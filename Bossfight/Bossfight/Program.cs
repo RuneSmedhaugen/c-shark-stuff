@@ -1,5 +1,7 @@
 ﻿using Bossfight;
 
-Boss Boss = new Boss(10,10,10);
+GameCharacter player = new GameCharacter(100, 20, 40);
+Boss boss = new Boss(400, 10);
+Game game = new Game(boss, player);
 
-Boss.BossFight();
+game.PlayingGame();

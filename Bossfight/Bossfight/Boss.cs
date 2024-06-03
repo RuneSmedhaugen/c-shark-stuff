@@ -12,9 +12,10 @@ namespace Bossfight
         private int _health;
         private int _stamina;
         private static Random _random = new Random();
-        
+        private GameCharacter _character;
 
-        public Boss( int Health, int Stamina)
+
+        public Boss(int Health, int Stamina)
         {
 
             _health = Health;
@@ -27,19 +28,33 @@ namespace Bossfight
             _strength = _random.Next(0, 31);
         }
 
-        public void BossFight()
+        public void BossFight(GameCharacter _character)
         {
             GenerateRandomStrength();
+            if (_stamina > 0)
+            {
+                _character.Health -= _strength;
+                _stamina -= 10;
+                Console.WriteLine($"Boss attacks you for {_strength}. Your health is now {_character.Health}");
+            }
+            else
+            {
+                Console.WriteLine("The Baws recharged his energy.");
+                BossRecharge();
+            }
+            
+
         }
 
         public void BossRecharge()
         {
-
+            _stamina = 10;
         }
 
-        public void Test()
+        public int Health
         {
-            Console.WriteLine($"str = {_stength}");
+            get { return _health; }
+            set { _health = value; }
         }
     }
 
