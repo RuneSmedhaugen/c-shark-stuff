@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace PokemonPP
         private Random _random;
 
 
-        public void Grass()
+        public void Grass(Player player)
         {
             _random = new Random();
             Console.WriteLine("You are walking around in grass...");
@@ -30,10 +31,14 @@ namespace PokemonPP
                 {
 
                 }
+                else if (whatToDo == "2")
+                {
+                    CatchPokemon(player, encounteredPokemon);
+                }
             }
         }
 
-        public void Water()
+        public void Water(Player player)
         {
             _random = new Random();
             Console.WriteLine("You are swimming around in the sea...");
@@ -45,6 +50,29 @@ namespace PokemonPP
 1: Fight
 2: Catch
 3: Flee");
+            }
+        }
+
+        public void CatchPokemon(Player player, string pokemonName)
+        {
+            if (player.UsePokeball())
+            {
+                Random random = new Random();
+                bool isCaught = random.Next(0, 2) == 0;
+                if (isCaught)
+                {
+                    Console.WriteLine($"You caught a {pokemonName}!");
+                    player.AddToInventory(pokemonName);
+                }
+                else
+                {
+                    Console.WriteLine($" The {pokemonName} dodged your ball and yeeted away!");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("You don't have any pokeballs!");
             }
         }
     }

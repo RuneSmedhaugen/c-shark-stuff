@@ -30,6 +30,7 @@ namespace PokemonPP
                 {
                     player.Coins -= _pokeballPrice;
                     player.AddToInventory("Pokeball");
+                    Console.WriteLine("Pokeball has been added to your inventory.");
                 }
                 else if (player.Coins < _pokeballPrice)
                 {
@@ -42,6 +43,7 @@ namespace PokemonPP
                 {
                     player.Coins -= (_healthpotionPrice);
                     player.AddToInventory("Healthpotion");
+                    Console.WriteLine("Healthpotion has been added to your inventory.");
                 }
                 else if (player.Coins < _healthpotionPrice)
                 {

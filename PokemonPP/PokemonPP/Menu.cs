@@ -11,7 +11,7 @@ namespace PokemonPP
         private Terrain terrain = new Terrain();
         Shop shop = new Shop("pokeball", "healthpotion");
 
-        public Player player = new Player("Terje", "", "", 100);
+        public Player player;
 
         Pokemon poliwag = new Pokemon("Poliwag", "Water", 100, 10);
         Pokemon krabby = new Pokemon("Krabby", "water", 100, 10);
@@ -44,18 +44,22 @@ namespace PokemonPP
 
         public void ChooseMenu()
         {
-            Console.WriteLine(@"What do you want to do?
-                1: Explore the wilderness
-                2: Explore the sea
-                3: Enter shop");
+            while (true)
+            {
+                Console.WriteLine(@"What do you want to do?
+1: Explore the wilderness
+2: Explore the sea
+3: Enter shop
+4: See inventory
+5: Exit game");
             string menuChoice = Console.ReadLine();
             if(menuChoice == "1")
             {
-               terrain.Grass();
+               terrain.Grass(player);
 
             }
             else if (menuChoice == "2") {
-                terrain.Water();
+                terrain.Water(player);
             }
             else if (menuChoice == "3")
             {
@@ -63,9 +67,19 @@ namespace PokemonPP
                 string chosenItem = Console.ReadLine();
                 shop.buyItem(player, chosenItem);
             }
+            else if (menuChoice == "4")
+            {
+               CheckInventory();
+            }
+            else if (menuChoice == "5")
+            {
+                Console.WriteLine("Exiting game. Cya nerd!");
+                break;
+            }
             else
             {
-                ChooseMenu();
+                Console.WriteLine("Please select a valid choice.");
+            }
             }
         }
 
@@ -78,14 +92,17 @@ namespace PokemonPP
             if(input == "bulbasaur" || input == "Bulbasaur")
             {
                 Console.WriteLine($"You choose {input}");
+                player = new Player("Terje", bulbasaur, "", 100);
             }
             else if (input == "charmander" || input == "Charmander")
             {
                 Console.WriteLine($"You choose {input}");
+                player = new Player("Terje", charmander, "", 100);
             }
             else if (input == "squirtle" || input == "Squirtle")
             {
                 Console.WriteLine($"You choose {input}");
+                player = new Player("Terje", squirtle, "", 100);
             }
             else
             {
@@ -93,7 +110,11 @@ namespace PokemonPP
             }
         }
 
-
+        public void CheckInventory()
+        {
+            Console.WriteLine("Your inventory contains:");
+            Console.WriteLine(player.GetInventory());
+        }
 
 
         public void Run()
