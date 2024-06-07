@@ -20,5 +20,10 @@ namespace PokemonPP
             _attack = Attack;
 
         }
+
+        public string Name
+        {
+            get { return _name; }
+        }
     }
 }

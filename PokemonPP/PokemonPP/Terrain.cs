@@ -53,7 +53,7 @@ namespace PokemonPP
             }
         }
 
-        public void CatchPokemon(Player player, string pokemonName)
+        public void CatchPokemon(Player player, Pokemon pokemon)
         {
             if (player.UsePokeball())
             {
@@ -61,12 +61,12 @@ namespace PokemonPP
                 bool isCaught = random.Next(0, 2) == 0;
                 if (isCaught)
                 {
-                    Console.WriteLine($"You caught a {pokemonName}!");
-                    player.AddToInventory(pokemonName);
+                    Console.WriteLine($"You caught a {pokemon.Name}!");
+                    player.AddPokemon(pokemon);
                 }
                 else
                 {
-                    Console.WriteLine($" The {pokemonName} dodged your ball and yeeted away!");
+                    Console.WriteLine($" The {pokemon.Name} dodged your ball and yeeted away!");
                 }
 
             }

@@ -51,6 +51,7 @@ namespace PokemonPP
 2: Explore the sea
 3: Enter shop
 4: See inventory
+5: Check Pokemon
 5: Exit game");
             string menuChoice = Console.ReadLine();
             if(menuChoice == "1")
@@ -71,7 +72,12 @@ namespace PokemonPP
             {
                CheckInventory();
             }
+
             else if (menuChoice == "5")
+            {
+                CheckPokemon();
+            }
+            else if (menuChoice == "6")
             {
                 Console.WriteLine("Exiting game. Cya nerd!");
                 break;
@@ -114,6 +120,12 @@ namespace PokemonPP
         {
             Console.WriteLine("Your inventory contains:");
             Console.WriteLine(player.GetInventory());
+        }
+
+        public void CheckPokemon()
+        {
+            Console.WriteLine("Your pokemon:");
+            Console.WriteLine(player.GetPokemonList());
         }
 
 

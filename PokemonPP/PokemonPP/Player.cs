@@ -9,15 +9,14 @@ namespace PokemonPP
     internal class Player
     {
         private string _name;
-        private Pokemon _pokemon;
         private List<Pokemon> _pokemons;
         private string _inventory;
         private int _coins;
 
-        public Player(string Name, Pokemon Pokemon, string Inventory, int Coins)
+        public Player(string Name, Pokemon StarterPokemon, string Inventory, int Coins)
         {
             _name = Name;
-            _pokemon = Pokemon;
+            _pokemons = new List<Pokemon> { StarterPokemon };
             _inventory = Inventory;
             _coins = Coins;
         }
@@ -25,6 +24,12 @@ namespace PokemonPP
         public void AddToInventory(string item)
         {
             _inventory += (string.IsNullOrEmpty(_inventory) ? "" : ", ") + item;
+        }
+
+        public void AddPokemon(Pokemon pokemon)
+        {
+            _pokemons.Add(pokemon);
+            Console.WriteLine($@"Current Pokemon: {String.Join(", ", _pokemons.Select(p=> p.Name))}");
         }
 
         public string GetInventory()
@@ -72,12 +77,15 @@ namespace PokemonPP
             set { _coins = value; }
         }
 
-        public Pokemon Pokemon
+        public string GetPokemonList()
         {
-            get { return _pokemon; }
-            set { _pokemon = value; }
+            return _pokemons.Count == 0 ? "No Pokemon" : string.Join(", ", _pokemons.Select(p => p.Name));
         }
 
+        public List<Pokemon> Pokemons
+        {
+            get { return _pokemons; }
+        }
 
     }
 }
