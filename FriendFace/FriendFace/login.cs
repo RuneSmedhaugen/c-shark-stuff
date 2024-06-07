@@ -9,7 +9,8 @@ namespace FriendFace
         {
             new Users("Bjarne", "bjarne@get.no", "hehexd", 13376969, 42, "male", "14 August"),
             new Users("Kåre", "kaare@get.no", "hehexd", 69691337, 69, "male", "09 February"),
-            new Users("Gunn", "Gunn@get.no", "hehexd", 42042069, 19, "female", "31 October")
+            new Users("Gunn", "Gunn@get.no", "hehexd", 42042069, 19, "female", "31 October"),
+            new Users("Andre", "Andre@get.no", "drøbaksuger", 69696969, 24, "whoKnows", "kekw nobody knows")
         };
 
         public bool LoggedIn;

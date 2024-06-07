@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nettbutikk", "nettbutikk\nettbutikk.csproj", "{30D7E74F-7262-40F7-A409-B927B0C115FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "codealong3", "codealong3\codealong3.csproj", "{9C0BCFEA-ECC5-4793-9A7C-903F6718BF98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{30D7E74F-7262-40F7-A409-B927B0C115FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30D7E74F-7262-40F7-A409-B927B0C115FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30D7E74F-7262-40F7-A409-B927B0C115FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30D7E74F-7262-40F7-A409-B927B0C115FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C0BCFEA-ECC5-4793-9A7C-903F6718BF98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C0BCFEA-ECC5-4793-9A7C-903F6718BF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C0BCFEA-ECC5-4793-9A7C-903F6718BF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C0BCFEA-ECC5-4793-9A7C-903F6718BF98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A1DE54CF-8D11-4BB5-B3BA-A1DC14ADDE66}
+		SolutionGuid = {636E2232-9505-4663-8B05-F4A2D027E2CB}
 	EndGlobalSection
 EndGlobal
