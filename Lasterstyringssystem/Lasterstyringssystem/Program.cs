@@ -36,36 +36,43 @@ while (true)
     switch (choice)
     {
         case "1":
+            Console.Clear();
             Console.WriteLine("Alle produkter:");
             lager.ListAlleProdukter();
             break;
 
         case "2":
+            Console.Clear();
             Console.WriteLine("Matvarer:");
             lager.ListProdukterAvKategori<Matvare>();
             break;
 
         case "3":
+            Console.Clear();
             Console.WriteLine("Klær:");
             lager.ListProdukterAvKategori<Klær>();
             break;
 
         case "4":
+            Console.Clear();
             Console.WriteLine("Elektronikk:");
             lager.ListProdukterAvKategori<Elektronikk>();
             break;
 
         case "5":
+            Console.Clear();
             Console.WriteLine("Velg hvilken vare du vil fjerne (Skriv navnet til produktet):");
             lager.ListAlleProdukter();
             string removeItem = Console.ReadLine().Trim();
-            lager.FjernProdukt(removeItem);
             if (lager.FjernProdukt(removeItem))
             {
+                Console.Clear();
                 Console.WriteLine($"Produktet {removeItem} er fjernet fra lager.");
+                lager.FjernProdukt(removeItem);
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine($"Fant ikke produktet {removeItem} i lager.");
             }
             break;

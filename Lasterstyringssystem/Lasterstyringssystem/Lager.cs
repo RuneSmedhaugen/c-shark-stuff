@@ -27,13 +27,11 @@ namespace Lagerstyringssystem
             if (produkt != null)
             {
                 _products.Remove(produkt);
-                Console.WriteLine($"fant produktet {navn}");
                 return true;
 
             }
             else
             {
-                Console.WriteLine($"fant ikke produktet {navn}");
                 return false;
             }
         }

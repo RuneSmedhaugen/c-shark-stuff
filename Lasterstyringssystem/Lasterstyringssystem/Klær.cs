@@ -21,7 +21,7 @@ namespace Lagerstyringssystem
 
         public void SkrivUtInfo()
         {
-            Console.WriteLine($"Navn: {Navn}, størrelse: {_size}, pris: {Pris}");
+            Console.WriteLine($"Navn: {Navn}, størrelse: {_size}, pris: {Pris}kr");
         }
     }
 }
