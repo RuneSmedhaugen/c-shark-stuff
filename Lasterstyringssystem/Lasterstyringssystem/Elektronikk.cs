@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Lagerstyringssystem
 {
-    internal class Elektronikk:Iprodukt
+    internal class Elektronikk:IProdukt
     {
-        private string _name;
-        private double _price;
+        public string Navn { get; set; }
+        public double Pris { get; set; }
         private int _guarantee;
 
-        public Elektronikk(string Name, double Price, int Guarantee)
+        public Elektronikk(string navn, double pris, int Guarantee)
         {
-            _name = Name;
-            _price = Price;
+            Navn = navn;
+            Pris = pris;
             _guarantee = Guarantee;
         }
 
         public void SkrivUtInfo()
         {
-
+            Console.WriteLine($"Navn: {Navn}, Garanti: {_guarantee}, pris: {Pris}");
         }
     }
 }

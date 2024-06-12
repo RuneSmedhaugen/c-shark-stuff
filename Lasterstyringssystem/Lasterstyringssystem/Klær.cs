@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Lagerstyringssystem
 {
-    internal class Klær:Iprodukt
+    internal class Klær:IProdukt
     {
-        private string _name;
-        private double _price;
+        public string Navn { get; set; }
+        public double Pris { get; set; }
         private string _size;
 
-        public Klær(string Name, double Price, string Size)
+        public Klær(string navn, double pris, string size)
         {
-            _name = Name;
-            _price = Price;
-            _size = Size;
+            Navn = navn;
+            Pris = pris;
+            _size = size;
         }
 
         public void SkrivUtInfo()
         {
-
+            Console.WriteLine($"Navn: {Navn}, størrelse: {_size}, pris: {Pris}");
         }
     }
 }

@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Lagerstyringssystem
 {
-    internal class Matvare:Iprodukt
+    internal class Matvare:IProdukt
     {
-        private string _name;
-        private double _price;
+        public string Navn { get; set; }
+        public double Pris { get; set; }
         private DateOnly _expiration;
 
-        public Matvare(string Name, double Price, DateOnly Expiration)
+        public Matvare(string navn, double pris, DateOnly expiration)
         {
-            _name = Name;
-            _price = Price;
-            _expiration = Expiration;
+            Navn = navn;
+            Pris = pris;
+            _expiration = expiration;
         }
 
         public void SkrivUtInfo()
         {
-
+            Console.WriteLine($"Navn: {Navn}, utløpsdato: {_expiration}, pris: {Pris}");
         }
     }
 }

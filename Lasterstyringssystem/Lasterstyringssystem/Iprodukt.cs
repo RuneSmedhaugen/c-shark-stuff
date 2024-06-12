@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lagerstyringssystem
 {
-    public interface Iprodukt
+    internal interface IProdukt
     {
-        private string Navn { get; set; }
-        private double pris { get; set; }
+        string Navn { get; set; }
+        double Pris { get; set; }
 
         void SkrivUtInfo();
     }
