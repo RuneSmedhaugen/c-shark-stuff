@@ -36,11 +36,21 @@ namespace Lagerstyringssystem
             }
         }
 
+
+
         public void ListAlleProdukter()
         {
             foreach (var produkt in _products)
             {
                 produkt.SkrivUtInfo();
+            }
+        }
+
+        public void ListAlleProdukterNavn() 
+        {
+            foreach (var produkt in _products)
+            {
+                Console.WriteLine(produkt.Navn);
             }
         }
 

@@ -10,6 +10,7 @@ namespace Lagerstyringssystem
     {
         string Navn { get; set; }
         double Pris { get; set; }
+        int Antall { get; set; }
 
         void SkrivUtInfo();
     }
