@@ -156,7 +156,7 @@ namespace HarryPotterPP
 
                 if (input == "vingardium leviosa")
                 {
-                    Console.WriteLine("you made a feather fly");
+                    Console.WriteLine(wandMagic[0].description);
                 }
                 else if (input == "avada kedavra")
                 {
