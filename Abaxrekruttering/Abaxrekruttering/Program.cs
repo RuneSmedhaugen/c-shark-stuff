@@ -33,7 +33,7 @@ switch (input)
             break;
     case "3":
         Console.Clear();
-            Console.WriteLine(car1.PrintInfo());
+        Console.WriteLine(car1.PrintInfo());
         Console.WriteLine(car2.PrintInfo());
             break;
     case "4":

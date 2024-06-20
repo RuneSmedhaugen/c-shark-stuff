@@ -8,6 +8,7 @@ namespace Abaxrekruttering
 {
     internal class Car : Vehicles
     {
+        public string Color { get; private set; }
         public Car(string name, int effect, int speed, string color, string type)
         {
             Name = name;

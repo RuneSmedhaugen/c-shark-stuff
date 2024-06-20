@@ -11,11 +11,8 @@ namespace Abaxrekruttering
         public string Name { get; set; }
         public int Effect { get; set; }
         public int Speed { get; set; }
-        public string Color { get; set; }
         public string Type { get; set; }
-        public int Wingspan { get; set; }
-        public int Load { get; set; }
-        public int Weight { get; set; }
+        public int Weight { get; set; }         
 
         public abstract string PrintInfo();
 

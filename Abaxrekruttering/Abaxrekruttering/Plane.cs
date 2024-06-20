@@ -8,6 +8,9 @@ namespace Abaxrekruttering
 {
     internal class Plane : Vehicles
     {
+        public int Wingspan { get; private set; }
+        public int Load { get; private set; }
+
         public Plane(string name, int effect, int wingspan, int load, int weight, string type)
         {
             Name = name;
