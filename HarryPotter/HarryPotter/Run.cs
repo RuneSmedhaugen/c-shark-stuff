@@ -11,6 +11,9 @@ namespace HarryPotter
         private Items Store = new Items();
         private Characters character = new Characters();
         private SortingHat sortingHat = new SortingHat();
+        public Characters player = new Characters("",null,100,null , null,100,3);
+        public List<Spells> playerSpells = new List<Spells>();
+
         public void Game()
         {
             Console.WriteLine($@"Welcome wizard, to Hogwards!");
@@ -18,6 +21,7 @@ namespace HarryPotter
 Now, before we can begin, you need to buy yourself a wand and a pet. Head over to the shop and get your desired items.");
             Console.WriteLine("You walk to Diagon Alley...");
             Shop();
+            Menu();
         }
 
         public void Shop()
@@ -77,8 +81,39 @@ the sorting hat is placed on your head...
 {House._sentences}!!!!!!!!
 
 Everyone in {House._sentences} clapped and welcomed you to their House.");
-            Characters player = new Characters(playerName, House, 100, playerWand, playerPet);
+            player._name = playerName;
+            player._house = House;
+            player._wand = playerWand;
+            player._pet = playerPet;
+
             return player;
         }
+
+        public void Menu()
+        {
+            while (true)
+            {
+                Console.WriteLine(@$"{player._name}, what would you like to do?
+1: Learn your spells
+2: fight a random enemy
+3: exit game");
+                var menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        Spells.AllSpells(this);
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        Console.WriteLine("wrong choice boii try again");
+                        break;
+                }
+            }
+        }
+
     }
 }
