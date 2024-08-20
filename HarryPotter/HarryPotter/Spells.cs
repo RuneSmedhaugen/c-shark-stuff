@@ -39,11 +39,11 @@ namespace HarryPotter
             {
                 new Spells("Aguamenti", "Conjure a stream of water to hit your enemy for 10-15dmg. Costs 20 mana", 15, 10, 20,
                     "casts Aguamenti and a stream of water deals", 1),
-                new Spells("Brackium Emendo", "Heal yourself for 10-20 health. Costs 35 mana", 10, 20, 35, "casts Brackium Emendo and heals for",2),
-                new Spells("Incendio", "Create a ball of fire to shoot at your enemy. Deals 12-18dmg. Costs 30 mana",12,18,30,"yells INCENDIO! and deals",3),
-                new Spells("Fracto Strata", "Zap your enemy for 15-20dmg. Costs 40 mana",15,20,40,"casts Fracto Strata and sends out a zap that deals",4),
-                new Spells("Everte Statum","Throw your enemy backward, dealing 8-12dmg. Costs 10 mana",8,12,10,"Takes a step forwards and yells Everte Statum, dealing",5),
-                new Spells("Expulso", "Create a pressure explosion, dealing 1-50dmg. Costs 50 mana",1,50,50,"Tries to cast Expulso, creating a pressure explosion that deals",6),
+                new Spells("Brackium Emendo", "Heal yourself for 10-20 health. Costs 35 mana", 20, 10, 35, "casts Brackium Emendo and heals for",2),
+                new Spells("Incendio", "Create a ball of fire to shoot at your enemy. Deals 12-18dmg. Costs 30 mana",18,12,30,"yells INCENDIO! and deals",3),
+                new Spells("Fracto Strata", "Zap your enemy for 15-20dmg. Costs 40 mana",20,15,40,"casts Fracto Strata and sends out a zap that deals",4),
+                new Spells("Everte Statum","Throw your enemy backward, dealing 8-12dmg. Costs 10 mana",12,8,10,"Takes a step forwards and yells Everte Statum, dealing",5),
+                new Spells("Expulso", "Create a pressure explosion, dealing 1-50dmg. Costs 50 mana",50,1,50,"Tries to cast Expulso, creating a pressure explosion that deals",6),
                 new Spells("Rictusempra","Tickle your enemy weak. Deal 10 damage. Costs 10 mana",10,10,10,"Yells RICTUSEMPRA, making the opponent roll of the floor laughing. deals",7),
             };
             return spells;

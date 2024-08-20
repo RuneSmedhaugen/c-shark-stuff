@@ -15,9 +15,14 @@ namespace HarryPotter
         public Items _wand { get; set; }
         public Items _pet { get; set; }
         public int _spells { get; set; }
+        public int _level { get; set; }
+        public int _coins { get; set; }
+        public int _defaulthealth { get; set; }
+        public int _defaultmana { get; set; }
+        public int _crit { get; set; }
         Random random = new Random();
 
-        public Characters(string Name, SortingHat House, int Mana, Items Wand, Items Pet, int health, int spells)
+        public Characters(string Name, SortingHat House, int Mana, Items Wand, Items Pet, int health, int spells, int level, int coins, int defaulthealth, int defaultmana, int crit)
         {
             _name = Name;
             _house = House;
@@ -26,6 +31,11 @@ namespace HarryPotter
             _pet = Pet;
             _health = health;
             _spells = spells;
+            _level = level;
+            _coins = coins;
+            _defaulthealth = defaulthealth;
+            _defaultmana = defaultmana;
+            _crit = crit;
         }
 
         public Characters()
@@ -33,11 +43,12 @@ namespace HarryPotter
 
         }
 
-        public Characters(string Name, int Mana, int Health)
+        public Characters(string Name, int Health, int Mana, int Crit)
         {
             _name = Name;
             _mana = Mana;
             _health = Health;
+            _crit = Crit;
             
         }
 
@@ -45,18 +56,25 @@ namespace HarryPotter
         {
             List<Characters> enemies = new List<Characters>
             {
-                new Characters("Bjarne", 100, 100),
-                new Characters("Arne", 50, 150),
-                new Characters("Plutte", 150, 50),
-                new Characters("Trine", 120, 80),
-                new Characters("Frode", 80, 120),
-                new Characters("Jonas", 50, 200),
-                new Characters("Thomas", 200, 90),
+                new Characters("Stian", 100, 100,0),
+                new Characters("Albert", 120, 120, 5),
+                new Characters("André", 150, 150, 5),
+                new Characters("Trine", 150, 180, 10),
+                new Characters("Frode", 200, 200, 10),
+                new Characters("Jonas", 200, 250,15),
+                new Characters("Thomas", 300, 300, 15),
+                new Characters("Linn", 200,320,20),
+                new Characters("Eskil", 200, 350, 20),
+                new Characters("Marie", 200,400,20),
+                new Characters("Rebecka", 200,450, 25),
+                new Characters("Terje", 250, 500,30),
             };
 
-            var randomEnemy = random.Next(8);
+            var randomEnemy = random.Next(enemies.Count);
             return enemies[randomEnemy];
 
         }
+
+        
     }
 }

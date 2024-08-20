@@ -9,11 +9,12 @@ namespace HarryPotter
     internal class Run
     {
         private Items Store = new Items();
-        private Characters character = new Characters();
+        private static Characters character = new Characters();
         private SortingHat sortingHat = new SortingHat();
-        public Characters player = new Characters("",null,100,null , null,100,3);
+        public Characters player = new Characters("",null,100,null , null,100,3, 1, 0, 100, 100, 50);
         public List<Spells> playerSpells = new List<Spells>();
-
+        Fight fight = new Fight();
+        private Characters enemy = character.Enemies();
         public void Game()
         {
             Console.WriteLine($@"Welcome wizard, to Hogwards!");
@@ -96,7 +97,8 @@ Everyone in {House._sentences} clapped and welcomed you to their House.");
                 Console.WriteLine(@$"{player._name}, what would you like to do?
 1: Learn your spells
 2: fight a random enemy
-3: exit game");
+3: Go to shop
+4: exit game");
                 var menuChoice = Console.ReadLine();
 
                 switch (menuChoice)
@@ -105,8 +107,12 @@ Everyone in {House._sentences} clapped and welcomed you to their House.");
                         Spells.AllSpells(this);
                         break;
                     case "2":
+                        fight.Battle(this, enemy);
                         break;
                     case "3":
+
+                        break;
+                    case "4":
                         return;
                     default:
                         Console.WriteLine("wrong choice boii try again");
