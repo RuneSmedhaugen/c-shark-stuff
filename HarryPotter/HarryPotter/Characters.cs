@@ -67,7 +67,7 @@ namespace HarryPotter
                 new Characters("Eskil", 200, 350, 20),
                 new Characters("Marie", 200,400,20),
                 new Characters("Rebecka", 200,450, 25),
-                new Characters("Terje", 250, 500,30),
+                new Characters("Terje", 500, 250,30),
             };
 
             var randomEnemy = random.Next(enemies.Count);
