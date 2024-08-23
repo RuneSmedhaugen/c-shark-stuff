@@ -38,53 +38,53 @@ namespace Aquarium
                 case Freshwaterfish.Bettafish:
                     Name = "Bettafish";
                     Description = "BETTAAAAAA!";
-                    Draw = ">\u00b0))'>\r\n";
+                    Draw = ">\u00b0))'>";
                     break;
                 case Freshwaterfish.Goldfish:
                     Name = "Goldfish";
                     Description = "Am I made of gold?!";
-                    Draw = "><(((('>\r\n";
+                    Draw = "><(((('>";
                     break;
                 case Freshwaterfish.NeonTetra:
                     Name = "NeonTetra";
                     Description = "Riders of the storm...";
-                    Draw = "<><\r\n";
+                    Draw = "<><";
                     break;
                 case Freshwaterfish.Guppy:
                     Name = "Guppy";
                     Description = "Gupp gupp";
-                    Draw = ">))'>\r\n";
+                    Draw = ">))'>";
                     break;
                 case Freshwaterfish.ZebraDanio:
                     Name = "Zebra Danio";
                     Description = "Didn't know Zebras had gills";
-                    Draw = "><))\">\r\n";
+                    Draw = "><))\">";
                     break;
                 case Freshwaterfish.OscarFish:
                     Name = "OscarFish";
                     Description = "Thank you for this prize!";
-                    Draw = "><((\u00b0>\r\n";
+                    Draw = "><((\u00b0>";
                     break;
                 case Freshwaterfish.DiscusFish:
                     Name = "DiscusFish";
                     Description = "Olympic medalist";
-                    Draw = "><{{{\u00b0>\r\n";
+                    Draw = "><{{{\u00b0>";
                     break;
                 case Freshwaterfish.CherryBarb:
                     Name = "CherryBarb";
                     Description = "That's one fruit I would not eat.";
-                    Draw = "><>~\r\n";
+                    Draw = "><>~";
                     break;
                 case Freshwaterfish.Rainbowfish:
                     Name = "Rainbowfish";
                     Description = "Where is the pot of gold?!";
-                    Draw = "><>``\r\n";
+                    Draw = "><>``";
                     break;
                 case Freshwaterfish.Pleco:
                     Name = "Pleco";
                     Description =
                         "The pleco is like the tank's personal vacuum cleaner—always on duty, never asking for a break!";
-                    Draw = ">\u00b0(((\u00b0)>\r\n";
+                    Draw = ">\u00b0(((\u00b0)>";
                     break;
 
             }

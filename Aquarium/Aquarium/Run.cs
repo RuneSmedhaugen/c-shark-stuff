@@ -8,8 +8,8 @@ namespace Aquarium
 {
     internal class Run
     {
-        List< Saltwater> salt = new List< Saltwater>();
-        List< Freshwater> fresh = new List< Freshwater>();
+        List<Saltwater> salt = new List<Saltwater>();
+        List<Freshwater> fresh = new List<Freshwater>();
         Fishtank fishtank = new Fishtank();
 
         public void RunProgram()
@@ -38,31 +38,59 @@ namespace Aquarium
 
         public void Menu()
         {
-            Console.WriteLine("This is your personal Aquarium! First, would you like freshwater or saltwater? (fresh/salt)");
-            var freshOrSalt = Console.ReadLine();
+            Console.WriteLine(
+                "This is your personal Aquarium! Here are your options:" +
+                "1: Add freshwater fish" +
+                "2: add saltwater fish" +
+                "3: view your fishtank" +
+                "4: exit program");
+            var input = Console.ReadLine();
 
-            if (freshOrSalt == "salt")
+            switch (input)
             {
-                
+                case "1":
+                    ShowFishOptions(fresh);
+                    break;
+                case "2":
+                    ShowFishOptions(salt);
+                    break;
+                case "3":
+                    ShowFishtank();
+                    break;
+                case "4":
+                    return;
+            }
 
-                for (int i = 0; i < salt.Count; i++) 
+        }
+
+        private void ShowFishOptions<T>(List<T> fishList) where T : Fish
+        {
+            while (true)
+            {
+                for (int i = 0; i < fishList.Count; i++)
                 {
-                    var fish = salt[i];
+                    var fish = fishList[i];
                     Console.WriteLine($@"{i + 1}: {fish.Name} {fish.Draw}
 {fish.Description}
 ");
                 }
-            }
-            else if (freshOrSalt == "fresh")
-            {
-                for (int i = 0; i < fresh.Count; i++)
+
+                Console.WriteLine("Enter the number of a fish you want to add to your aquarium");
+                int fishIndex = int.Parse(Console.ReadLine() ?? "0");
+
+                if (fishIndex > 0 && fishIndex <= fishList.Count)
                 {
-                    var freshfish = fresh[i];
-                    Console.WriteLine($@"{i}: {freshfish.Name} {freshfish.Draw}
-{freshfish.Description}
-");
+                    var selectedFish = fishList[fishIndex -1];
+                    fishtank.AddFish(selectedFish);
+                    fishtank.PrintFishTank();
+                    fishtank.DisplayFish();
+                    break;
                 }
             }
+        }
+
+        public void ShowFishtank()
+        {
 
         }
     }

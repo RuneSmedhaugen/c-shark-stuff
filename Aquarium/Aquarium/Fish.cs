@@ -11,6 +11,8 @@ namespace Aquarium
         public string Name { get; protected set; }
         public string Description { get; protected set; }
         public string Draw { get; protected set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public Fish(string name, string description, string draw)
         {

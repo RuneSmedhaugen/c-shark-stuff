@@ -43,47 +43,47 @@ namespace Aquarium
                 case FishSpecies.Angelfish:
                     Name = "Angelfish";
                     Description = "Blesses you";
-                    Draw = "><(((\u00b0>\r\n";
+                    Draw = "><(((\u00b0>";
                     break;
                 case FishSpecies.Pufferfish:
                     Name = "Pufferfish";
                     Description = "Huffin'n'puffin'";
-                    Draw = "<\u00b0)))><\r\n";
+                    Draw = "<\u00b0)))><";
                     break;
                 case FishSpecies.Boxfish:
                     Name = "Boxfish";
                     Description = "Box box";
-                    Draw = "[><>\r\n";
+                    Draw = "[><>";
                     break;
                 case FishSpecies.Lionfish:
                     Name = "Lionfish";
                     Description = "RAWR!";
-                    Draw = ">))'>>\r\n";
+                    Draw = ">))'>>";
                     break;
                 case FishSpecies.Butterflyfish:
                     Name = "Butterflyfish";
                     Description = "Can't believe it's not butter!";
-                    Draw = "><((º>\r\n";
+                    Draw = "><((º>";
                     break;
                 case FishSpecies.Parrotfish:
                     Name = "Parrotfish";
                     Description = "Hello i am hooman squaak squaak";
-                    Draw = "<\u00b0)))>< squawk\r\n";
+                    Draw = "<\u00b0)))>< squawk";
                     break;
                 case FishSpecies.Goblinshark:
                     Name = "Goblinshark";
                     Description = "Mines of moria is ours!";
-                    Draw = "(v\u00b0\u00b0)v\r\n";
+                    Draw = "(v\u00b0\u00b0)v";
                     break;
                 case FishSpecies.Flyingfish:
                     Name = "Flyingfish";
                     Description = "I believe I can flyyyyyy";
-                    Draw = ">\u00b0)))\u00b0\r\n";
+                    Draw = ">\u00b0)))\u00b0";
                     break;
                 case FishSpecies.Mandarinfish:
                     Name = "Mandarinfish";
                     Description = "为什么鱼从来不做功课？ 因为它们总是“在水里”（在“逃避”）！";
-                    Draw = "><(((\u00b0>\r\n";
+                    Draw = "><(((\u00b0>";
                     break;
             }
         }
