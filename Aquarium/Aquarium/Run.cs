@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,10 @@ namespace Aquarium
             InitializeFreshwaterTank();
             InitializeSaltwaterTank();
 
-            Menu();
+            while (true)
+            {
+                Menu();
+            }
         }
 
         private void InitializeSaltwaterTank()
@@ -38,12 +42,12 @@ namespace Aquarium
 
         public void Menu()
         {
-            Console.WriteLine(
-                "This is your personal Aquarium! Here are your options:" +
-                "1: Add freshwater fish" +
-                "2: add saltwater fish" +
-                "3: view your fishtank" +
-                "4: exit program");
+            Console.Clear();
+            Console.WriteLine(@"This is your personal Aquarium! Here are your options:
+                    1: Add freshwater fish
+                    2: add saltwater fish
+                    3: view your fishtank
+                    4: exit program");
             var input = Console.ReadLine();
 
             switch (input)
@@ -58,8 +62,13 @@ namespace Aquarium
                     ShowFishtank();
                     break;
                 case "4":
-                    return;
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Come on how hard is it to press 1-4?");
+                    break;
             }
+            
 
         }
 
@@ -67,6 +76,7 @@ namespace Aquarium
         {
             while (true)
             {
+                Console.Clear();
                 for (int i = 0; i < fishList.Count; i++)
                 {
                     var fish = fishList[i];
@@ -82,16 +92,31 @@ namespace Aquarium
                 {
                     var selectedFish = fishList[fishIndex -1];
                     fishtank.AddFish(selectedFish);
-                    fishtank.PrintFishTank();
-                    fishtank.DisplayFish();
-                    break;
+                    Console.WriteLine(@$"Added {selectedFish.Name} to the aquarium
+1: Add another fish
+2: return to main menu");
+                    var fishinput = Console.ReadLine();
+
+                    if (fishinput == "2")
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("1 or 2 fool");
+                    }
                 }
             }
         }
 
         public void ShowFishtank()
         {
-
+            Console.Clear();
+            fishtank.PrintFishTank();
+            fishtank.DisplayFish();
+            Console.SetCursorPosition(0, Console.WindowHeight -1);
+            Console.WriteLine("press any key to return to the menu");
+            var returnToMenu = Console.ReadKey();
         }
     }
 }
