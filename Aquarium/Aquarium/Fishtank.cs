@@ -50,21 +50,10 @@ namespace Aquarium
             }
         }
 
-        public void clearFish(int x, int y)
-        {
-            foreach (var fish in fishInTank)
-            {
-                Console.SetCursorPosition(startX + fish.X, startY + fish.Y);
-                Console.Write(" ");
-            }
-        }
-
         public void MoveFish()
         {
             foreach (var fish in fishInTank)
             {
-                clearFish(fish.X, fish.Y);
-
                 int move = rnd.Next(0, 4);
                 switch (move)
                 {
