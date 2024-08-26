@@ -46,7 +46,7 @@ namespace Aquarium
             Console.WriteLine(@"This is your personal Aquarium! Here are your options:
                     1: Add freshwater fish
                     2: add saltwater fish
-                    3: view your fishtank
+                    3: view your fishtank (make sure to add all the fish you want first)
                     4: exit program");
             var input = Console.ReadLine();
 

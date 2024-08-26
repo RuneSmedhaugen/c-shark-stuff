@@ -38,7 +38,7 @@ namespace Aquarium
             fishInTank.Add(fish);
         }
 
-
+        //Fant ikke ut hvordan jeg kan få fisketanken til å ikke blinke som faen så denne brukes ikke akkurat nå
         public void PrintFishTank()
         {
             int windowWidth = Console.WindowWidth;
@@ -82,23 +82,31 @@ namespace Aquarium
             }
         }
 
-        public void MoveFish()
+        public void clearFish(int x, int y)
         {
             foreach (var fish in fishInTank)
             {
                 Console.SetCursorPosition(startX + fish.X, startY + fish.Y);
                 Console.Write(" ");
+            }
+        }
 
-                int direction = rnd.Next(0, 4);
-                switch (direction)
+        public void MoveFish()
+        {
+            foreach (var fish in fishInTank)
+            {
+                clearFish(fish.X, fish.Y);
+
+                int move = rnd.Next(0, 4);
+                switch (move)
                 {
                     case 0:
                         fish.Y = Math.Clamp(fish.Y - 1, 1, tankHeight - 2);
                         break;
-                    case 1: 
+                    case 1:
                         fish.Y = Math.Clamp(fish.Y + 1, 1, tankHeight - 2);
                         break;
-                    case 2: 
+                    case 2:
                         fish.X = Math.Clamp(fish.X - 1, 1, tankWidth - 2);
                         break;
                     case 3:
@@ -106,13 +114,15 @@ namespace Aquarium
                         break;
                 }
             }
+                
+            
         }
 
         public void RunFishtankSimulation()
         {
-            PrintFishTank();
             while (true)
             {
+                Console.Clear();
                 MoveFish();
                 DisplayFish();
                 Thread.Sleep(200);
