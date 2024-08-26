@@ -59,7 +59,7 @@ namespace Aquarium
                     ShowFishOptions(salt);
                     break;
                 case "3":
-                    ShowFishtank();
+                    fishtank.RunFishtankSimulation();
                     break;
                 case "4":
                     Environment.Exit(0);
@@ -115,8 +115,7 @@ namespace Aquarium
             fishtank.PrintFishTank();
             fishtank.DisplayFish();
             Console.SetCursorPosition(0, Console.WindowHeight -1);
-            Console.WriteLine("press any key to return to the menu");
-            var returnToMenu = Console.ReadKey();
+
         }
     }
 }
