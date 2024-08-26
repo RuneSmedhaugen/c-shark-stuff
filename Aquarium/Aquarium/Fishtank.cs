@@ -38,38 +38,6 @@ namespace Aquarium
             fishInTank.Add(fish);
         }
 
-        //Fant ikke ut hvordan jeg kan få fisketanken til å ikke blinke som faen så denne brukes ikke akkurat nå
-        public void PrintFishTank()
-        {
-            int windowWidth = Console.WindowWidth;
-            int windowHeight = Console.WindowHeight;
-
-            tankWidth = windowWidth - 5; 
-            tankHeight = windowHeight - 5;
-
-            tankWidth = Math.Max(tankWidth, 20);
-            tankHeight = Math.Max(tankHeight, 10);
-
-            startX = 2;
-            startY = 2;
-
-            for (int i = 0; i < tankHeight; i++)
-            {
-                Console.SetCursorPosition(startX, startY + i);
-                for (int j = 0; j < tankWidth; j++)
-                {
-                    if (i == 0 || i == tankHeight - 1 || j == 0 || j == tankWidth - 1)
-                    {
-                        Console.Write("█");
-                    }
-                    else
-                    {
-                        Console.Write(" ");
-                    }
-                }
-            }
-        }
-
         public void DisplayFish()
         {
             foreach (var fish in fishInTank)

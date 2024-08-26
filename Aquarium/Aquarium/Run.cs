@@ -108,14 +108,5 @@ namespace Aquarium
                 }
             }
         }
-
-        public void ShowFishtank()
-        {
-            Console.Clear();
-            fishtank.PrintFishTank();
-            fishtank.DisplayFish();
-            Console.SetCursorPosition(0, Console.WindowHeight -1);
-
-        }
     }
 }
