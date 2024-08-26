@@ -13,16 +13,19 @@ namespace HarryPotter
         public string _name { get; set; }
         public string _type { get; set; }
         public string _description { get; set; }
+        public int _baseDmg { get; set; }
 
 
 
 
 
-        public Items(string Name, string Type, string Description)
+        public Items(string Name, string Type, string Description, int BaseDmg)
         {
             _name = Name;
             _type = Type;
             _description = Description;
+            _baseDmg = BaseDmg;
+
         }
 
         public Items()

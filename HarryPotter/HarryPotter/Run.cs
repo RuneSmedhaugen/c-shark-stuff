@@ -8,10 +8,11 @@ namespace HarryPotter
 {
     internal class Run
     {
+        private Shop shop = new Shop();
         private Items Store = new Items();
         private static Characters character = new Characters();
         private SortingHat sortingHat = new SortingHat();
-        public Characters player = new Characters("",null,100,null , null,100,3, 1, 0, 100, 100, 50);
+        public Characters player = new Characters("",null,100,null , null,100,3, 1, 1000, 100, 100, 50);
         public List<Spells> playerSpells = new List<Spells>();
         Fight fight = new Fight();
         private Characters enemy = character.Enemies();
@@ -45,7 +46,7 @@ Now, before we can begin, you need to buy yourself a wand and a pet. Head over t
                 var petDescription = Console.ReadLine();
                 Console.WriteLine("Great, now you just need to give your new pet a name");
                 var petName = Console.ReadLine();
-                Items playerPet = new Items(petName, petType, petDescription);
+                Items playerPet = new Items(petName, petType, petDescription, 0);
                 Console.WriteLine("Thank you for your purchase, have a good day!");
                 return playerPet;
         }
@@ -58,7 +59,7 @@ Now, before we can begin, you need to buy yourself a wand and a pet. Head over t
             Console.WriteLine($"Hmm i may have something similar to a {wandName}... Ah yes here it is! how would you describe this wand?");
             var wandDescription = Console.ReadLine();
             Console.WriteLine("Sounds about right. Here is your new wand! Goodbye.");
-            Items playerWand = new Items(wandName, "wand", wandDescription);
+            Items playerWand = new Items(wandName, "wand", wandDescription, 0);
             return playerWand;
         }
 
@@ -110,10 +111,11 @@ Everyone in {House._sentences} clapped and welcomed you to their House.");
                         fight.Battle(this, enemy);
                         break;
                     case "3":
-
+                        shop.Shopping(this);
                         break;
                     case "4":
-                        return;
+                        Environment.Exit(0);
+                        break;
                     default:
                         Console.WriteLine("wrong choice boii try again");
                         break;

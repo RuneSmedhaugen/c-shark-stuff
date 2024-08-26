@@ -56,6 +56,16 @@ namespace HarryPotter
         {
             List<Characters> enemies = new List<Characters>
             {
+                new Characters("Erlend", 100,100,0),
+                new Characters("Linda", 100,100,0),
+                new Characters("Ellie",100,100,0),
+                new Characters("Erik",100,100,0),
+                new Characters("Martin", 100,100,0),
+                new Characters("Christopher",100,100,0),
+                new Characters("Sofus", 100,100,0),
+                new Characters("Viktor",100,100,0),
+                new Characters("Marie",100,100,0),
+                new Characters("Hanne",100,100,0),
                 new Characters("Stian", 100, 100,0),
                 new Characters("Albert", 120, 120, 5),
                 new Characters("André", 150, 150, 5),
@@ -70,9 +80,16 @@ namespace HarryPotter
                 new Characters("Terje", 500, 250,30),
             };
 
-            var randomEnemy = random.Next(enemies.Count);
-            return enemies[randomEnemy];
+            foreach (var enemy in enemies)
+            {
+                if (enemy._health > 0)
+                {
+                    return enemy;
+                }
 
+            }
+
+            return null;
         }
 
         
