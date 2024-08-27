@@ -47,7 +47,6 @@ namespace Aquarium
                 { Freshwaterfish.Pleco, new Fish (Name = "Pleco", Description = "The pleco is like the tank's personal vacuum cleaner—always on duty, never asking for a break!", Draw = ">\u00b0(((\u00b0)>") }
             };
 
-            // Use TryGetValue to set properties
             if (fishData.TryGetValue(fish, out Fish info))
             {
                 Name = info.Name;

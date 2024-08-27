@@ -31,7 +31,7 @@ namespace Aquarium
 
         }
 
-        public void FishProperties(FishSpecies Fishes)
+        public void FishProperties(FishSpecies Fishes) //Har ikke gjort om dette til en dictionary enda
         {
             switch (Fishes)
             {
