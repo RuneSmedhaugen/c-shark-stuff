@@ -75,14 +75,14 @@ namespace Aquarium
             
         }
 
-        public void RunFishtankSimulation()
+        public async void RunFishtankSimulation()
         {
             while (true)
             {
                 Console.Clear();
                 MoveFish();
                 DisplayFish();
-                Thread.Sleep(200);
+               await Task.Delay(200);
             }
         }
     }

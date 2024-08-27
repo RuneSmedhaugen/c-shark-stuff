@@ -25,7 +25,7 @@ namespace Aquarium
 
         public Freshwaterfish Fishes;
 
-        public Freshwater(Freshwaterfish fishes) : base(null, null, null)
+        public Freshwater(Freshwaterfish fishes) : base("", "", "")
         {
             Fishes = fishes;
             FishProperties(fishes);
