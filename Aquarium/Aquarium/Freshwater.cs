@@ -23,11 +23,8 @@ namespace Aquarium
             Pleco
         }
 
-        private Freshwaterfish FishType { get; }
-
         public Freshwater(Freshwaterfish fishType) : base("","","")
         {
-            FishType = fishType;
             FishProperties(fishType);
         }
 

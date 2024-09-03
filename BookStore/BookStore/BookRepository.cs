@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,28 +10,70 @@ namespace BookStore
 {
     internal class BookRepository
     {
-        private readonly string _connectionstring;
+        private readonly string _connectionString;
+
 
         public BookRepository(string connectionstring)
         {
-            _connectionstring = connectionstring;
+            _connectionString = connectionstring;
         }
 
-        public void AddBook(string title, string author, int publishedlDate)
+        public void AddBook(string title, string author, int publishedYear, string genre, int bookID)
         {
-            using var connection = new SqlConnection(_connectionstring);
+            using var connection = new SqlConnection(_connectionString);
 
             var command =
-                new SqlConnection(
-                    "INSERT INTO Books (Title, Author, publishedDate) VALUES (@Title, @Author, @PublishedDate)",
+                new SqlCommand(
+                    "INSERT INTO Books (Title, Author, publishedYear, Genre, BookID) VALUES (@Title, @Author, @PublishedYear, @Genre, @BookID)",
                     connection);
 
             command.Parameters.AddWithValue("@Title", title);
             command.Parameters.AddWithValue("@Author", author);
-            command.Parameters.AddWithValue("@PublishedDate", publishedDate);
+            command.Parameters.AddWithValue("@PublishedYear", publishedYear);
+            command.Parameters.AddWithValue("@Genre", genre);
+            command.Parameters.AddWithValue("@BookID", bookID);
 
             connection.Open();
-            command.ExecutenonQuery();
+            command.ExecuteNonQuery();
+        }
+
+        public void ShowAllBooks()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = "SELECT BookID, Title, Author, PublishedYear, Genre FROM Books";
+            var command = new SqlCommand(query, connection);
+
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine($@"ID: {reader["BookID"]}, 
+Title: {reader["Title"]}, 
+Author: {reader["Author"]}, 
+Published Year: {reader["PublishedYear"]}, 
+Genre: {reader["Genre"]}");
+
+            }
+
+        }
+
+        public void TestConnection()
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                connection.Open();
+                Console.WriteLine("Connection successful!");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"SQL Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General Exception: {ex.Message}");
+            }
         }
     }
 }
