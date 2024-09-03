@@ -1,21 +1,16 @@
 using System;
 using System.Data.SqlClient;
+using RollRadar;
+using RollRadar.Services;
 
 class Program
 {
+    
     static void Main()
     {
+        Run run = new Run();
         string connectionString = @"Server=.\SQLEXPRESS;Database=BowlingDB;Trusted_Connection=True;";
-
-        using (SqlConnection connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
-
-            using (SqlCommand command = connection.CreateCommand("SELECT COUNT(*) FROM USERS", connection))
-            {
-                int usercount = (int)command.ExecuteScalar();
-                Console.WriteLine($"Users: ");
-            }
-        }
+        UserService userService = new UserService(connectionString);
+        run.CreateUser(userService);
     }
 }

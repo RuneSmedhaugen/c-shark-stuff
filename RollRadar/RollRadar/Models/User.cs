@@ -61,15 +61,14 @@
             }
         }
 
-        public string Profilepic
+        public string ProfilePic
         {
             get => _profilepic;
             set => _profilepic = value;
         }
 
-        public User(int id, string email, string passwordHash, string name, int? age, string hand, string profilePic)
+        public User(string email, string passwordHash, string name, int? age, string hand, string profilePic)
         {
-            _id = id;
             _email = email;
             _passwordHash = passwordHash;
             _name = name;
@@ -77,6 +76,9 @@
             _hand = hand;
             _profilepic = profilePic;
         }
+
+
+
 
     }
 }

@@ -45,6 +45,6 @@
             _location = location;
             _review = review;
             _image = image;
-        }
+        } 
     }
 }
