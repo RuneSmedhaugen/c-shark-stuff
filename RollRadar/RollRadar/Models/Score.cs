@@ -31,7 +31,7 @@
             set
             {
                 if (value < 0)
-                    throw new ArgumentException("TotalScore cannot be negative.");
+                    throw new ArgumentException("TotalScore cannot be negative");
                 _totalScore = value;
             }
         }
@@ -42,7 +42,7 @@
             set
             {
                 if (value < 0) 
-                    throw new ArgumentException("Strikes cannot be negative.");
+                    throw new ArgumentException("Strikes cannot be negative");
                 _strikes = value;
             }
         }
@@ -53,7 +53,7 @@
             set
             {
                 if (value < 0) 
-                    throw new ArgumentException("Spares cannot be negative.");
+                    throw new ArgumentException("Spares cannot be negative");
                 _spares = value;
             }
         }
@@ -64,7 +64,7 @@
             set
             {
                 if (value < 0) 
-                    throw new ArgumentException("Holes cannot be negative.");
+                    throw new ArgumentException("Holes cannot be negative");
                 _holes = value;
             }
         }

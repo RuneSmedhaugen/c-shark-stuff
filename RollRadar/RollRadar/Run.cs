@@ -5,33 +5,33 @@ namespace RollRadar
 {
     public class Run
     {
-        //Dette er bare en test for å øve på å legge ting inn i databasen, tror jeg fikk det til
-        public void CreateUser(UserService userService)
+        private BowlingBallService Bowlingball = new BowlingBallService(connectionString);
+
+        public void RunAll()
         {
-            Console.Write("Enter your email: ");
-            string email = Console.ReadLine();
+            mainMenu();
+        }
 
-            Console.Write("Enter your password: ");
-            string password = Console.ReadLine();
+        public void mainMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine($@"Welcome to RollRadar! Here is your menu:
+1: Create user
+2: Add a bowling ball
+3: Review a bowling alley
+4: See all users
+5: See all bowling balls
+6: See all bowling alley reviews
+7: Exit program");
 
-            Console.Write("Enter your name: ");
-            string name = Console.ReadLine();
+                var mainMenuAnswer = Console.ReadLine();
 
-            Console.Write("Enter your age: ");
-            string ageInput = Console.ReadLine();
-            int? age = string.IsNullOrEmpty(ageInput) ? (int?)null : int.Parse(ageInput);
-
-            Console.Write("Enter your hand (Lefty/Righty): ");
-            string hand = Console.ReadLine();
-
-            Console.Write("Enter the path to your profile picture (optional): ");
-            string profilePic = Console.ReadLine();
-
-
-            User newUser = new User(email, password, name, age, hand,
-                string.IsNullOrEmpty(profilePic) ? null : profilePic);
-
-            userService.AddUser(newUser);
+                switch (mainMenuAnswer)
+                {
+                    case "1": Bowlingball.c
+                }
+            }
         }
     }
 }

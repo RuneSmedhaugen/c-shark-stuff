@@ -11,6 +11,5 @@ class Program
         Run run = new Run();
         string connectionString = @"Server=.\SQLEXPRESS;Database=BowlingDB;Trusted_Connection=True;";
         UserService userService = new UserService(connectionString);
-        run.CreateUser(userService);
     }
 }
