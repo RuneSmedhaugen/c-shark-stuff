@@ -100,14 +100,12 @@
             set => _bowlingAlleyName = value;
         }
 
-        public Score(int userId, int totalScore, int strikes, int spares, int holes, int bowlingAlleyId, DateTime scoreDate, string image, string comments, string bowlingAlleyName)
+        public Score(int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string image, string comments, string bowlingAlleyName)
         {
-            UserId = userId;
             TotalScore = totalScore;
             Strikes = strikes;
             Spares = spares;
             Holes = holes;
-            BowlingAlleyId = bowlingAlleyId;
             ScoreDate = scoreDate;
             Image = image;
             Comments = comments;
