@@ -9,6 +9,8 @@ namespace RollRadar
     {
         private readonly string _connectionString;
         private BowlingBallService Bowlingball;
+        private UserService user;
+        private BowlingAlleyService BowlingAlley;
 
         public Run(string connectionString)
         {
@@ -39,9 +41,14 @@ namespace RollRadar
 
                 switch (mainMenuAnswer)
                 {
+                    case "1":
+                        user.CreateUser();
+                        break;
                     case "2": Bowlingball.CreateBowlingBall();
                         break;
-
+                    case "3":
+                        BowlingAlley.CreateBowlingAlley();
+                        break;
                     case "5": Bowlingball.PrintBalls();
                         break;
                 }

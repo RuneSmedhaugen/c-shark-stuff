@@ -9,6 +9,7 @@
         private int _spares;
         private int _holes;
         private int _bowlingAlleyId;
+        private string _bowlingAlleyName;
         private DateTime _scoreDate;
         private string _image;
         private string _comments;
@@ -93,9 +94,14 @@
             set => _comments = value;
         }
 
-        public Score(int id, int userId, int totalScore, int strikes, int spares, int holes, int bowlingAlleyId, DateTime scoreDate, string image, string comments)
+        public string BowlingAlleyName
         {
-            Id = id;
+            get => _bowlingAlleyName;
+            set => _bowlingAlleyName = value;
+        }
+
+        public Score(int userId, int totalScore, int strikes, int spares, int holes, int bowlingAlleyId, DateTime scoreDate, string image, string comments, string bowlingAlleyName)
+        {
             UserId = userId;
             TotalScore = totalScore;
             Strikes = strikes;
@@ -105,6 +111,7 @@
             ScoreDate = scoreDate;
             Image = image;
             Comments = comments;
+            BowlingAlleyName = bowlingAlleyName;
         }
     }
 }

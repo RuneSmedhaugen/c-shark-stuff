@@ -38,9 +38,8 @@
             set => _image = value;
         }
 
-        public BowlingAlley(int id, string name, string location, string review, string image)
+        public BowlingAlley(string name, string location, string review, string image)
         {
-            _id = id;
             _name = name;
             _location = location;
             _review = review;

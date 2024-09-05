@@ -32,5 +32,22 @@ namespace RollRadar.Services
                 }
             }
         }
+
+        public void CreateBowlingAlley()
+        {
+            Console.WriteLine("Name of the bowling alley");
+            var name = Console.ReadLine();
+            Console.WriteLine("Location:");
+            var location = Console.ReadLine();
+            Console.WriteLine("Your review:");
+            var review = Console.ReadLine();
+            Console.WriteLine("Image:");
+            var image = Console.ReadLine();
+
+            BowlingAlley newBowlingAlley = new BowlingAlley(name, location, review, image);
+
+            AddBowlingAlley(newBowlingAlley);
+
+        }
     }
 }
