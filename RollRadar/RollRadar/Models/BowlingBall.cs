@@ -24,7 +24,7 @@ namespace RollRadar.Models
         public string Type { get { return _type; } set { _type = value; } }
         public string Image { get { return _image; } set { _image = value; } }
 
-        public BowlingBall(int id, string brand, decimal? cost, string surface, int hookPotential, string type, string image)
+        public BowlingBall(string brand, decimal? cost, string surface, int hookPotential, string type, string image)
         {
             _brand = brand;
             _cost = cost;

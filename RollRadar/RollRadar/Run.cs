@@ -1,11 +1,21 @@
-﻿using RollRadar.Models;
+﻿using System.Data.Common;
+using System.Runtime.CompilerServices;
+using RollRadar.Models;
 using RollRadar.Services;
 
 namespace RollRadar
 {
     public class Run
     {
-        private BowlingBallService Bowlingball = new BowlingBallService(connectionString);
+        private readonly string _connectionString;
+        private BowlingBallService Bowlingball;
+
+        public Run(string connectionString)
+        {
+            _connectionString = connectionString;
+            Bowlingball = new BowlingBallService(_connectionString);
+        }
+
 
         public void RunAll()
         {
@@ -29,7 +39,11 @@ namespace RollRadar
 
                 switch (mainMenuAnswer)
                 {
-                    case "1": Bowlingball.c
+                    case "2": Bowlingball.CreateBowlingBall();
+                        break;
+
+                    case "5": Bowlingball.PrintBalls();
+                        break;
                 }
             }
         }

@@ -18,13 +18,13 @@ namespace RollRadar.Services
             {
                 connection.Open();
 
-                string query = @"INSERT INTO Users (Brand, Cost, Surface, HookPotential, Type, Image )" +
+                string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Image )" +
                                "VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Image)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Brand", bowlingBall.Brand);
-                    command.Parameters.AddWithValue("@Cost", bowlingBall.Cost);
+                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.Cost ?? DBNull.Value);
                     command.Parameters.AddWithValue("@Surface", bowlingBall.Surface);
                     command.Parameters.AddWithValue("@HookPotential", bowlingBall.HookPotential);
                     command.Parameters.AddWithValue("@Type", bowlingBall.Type);
@@ -41,10 +41,58 @@ namespace RollRadar.Services
             var brand = Console.ReadLine();
 
             Console.WriteLine("Write the cost of the ball:");
-            var cost = Console.ReadLine();
+            decimal cost = decimal.Parse(Console.ReadLine());
 
             Console.WriteLine("Write the surface of the ball:");
             var surface = Console.ReadLine();
+
+            Console.WriteLine("What hookpotential does the ball have (1-100):");
+            int hookPotential = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Type of ball (main, spare, reactive, urethane etc):");
+            var type = Console.ReadLine();
+
+            Console.WriteLine("Link to image:");
+            var image = Console.ReadLine();
+
+            BowlingBall newBall = new BowlingBall(brand, cost, surface, hookPotential, type, image);
+
+            AddBowlingBall(newBall);
+        }
+
+        public void PrintBalls()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT * FROM BowlingBalls";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string brand = reader["Brand"].ToString();
+                            decimal cost = reader.IsDBNull(reader.GetOrdinal("Cost"))
+                                ? 0
+                                : reader.GetDecimal(reader.GetOrdinal("Cost"));
+                            string surface = reader["Surface"].ToString();
+                            int hookPotential = reader.IsDBNull(reader.GetOrdinal("HookPotential"))
+                                ? 0
+                                : reader.GetInt32(reader.GetOrdinal("HookPotential"));
+                            string type = reader["Type"].ToString();
+                            string image = reader.IsDBNull(reader.GetOrdinal("Image"))
+                                ? "No Image"
+                                : reader["Image"].ToString();
+
+                            Console.WriteLine(
+                                $"Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Type: {type}, Image: {image}");
+                        }
+                    }
+                }
+            }
         }
     }
 }

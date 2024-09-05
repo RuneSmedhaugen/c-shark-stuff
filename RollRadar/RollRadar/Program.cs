@@ -8,8 +8,10 @@ class Program
     
     static void Main()
     {
-        Run run = new Run();
         string connectionString = @"Server=.\SQLEXPRESS;Database=BowlingDB;Trusted_Connection=True;";
+        Run run = new Run(connectionString);
         UserService userService = new UserService(connectionString);
+
+        run.RunAll();
     }
 }
