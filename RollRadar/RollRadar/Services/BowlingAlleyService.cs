@@ -40,11 +40,11 @@ namespace RollRadar.Services
             Console.WriteLine("Location:");
             var location = Console.ReadLine();
             Console.WriteLine("Your review:");
-            var review = Console.ReadLine();
+            var comments = Console.ReadLine();
             Console.WriteLine("Image:");
             var image = Console.ReadLine();
 
-            BowlingAlley newBowlingAlley = new BowlingAlley(location, name, image, review);
+            BowlingAlley newBowlingAlley = new BowlingAlley(location, name, image, comments);
 
             AddBowlingAlley(newBowlingAlley);
 

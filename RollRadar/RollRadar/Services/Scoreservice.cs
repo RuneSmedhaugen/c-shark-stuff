@@ -46,7 +46,7 @@ namespace RollRadar.Services
             Console.WriteLine("Name your score:");
             var name = Console.ReadLine();
             Console.WriteLine("Write the total score:");
-            var score = int.Parse(Console.ReadLine());
+            var totalScore = int.Parse(Console.ReadLine());
             Console.WriteLine("Strikes:");
             var strikes = int.Parse(Console.ReadLine());
             Console.WriteLine("Spares:");
@@ -62,7 +62,7 @@ namespace RollRadar.Services
             Console.WriteLine("Your own comment:");
             var comments = Console.ReadLine();
 
-            Score newScore = new Score(name, score, strikes, spares, holes, date,bowlingAlley,image,comments);
+            Score newScore = new Score(name, totalScore, strikes, spares, holes, date,bowlingAlley,image,comments);
 
             AddScore(newScore);
         }

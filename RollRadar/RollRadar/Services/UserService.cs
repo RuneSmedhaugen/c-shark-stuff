@@ -26,7 +26,7 @@ namespace RollRadar.Services
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
                     command.Parameters.AddWithValue("@Name", user.name);
-                    command.Parameters.AddWithValue("@Age", (object)user.Age ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Age", user.Age);
                     command.Parameters.AddWithValue("@Hand", user.Hand);
                     command.Parameters.AddWithValue("@ProfilePic", (object)user.image ?? DBNull.Value);
 
@@ -54,13 +54,13 @@ namespace RollRadar.Services
             string hand = Console.ReadLine();
 
             Console.WriteLine("About yourself:");
-            var about = Console.ReadLine();
+            var comments = Console.ReadLine();
 
             Console.Write("Enter the path to your profile picture (optional): ");
             string image = Console.ReadLine();
 
 
-            User newUser = new User(name, email, password, age, hand, image, about);
+            User newUser = new User(name, email, password, age, hand, image, comments);
 
             AddUser(newUser);
         }
