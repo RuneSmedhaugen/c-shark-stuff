@@ -18,17 +18,18 @@ namespace RollRadar.Services
             {
                 connection.Open();
 
-                string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Image )" +
-                               "VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Image)";
+                string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Image, Comments )" +
+                               "VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Image, @Comments)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Brand", bowlingBall.Brand);
-                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.Cost ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Surface", bowlingBall.Surface);
-                    command.Parameters.AddWithValue("@HookPotential", bowlingBall.HookPotential);
-                    command.Parameters.AddWithValue("@Type", bowlingBall.Type);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingBall.Image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Brand", bowlingBall.brand);
+                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.cost ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Surface", bowlingBall.surface);
+                    command.Parameters.AddWithValue("@HookPotential", bowlingBall.hookPotential);
+                    command.Parameters.AddWithValue("@Type", bowlingBall.type);
+                    command.Parameters.AddWithValue("@Image", (object)bowlingBall.image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Comments", (object)bowlingBall.comments ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }
@@ -37,8 +38,11 @@ namespace RollRadar.Services
 
         public void CreateBowlingBall()
         {
-            Console.WriteLine("Write the brand/name of the ball:");
+            Console.WriteLine("Write the brand of the ball:");
             var brand = Console.ReadLine();
+
+            Console.WriteLine("Name of the ball:");
+            var name = Console.ReadLine();
 
             Console.WriteLine("Write the cost of the ball:");
             decimal cost = decimal.Parse(Console.ReadLine());
@@ -49,13 +53,16 @@ namespace RollRadar.Services
             Console.WriteLine("What hookpotential does the ball have (1-100):");
             int hookPotential = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Type of ball (main, spare, reactive, urethane etc):");
+            Console.WriteLine("Coverstock of the ball (reactive, urethane etc):");
             var type = Console.ReadLine();
+
+            Console.WriteLine("Your review:");
+            var review = Console.ReadLine();
 
             Console.WriteLine("Link to image:");
             var image = Console.ReadLine();
 
-            BowlingBall newBall = new BowlingBall(brand, cost, surface, hookPotential, type, image);
+            BowlingBall newBall = new BowlingBall(brand, cost, surface, hookPotential, type, name, image, review);
 
             AddBowlingBall(newBall);
         }
@@ -86,9 +93,11 @@ namespace RollRadar.Services
                             string image = reader.IsDBNull(reader.GetOrdinal("Image"))
                                 ? "No Image"
                                 : reader["Image"].ToString();
+                            string review = reader["Comments"].ToString();
 
                             Console.WriteLine(
-                                $"Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Type: {type}, Image: {image}");
+                                @$"Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Coverstock: {type}, Image: {image}
+Review: {review}");
                         }
                     }
                 }

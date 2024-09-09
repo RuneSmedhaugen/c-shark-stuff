@@ -18,15 +18,15 @@ namespace RollRadar.Services
             {
                 connection.Open();
 
-                string query = @"INSERT INTO Users (Name, Location, Review, Image,)" +
-                               "VALUES (@Name, @Location, @Review, @Image,)";
+                string query = @"INSERT INTO BowlingAlleys (Name, Location, Review, Image)" +
+                               "VALUES (@Name, @Location, @Review, @Image)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Name",bowlingAlley.Name);
-                    command.Parameters.AddWithValue("@Location",bowlingAlley.Location);
-                    command.Parameters.AddWithValue("@Review",bowlingAlley.Review);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingAlley.Image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Name",bowlingAlley.name);
+                    command.Parameters.AddWithValue("@Location",bowlingAlley.location);
+                    command.Parameters.AddWithValue("@Review",bowlingAlley.comments);
+                    command.Parameters.AddWithValue("@Image", (object)bowlingAlley.image ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }
@@ -44,10 +44,40 @@ namespace RollRadar.Services
             Console.WriteLine("Image:");
             var image = Console.ReadLine();
 
-            BowlingAlley newBowlingAlley = new BowlingAlley(name, location, review, image);
+            BowlingAlley newBowlingAlley = new BowlingAlley(location, name, image, review);
 
             AddBowlingAlley(newBowlingAlley);
 
+        }
+
+        public void PrintAllAlleys()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT * FROM BowlingAlleys";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string name = reader["Name"].ToString();
+                            string location = reader["Location"].ToString();
+                            string review = reader["Review"].ToString();
+                            string image = reader.IsDBNull(reader.GetOrdinal("Image"))
+                                ? "No Image"
+                                : reader["Image"].ToString();
+
+
+                            Console.WriteLine(
+                                $"Name: {name}, Location: {location}, Review: {review}, Image: {image}");
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -17,6 +17,9 @@ namespace RollRadar
         {
             _connectionString = connectionString;
             Bowlingball = new BowlingBallService(_connectionString);
+            user = new UserService(_connectionString);
+            BowlingAlley = new BowlingAlleyService(_connectionString);
+            series = new Scoreservice(_connectionString);
         }
 
 
@@ -33,12 +36,12 @@ namespace RollRadar
 1: Create user
 2: Add a bowling ball
 3: Add a series
-3: Review a bowling alley
-4: See all users
-5: See all bowling balls
-6: See all series
-7: See all bowling alley reviews
-8: Exit program");
+4: Review a bowling alley
+5: See all users
+6: See all bowling balls
+7: See all series
+8: See all bowling alley reviews
+9: Exit program");
 
                 var mainMenuAnswer = Console.ReadLine();
 
@@ -55,13 +58,18 @@ namespace RollRadar
                     case "4":
                         BowlingAlley.CreateBowlingAlley();
                         break;
-                    case "5": Bowlingball.PrintBalls();
+                    case "5":
+                        user.PrintUsers();
                         break;
-                    case "6":
+                    case "6": Bowlingball.PrintBalls();
                         break;
                     case "7":
+                        series.PrintAllScores();
                         break;
                     case "8":
+                        BowlingAlley.PrintAllAlleys();
+                        break;
+                    case "9":
                         Environment.Exit(0);
                         break;
                     default:

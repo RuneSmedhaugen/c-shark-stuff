@@ -1,20 +1,12 @@
 ﻿namespace RollRadar.Models
 {
-    public class User
+    public class User : Inherit
     {
-        private int _id;
         private string _email;
         private string _passwordHash;
-        private string _name;
         private int? _age;
         private string _hand;
-        private string _profilepic;
 
-        public int Id
-        {
-            get => _id;
-            private set => _id = value;
-        }
 
         public string Email
         {
@@ -33,11 +25,6 @@
             set => _passwordHash = value;
         }
 
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
 
         public int? Age
         {
@@ -61,20 +48,12 @@
             }
         }
 
-        public string ProfilePic
-        {
-            get => _profilepic;
-            set => _profilepic = value;
-        }
-
-        public User(string email, string passwordHash, string name, int? age, string hand, string profilePic)
+        public User(string name, string email, string passwordHash, int? age, string hand, string image, string comments) : base(name, image, comments)
         {
             _email = email;
             _passwordHash = passwordHash;
-            _name = name;
             _age = age;
             _hand = hand;
-            _profilepic = profilePic;
         }
 
 

@@ -19,29 +19,32 @@ namespace RollRadar.Services
             {
                 connection.Open();
 
-                string query = "INSERT * INTO Scores(UserID, TotalScore, Strikes, Spares, Holes, BowlingAlley, ScoreDate, Image, Comments)" +
-                               "VALUES (@UserID, @TotalScore, @Strikes, @Spares, @Holes, @BowlingAlley @ScoreDate, @Image, @Comments)";
+                string query = @"INSERT INTO Scores(UserId, TotalScore, Strikes, Spares, Holes, BowlingAlley, ScoreDate, Image, Comments, Name)
+                         VALUES (@UserId, @TotalScore, @Strikes, @Spares, @Holes, @BowlingAlley, @ScoreDate, @Image, @Comments, @Name)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@UserID", (object) score.UserId ?? DBNull.Value);
-                    command.Parameters.AddWithValue("BowlingAlleyId", (object)score.BowlingAlleyId ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@TotalScore", score.TotalScore);
-                    command.Parameters.AddWithValue("@Strikes", score.Strikes);
-                    command.Parameters.AddWithValue("@Spares", score.Spares);
-                    command.Parameters.AddWithValue("@Holes", score.Holes);
-                    command.Parameters.AddWithValue("@BowlingAlley", score.BowlingAlleyId);
-                    command.Parameters.AddWithValue("@ScoreDate", score.ScoreDate);
-                    command.Parameters.AddWithValue("@Image", score.Image);
-                    command.Parameters.AddWithValue("@Comments", score.Comments);
+                    command.Parameters.AddWithValue("@UserId", (object)score.userId ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@TotalScore", score.totalScore);
+                    command.Parameters.AddWithValue("@Strikes", score.strikes);
+                    command.Parameters.AddWithValue("@Spares", score.spares);
+                    command.Parameters.AddWithValue("@Holes", score.holes);
+                    command.Parameters.AddWithValue("@BowlingAlley", (object)score.bowlingAlleyId ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@ScoreDate", score.scoreDate);
+                    command.Parameters.AddWithValue("@Image", (object)score.image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Comments", (object)score.comments ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Name", (object)score.name ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }
             }
         }
 
+
         public void CreateScore()
         {
+            Console.WriteLine("Name your score:");
+            var name = Console.ReadLine();
             Console.WriteLine("Write the total score:");
             var score = int.Parse(Console.ReadLine());
             Console.WriteLine("Strikes:");
@@ -59,9 +62,41 @@ namespace RollRadar.Services
             Console.WriteLine("Your own comment:");
             var comments = Console.ReadLine();
 
-            Score newScore = new Score(score, strikes, spares, holes, date, image, comments, bowlingAlley);
+            Score newScore = new Score(name, score, strikes, spares, holes, date,bowlingAlley,image,comments);
 
             AddScore(newScore);
+        }
+
+        public void PrintAllScores()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT * FROM Scores";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int totalScore = reader.GetInt32(reader.GetOrdinal("TotalScore"));
+                            int strikes = reader.GetInt32(reader.GetOrdinal("Strikes"));
+                            int spares = reader.GetInt32(reader.GetOrdinal("Spares"));
+                            int holes = reader.GetInt32(reader.GetOrdinal("Holes"));
+                            DateTime scoreDate = reader.GetDateTime(reader.GetOrdinal("ScoreDate"));
+                            string image = reader["Image"].ToString();
+                            string comments = reader["Comments"].ToString();
+                            string bowlingAlley = reader["BowlingAlley"].ToString();
+
+                            Console.WriteLine(
+                                $"Score: {totalScore}, Strikes: {strikes}, Spares: {spares}, Holes: {holes}, Date played: {scoreDate}, Image: {image}, Alley: {bowlingAlley}" +
+                                $"Comments: {comments}");
+                        }
+                    }
+                }
+            }
         }
     }
 }

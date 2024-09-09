@@ -1,8 +1,8 @@
 ﻿namespace RollRadar.Models
 {
-    public class Score
+    public class Score : Inherit
     {
-        private int _id;
+      
         private int _userId;
         private int _totalScore;
         private int _strikes;
@@ -11,22 +11,15 @@
         private int _bowlingAlleyId;
         private string _bowlingAlleyName;
         private DateTime _scoreDate;
-        private string _image;
-        private string _comments;
 
-        public int Id
-        {
-            get => _id;
-            private set => _id = value;
-        }
 
-        public int UserId
+        public int userId
         {
             get => _userId;
             set => _userId = value;
         }
 
-        public int TotalScore
+        public int totalScore
         {
             get => _totalScore;
             set
@@ -37,7 +30,7 @@
             }
         }
 
-        public int Strikes
+        public int strikes
         {
             get => _strikes;
             set
@@ -48,7 +41,7 @@
             }
         }
 
-        public int Spares
+        public int spares
         {
             get => _spares;
             set
@@ -59,7 +52,7 @@
             }
         }
 
-        public int Holes
+        public int holes
         {
             get => _holes;
             set
@@ -70,46 +63,33 @@
             }
         }
 
-        public int BowlingAlleyId
+        public int bowlingAlleyId
         {
             get => _bowlingAlleyId;
             set => _bowlingAlleyId = value;
         }
 
-        public DateTime ScoreDate
+        public DateTime scoreDate
         {
             get => _scoreDate;
             set => _scoreDate = value;
         }
 
-        public string Image
-        {
-            get => _image;
-            set => _image = value;
-        }
 
-        public string Comments
-        {
-            get => _comments;
-            set => _comments = value;
-        }
-
-        public string BowlingAlleyName
+        public string bowlingAlleyName
         {
             get => _bowlingAlleyName;
             set => _bowlingAlleyName = value;
         }
 
-        public Score(int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string image, string comments, string bowlingAlleyName)
+        public Score(string name, int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string bowlingAlleyName, string image, string comments) : base(name, image, comments)
         {
-            TotalScore = totalScore;
-            Strikes = strikes;
-            Spares = spares;
-            Holes = holes;
-            ScoreDate = scoreDate;
-            Image = image;
-            Comments = comments;
-            BowlingAlleyName = bowlingAlleyName;
+            this.totalScore = totalScore;
+            this.strikes = strikes;
+            this.spares = spares;
+            this.holes = holes;
+            this.scoreDate = scoreDate;
+            this.bowlingAlleyName = bowlingAlleyName;
         }
     }
 }
