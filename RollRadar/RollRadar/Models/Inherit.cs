@@ -1,4 +1,4 @@
-﻿namespace RollRadar
+﻿namespace RollRadar.Models
 {
     public class Inherit
     {
@@ -22,7 +22,7 @@
 
         public int id
         {
-            get {return Id; }
+            get { return Id; }
             set { Id = value; }
         }
 
@@ -48,10 +48,10 @@
 
         public Inherit(string name, string image, string comments)
         {
-            this.name =name;
-            this.location = image;
+            this.name = name;
+            location = image;
             this.comments = comments;
         }
-        
+
     }
 }
