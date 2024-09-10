@@ -49,7 +49,7 @@
         public Inherit(string name, string image, string comments)
         {
             this.name = name;
-            location = image;
+            this.image = image;
             this.comments = comments;
         }
 

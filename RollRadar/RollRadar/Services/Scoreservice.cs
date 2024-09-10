@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using RollRadar.Models;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace RollRadar.Services
 {
@@ -56,7 +57,7 @@ namespace RollRadar.Services
             Console.WriteLine("Bowling Alley:");
             var bowlingAlley = Console.ReadLine();
             Console.WriteLine("Date played (YYYY-MM-DD):");
-            var date = DateTime.Parse(Console.ReadLine());
+            DateTime date = DateTime.Parse(Console.ReadLine());
             Console.WriteLine("Image:");
             var image = Console.ReadLine();
             Console.WriteLine("Your own comment:");

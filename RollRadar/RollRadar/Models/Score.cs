@@ -1,4 +1,6 @@
-﻿namespace RollRadar.Models
+﻿using System.Runtime.InteropServices.JavaScript;
+
+namespace RollRadar.Models
 {
     public class Score : Inherit
     {
