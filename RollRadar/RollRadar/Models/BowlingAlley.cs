@@ -13,7 +13,7 @@
 
         public BowlingAlley(string location, string name, string image, string comments) : base(name, image, comments)
         {
-            _location = location;
+            this.Location = location;
         } 
     }
 }

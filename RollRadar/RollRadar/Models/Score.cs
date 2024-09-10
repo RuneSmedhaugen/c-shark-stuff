@@ -22,45 +22,25 @@
         public int totalScore
         {
             get => _totalScore;
-            set
-            {
-                if (value < 0)
-                    throw new ArgumentException("TotalScore cannot be negative");
-                _totalScore = value;
-            }
+            set => _totalScore = value;
         }
 
         public int strikes
         {
             get => _strikes;
-            set
-            {
-                if (value < 0) 
-                    throw new ArgumentException("Strikes cannot be negative");
-                _strikes = value;
-            }
+            set => _strikes = value;
         }
 
         public int spares
         {
             get => _spares;
-            set
-            {
-                if (value < 0) 
-                    throw new ArgumentException("Spares cannot be negative");
-                _spares = value;
-            }
+            set => _spares = value;
         }
 
         public int holes
         {
             get => _holes;
-            set
-            {
-                if (value < 0) 
-                    throw new ArgumentException("Holes cannot be negative");
-                _holes = value;
-            }
+            set => _holes = value;
         }
 
         public int bowlingAlleyId
