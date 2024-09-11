@@ -12,7 +12,7 @@ namespace RollRadar.Services
             _connectionString = connectionString;
         }
 
-        public void AddBowlingAlley(BowlingAlley bowlingAlley) 
+        public void AddBowlingAlley(BowlingAlley bowlingAlley)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -23,10 +23,10 @@ namespace RollRadar.Services
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Name",bowlingAlley.name);
-                    command.Parameters.AddWithValue("@Location",bowlingAlley.location);
-                    command.Parameters.AddWithValue("@Review",bowlingAlley.comments);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingAlley.image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Name", bowlingAlley.Name);
+                    command.Parameters.AddWithValue("@Location", bowlingAlley.location);
+                    command.Parameters.AddWithValue("@Review", bowlingAlley.Comments);
+                    command.Parameters.AddWithValue("@Image", (object)bowlingAlley.Image ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }
@@ -35,19 +35,48 @@ namespace RollRadar.Services
 
         public void CreateBowlingAlley()
         {
-            Console.WriteLine("Name of the bowling alley");
-            var name = Console.ReadLine();
-            Console.WriteLine("Location:");
-            var location = Console.ReadLine();
-            Console.WriteLine("Your review:");
-            var comments = Console.ReadLine();
-            Console.WriteLine("Image:");
+            string name;
+            do
+            {
+                Console.WriteLine("Name of the bowling alley:");
+                name = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    Console.WriteLine("Please provide a name of the bowling alley you are reviewing.");
+                }
+            } while (string.IsNullOrWhiteSpace(name));
+
+            string location;
+            do
+            {
+                Console.WriteLine("Location:");
+                location = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    Console.WriteLine("Please provide a location for the bowling alley.");
+                }
+            } while (string.IsNullOrWhiteSpace(location));
+
+            string comments;
+            do
+            {
+                Console.WriteLine("Your review:");
+                comments = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(comments))
+                {
+                    Console.WriteLine("Please write a review of the bowling alley.");
+                }
+            } while (string.IsNullOrWhiteSpace(comments));
+
+            Console.WriteLine("Image url (Optional):");
             var image = Console.ReadLine();
 
             BowlingAlley newBowlingAlley = new BowlingAlley(location, name, image, comments);
 
             AddBowlingAlley(newBowlingAlley);
-
         }
 
         public void PrintAllAlleys()

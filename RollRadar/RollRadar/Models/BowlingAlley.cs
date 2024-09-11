@@ -2,18 +2,18 @@
 {
     public class BowlingAlley : Inherit
     {
-        private string _location;
+        private string Location;
 
-        public string Location
+        public string location
         {
-            get => _location;
-            set => _location = value;
+            get { return Location; }
+            set { Location = value; }
         }
 
 
         public BowlingAlley(string location, string name, string image, string comments) : base(name, image, comments)
         {
-            this.Location = location;
+            this.location = location;
         } 
     }
 }

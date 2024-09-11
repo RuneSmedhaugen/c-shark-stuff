@@ -25,10 +25,10 @@ namespace RollRadar.Services
                 {
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                    command.Parameters.AddWithValue("@Name", user.name);
+                    command.Parameters.AddWithValue("@Name", user.Name);
                     command.Parameters.AddWithValue("@Age", user.Age);
                     command.Parameters.AddWithValue("@Hand", user.Hand);
-                    command.Parameters.AddWithValue("@ProfilePic", (object)user.image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@ProfilePic", (object)user.Image ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }

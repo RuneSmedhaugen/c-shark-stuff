@@ -25,16 +25,16 @@ namespace RollRadar.Services
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@UserId", (object)score.userId ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@TotalScore", score.totalScore);
-                    command.Parameters.AddWithValue("@Strikes", score.strikes);
-                    command.Parameters.AddWithValue("@Spares", score.spares);
-                    command.Parameters.AddWithValue("@Holes", score.holes);
-                    command.Parameters.AddWithValue("@BowlingAlley", (object)score.bowlingAlleyId ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@ScoreDate", score.scoreDate);
-                    command.Parameters.AddWithValue("@Image", (object)score.image ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Comments", (object)score.comments ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Name", (object)score.name ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@UserId", (object)score.UserId ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@TotalScore", score.TotalScore);
+                    command.Parameters.AddWithValue("@Strikes", score.Strikes);
+                    command.Parameters.AddWithValue("@Spares", score.Spares);
+                    command.Parameters.AddWithValue("@Holes", score.Holes);
+                    command.Parameters.AddWithValue("@BowlingAlley", (object)score.BowlingAlleyId ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@ScoreDate", score.ScoreDate);
+                    command.Parameters.AddWithValue("@Image", (object)score.Image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Comments", (object)score.Comments ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Name", (object)score.Name ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }

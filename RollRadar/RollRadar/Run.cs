@@ -8,27 +8,27 @@ namespace RollRadar
     public class Run
     {
         private readonly string _connectionString;
-        private BowlingBallService Bowlingball;
-        private UserService user;
-        private BowlingAlleyService BowlingAlley;
-        private Scoreservice series;
+        private BowlingBallService _bowlingball;
+        private UserService _user;
+        private BowlingAlleyService _bowlingAlley;
+        private Scoreservice _series;
 
         public Run(string connectionString)
         {
             _connectionString = connectionString;
-            Bowlingball = new BowlingBallService(_connectionString);
-            user = new UserService(_connectionString);
-            BowlingAlley = new BowlingAlleyService(_connectionString);
-            series = new Scoreservice(_connectionString);
+            _bowlingball = new BowlingBallService(_connectionString);
+            _user = new UserService(_connectionString);
+            _bowlingAlley = new BowlingAlleyService(_connectionString);
+            _series = new Scoreservice(_connectionString);
         }
 
 
         public void RunAll()
         {
-            mainMenu();
+            MainMenu();
         }
 
-        public void mainMenu()
+        public void MainMenu()
         {
             while (true)
             {
@@ -48,26 +48,26 @@ namespace RollRadar
                 switch (mainMenuAnswer)
                 {
                     case "1":
-                        user.CreateUser();
+                        _user.CreateUser();
                         break;
-                    case "2": Bowlingball.CreateBowlingBall();
+                    case "2": _bowlingball.CreateBowlingBall();
                         break;
                     case "3":
-                        series.CreateScore();
+                        _series.CreateScore();
                         break;
                     case "4":
-                        BowlingAlley.CreateBowlingAlley();
+                        _bowlingAlley.CreateBowlingAlley();
                         break;
                     case "5":
-                        user.PrintUsers();
+                        _user.PrintUsers();
                         break;
-                    case "6": Bowlingball.PrintBalls();
+                    case "6": _bowlingball.PrintBalls();
                         break;
                     case "7":
-                        series.PrintAllScores();
+                        _series.PrintAllScores();
                         break;
                     case "8":
-                        BowlingAlley.PrintAllAlleys();
+                        _bowlingAlley.PrintAllAlleys();
                         break;
                     case "9":
                         Environment.Exit(0);

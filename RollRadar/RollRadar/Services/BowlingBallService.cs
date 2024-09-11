@@ -23,13 +23,13 @@ namespace RollRadar.Services
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Brand", bowlingBall.brand);
-                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.cost ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Surface", bowlingBall.surface);
-                    command.Parameters.AddWithValue("@HookPotential", bowlingBall.hookPotential);
-                    command.Parameters.AddWithValue("@Type", bowlingBall.type);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingBall.image ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Comments", (object)bowlingBall.comments ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Brand", bowlingBall.Brand);
+                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.Cost ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Surface", bowlingBall.Surface);
+                    command.Parameters.AddWithValue("@HookPotential", bowlingBall.HookPotential);
+                    command.Parameters.AddWithValue("@Type", bowlingBall.Type);
+                    command.Parameters.AddWithValue("@Image", (object)bowlingBall.Image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Comments", (object)bowlingBall.Comments ?? DBNull.Value);
 
                     command.ExecuteNonQuery();
                 }

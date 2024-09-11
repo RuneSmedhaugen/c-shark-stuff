@@ -2,55 +2,48 @@
 {
     public class Inherit
     {
-        private string Name;
-        private string Location;
-        private int Id;
-        private string Image;
-        private string Comments;
+        private string _name;
+        private string _location;
+        private int _id;
+        private string _image;
+        private string _comments;
 
-        public string name
+        public string Name
         {
-            get { return Name; }
-            set { Name = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
-        public string location
+        public int Id
         {
-            get { return Location; }
-            set { Location = value; }
+            get { return _id; }
+            set { _id = value; }
         }
 
-        public int id
+        public string Image
         {
-            get { return Id; }
-            set { Id = value; }
+            get { return _image; }
+            set { _image = value; }
         }
 
-        public string image
+        public string Comments
         {
-            get { return Image; }
-            set { Image = value; }
-        }
-
-        public string comments
-        {
-            get { return Comments; }
-            set { Comments = value; }
+            get { return _comments; }
+            set { _comments = value; }
         }
 
         public Inherit(string name, string location, string image, string comments)
         {
-            this.name = name;
-            this.location = location;
-            this.image = image;
-            this.comments = comments;
+            this.Name = name;
+            this.Image = image;
+            this.Comments = comments;
         }
 
         public Inherit(string name, string image, string comments)
         {
-            this.name = name;
-            this.image = image;
-            this.comments = comments;
+            this.Name = name;
+            this.Image = image;
+            this.Comments = comments;
         }
 
     }
