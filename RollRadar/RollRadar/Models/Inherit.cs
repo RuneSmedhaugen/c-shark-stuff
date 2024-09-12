@@ -3,7 +3,6 @@
     public class Inherit
     {
         private string _name;
-        private string _location;
         private int _id;
         private string _image;
         private string _comments;
@@ -32,19 +31,11 @@
             set { _comments = value; }
         }
 
-        public Inherit(string name, string location, string image, string comments)
-        {
-            this.Name = name;
-            this.Image = image;
-            this.Comments = comments;
-        }
-
         public Inherit(string name, string image, string comments)
         {
-            this.Name = name;
-            this.Image = image;
-            this.Comments = comments;
+            _image = image;
+            _comments = comments;
+            _name = name;
         }
-
     }
 }

@@ -26,7 +26,7 @@ namespace RollRadar.Services
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
                     command.Parameters.AddWithValue("@Name", user.Name);
-                    command.Parameters.AddWithValue("@Age", user.Age);
+                    command.Parameters.AddWithValue("@Age", (object)user.Age ?? DBNull.Value);
                     command.Parameters.AddWithValue("@Hand", user.Hand);
                     command.Parameters.AddWithValue("@ProfilePic", (object)user.Image ?? DBNull.Value);
 
@@ -37,27 +37,33 @@ namespace RollRadar.Services
 
         public void CreateUser()
         {
-            Console.Write("Enter your email: ");
-            string email = Console.ReadLine();
+            string GetValidInput(string prompt)
+            {
+                string input;
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    input = Console.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(input))
+                    {
+                        return input;
+                    }
+                    Console.WriteLine("Please provide a valid input.");
+                }
+            }
 
-            Console.Write("Enter your password: ");
-            string password = Console.ReadLine();
+            string email = GetValidInput("Enter your email:");
+            string password = GetValidInput("Enter your password:");
+            string name = GetValidInput("Enter your name:");
+            string hand = GetValidInput("Enter your hand (Lefty/Righty):");
+            string comments = GetValidInput("About yourself:");
 
-            Console.Write("Enter your name: ");
-            string name = Console.ReadLine();
-
-            Console.Write("Enter your age: ");
+            Console.Write("Enter your age (Optional): ");
             string ageInput = Console.ReadLine();
             int? age = string.IsNullOrEmpty(ageInput) ? (int?)null : int.Parse(ageInput);
 
-            Console.Write("Enter your hand (Lefty/Righty): ");
-            string hand = Console.ReadLine();
-
-            Console.WriteLine("About yourself:");
-            var comments = Console.ReadLine();
-
-            Console.Write("Enter the path to your profile picture (optional): ");
-            string image = Console.ReadLine();
+            Console.Write("Enter the path to your profile picture (Optional): ");
+            string? image = Console.ReadLine();
 
 
             User newUser = new User(name, email, password, age, hand, image, comments);

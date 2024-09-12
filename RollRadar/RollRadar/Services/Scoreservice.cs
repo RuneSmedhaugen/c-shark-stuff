@@ -44,24 +44,59 @@ namespace RollRadar.Services
 
         public void CreateScore()
         {
-            Console.WriteLine("Name your score:");
-            var name = Console.ReadLine();
-            Console.WriteLine("Write the total score:");
-            var totalScore = int.Parse(Console.ReadLine());
-            Console.WriteLine("Strikes:");
-            var strikes = int.Parse(Console.ReadLine());
-            Console.WriteLine("Spares:");
-            var spares = int.Parse(Console.ReadLine());
-            Console.WriteLine("Holes:");
-            var holes = int.Parse(Console.ReadLine());
-            Console.WriteLine("Bowling Alley:");
-            var bowlingAlley = Console.ReadLine();
-            Console.WriteLine("Date played (YYYY-MM-DD):");
-            DateTime date = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Image:");
-            var image = Console.ReadLine();
-            Console.WriteLine("Your own comment:");
-            var comments = Console.ReadLine();
+            string GetValidInput(string prompt)
+            {
+                string input;
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    input = Console.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(input))
+                    {
+                        return input;
+                    }
+                    Console.WriteLine("Please provide a valid input.");
+                }
+            }
+
+            int GetValidIntInput(string prompt)
+            {
+                int result;
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    string input = Console.ReadLine();
+                    if (int.TryParse(input, out result))
+                    {
+                        return result;
+                    }
+                    Console.WriteLine("Please provide a valid number.");
+                }
+            }
+
+            string name = GetValidInput("Name your score:");
+            int totalScore = GetValidIntInput("Write the total score:");
+            int strikes = GetValidIntInput("Strikes:");
+            int spares = GetValidIntInput("Spares:");
+            int holes = GetValidIntInput("Holes:");
+            string bowlingAlley = GetValidInput("Bowling Alley played in:");
+
+            DateTime date;
+            while (true)
+            {
+                Console.WriteLine("Date played (DD-MM-YYYY):");
+                if (DateTime.TryParseExact(Console.ReadLine(), "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out date))
+                {
+                    break;
+                }
+                Console.WriteLine("Please provide a valid date in DD-MM-YYYY format.");
+            }
+
+            Console.WriteLine("Image (Optional):");
+            string image = Console.ReadLine();
+
+            Console.WriteLine("Comments (Optional):");
+            string comments = Console.ReadLine();
 
             Score newScore = new Score(name, totalScore, strikes, spares, holes, date,bowlingAlley,image,comments);
 
@@ -91,8 +126,10 @@ namespace RollRadar.Services
                             string comments = reader["Comments"].ToString();
                             string bowlingAlley = reader["BowlingAlley"].ToString();
 
+                            string formattedDate = scoreDate.ToString("dd-MM-yyyy");
+
                             Console.WriteLine(
-                                $"Score: {totalScore}, Strikes: {strikes}, Spares: {spares}, Holes: {holes}, Date played: {scoreDate}, Image: {image}, Alley: {bowlingAlley}" +
+                                $"Score: {totalScore}, Strikes: {strikes}, Spares: {spares}, Holes: {holes}, Date played: {formattedDate}, Image: {image}, Alley: {bowlingAlley}" +
                                 $"Comments: {comments}");
                         }
                     }

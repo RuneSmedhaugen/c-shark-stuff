@@ -29,11 +29,9 @@ namespace RollRadar.Models
 
         public BowlingBall(string brand, decimal? cost, string surface, int hookPotential, string type, string name, string image, string comments) : base(name, image, comments)
         {
-            this.Brand = brand;
-            this.Cost = cost;
-            this.Surface = surface;
-            this.HookPotential = hookPotential;
-            this.Type = type;
+            _brand = brand;
+            _surface = surface;
+            _type = type;
         }
     }
 }

@@ -2,17 +2,40 @@
 {
     public class User : Inherit
     {
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public int? Age { get; set; }
-        public string Hand { get; set; }
+        private string _email;
+        private string _passwordHash;
+        private int? _age;
+        private string _hand;
 
+        public string Email
+        {
+            get => _email;
+            set => _email = value;
+        }
+
+        public string PasswordHash
+        {
+            get => _passwordHash;
+            set => _passwordHash = value;
+        }
+
+        public int? Age
+        {
+            get => _age;
+            set => _age = value;
+        }
+
+        public string Hand
+        {
+            get => _hand;
+            set => _hand = value;
+        }
         public User(string name, string email, string passwordHash, int? age, string hand, string image, string comments) : base(name, image, comments)
         {
-            Email = email;
-            PasswordHash = passwordHash;
-            Age = age;
-            Hand = hand;
+            this.Email = email;
+            this.PasswordHash = passwordHash;
+            this.Age = age;
+            this.Hand = hand;
         }
     }
 }

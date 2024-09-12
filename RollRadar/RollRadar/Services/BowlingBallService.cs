@@ -38,28 +38,59 @@ namespace RollRadar.Services
 
         public void CreateBowlingBall()
         {
-            Console.WriteLine("Write the brand of the ball:");
-            var brand = Console.ReadLine();
+            string GetValidInput(string prompt)
+            {
+                string input;
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    input = Console.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(input))
+                    {
+                        return input;
+                    }
+                    Console.WriteLine("Please provide a valid input.");
+                }
+            }
 
-            Console.WriteLine("Name of the ball:");
-            var name = Console.ReadLine();
+            decimal? GetOptionalDecimal(string prompt)
+            {
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    var input = Console.ReadLine();
+                    if (string.IsNullOrWhiteSpace(input)) return null;
+                    if (decimal.TryParse(input, out decimal result)) return result;
+                    Console.WriteLine("Please provide a valid number.");
+                }
+                
+            }
 
-            Console.WriteLine("Write the cost of the ball:");
-            decimal cost = decimal.Parse(Console.ReadLine());
+            int GetIntRange(string prompt, int min, int max)
+            {
+                int value;
+                while (true)
+                {
+                    Console.WriteLine(prompt);
+                    var input = Console.ReadLine();
+                    if (int.TryParse(input, out value) && value >= min && value <= max)
+                    {
+                        return value;
+                    }
 
-            Console.WriteLine("Write the surface of the ball:");
-            var surface = Console.ReadLine();
+                    Console.WriteLine($"please write a number between {min} and {max}.");
+                }
+            }
 
-            Console.WriteLine("What hookpotential does the ball have (1-100):");
-            int hookPotential = int.Parse(Console.ReadLine());
+            string brand = GetValidInput("Write the brand of the ball:");
+            string name = GetValidInput("Write the name of the ball:");
+            decimal? cost = GetOptionalDecimal("Write the cost of the ball (Optional):");
+            string surface = GetValidInput("Write the surface of the ball:");
+            int hookPotential = GetIntRange("Write the hook potential of the ball (0-100):", 0, 100);
+            string type = GetValidInput("Coverstock of the ball:");
+            string review = GetValidInput("Your review of the ball:");
 
-            Console.WriteLine("Coverstock of the ball (reactive, urethane etc):");
-            var type = Console.ReadLine();
-
-            Console.WriteLine("Your review:");
-            var review = Console.ReadLine();
-
-            Console.WriteLine("Link to image:");
+            Console.WriteLine("Link to image(Optional):");
             var image = Console.ReadLine();
 
             BowlingBall newBall = new BowlingBall(brand, cost, surface, hookPotential, type, name, image, review);

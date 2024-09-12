@@ -4,19 +4,55 @@ namespace RollRadar.Models
 {
     public class Score : Inherit
     {
-        public int UserId { get; set; }
+        private int _userId;
+        private int _totalScore;
+        private int _strikes;
+        private int _spares;
+        private int _holes;
+        private int _bowlingAlleyId;
+        private DateTime _scoreDate;
 
-        public int TotalScore { get; set; }
+        public int UserId
+        {
+            get => _userId;
+            set => _userId = value;
+        }
 
-        public int Strikes { get; set; }
+        public int TotalScore
+        {
+            get => _totalScore;
+            set => _totalScore = value;
+        }
 
-        public int Spares { get; set; }
+        public int Strikes
+        {
+            get => _strikes;
+            set => _strikes = value;
+        }
 
-        public int Holes { get; set; }
+        public int Spares
+        {
+            get => _spares;
+            set => _spares = value;
+        }
 
-        public int BowlingAlleyId { get; set; }
+        public int Holes
+        {
+            get => _holes;
+            set => _holes = value;
+        }
 
-        public DateTime ScoreDate { get; set; }
+        public int BowlingAlleyId
+        {
+            get => _bowlingAlleyId;
+            set => _bowlingAlleyId = value;
+        }
+
+        public DateTime ScoreDate
+        {
+            get => _scoreDate;
+            set => _scoreDate = value;
+        }
 
 
         public string BowlingAlleyName { get; set; }
