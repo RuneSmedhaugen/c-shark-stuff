@@ -18,8 +18,8 @@ namespace RollRadar.Services
             {
                 connection.Open();
 
-                string query = @"INSERT INTO Users (Email, PasswordHash, Name, Age, Hand, ProfilePic)" +
-                                "VALUES (@Email, @PasswordHash, @Name, @Age, @Hand, @ProfilePic)";
+                string query = @"INSERT INTO Users (Email, PasswordHash, Name, Age, Hand, ProfilePic, About)" +
+                                "VALUES (@Email, @PasswordHash, @Name, @Age, @Hand, @ProfilePic, @About)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -29,6 +29,8 @@ namespace RollRadar.Services
                     command.Parameters.AddWithValue("@Age", (object)user.Age ?? DBNull.Value);
                     command.Parameters.AddWithValue("@Hand", user.Hand);
                     command.Parameters.AddWithValue("@ProfilePic", (object)user.Image ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@About", (object)user.Comments ?? DBNull.Value);
+
 
                     command.ExecuteNonQuery();
                 }
@@ -88,15 +90,14 @@ namespace RollRadar.Services
                             string email = reader["Email"].ToString();
                             string passwordHash = reader["PasswordHash"].ToString();
                             string name = reader["Name"].ToString();
-                            int age = reader.GetInt32(reader.GetOrdinal("Age"));
-                            string hand = reader["Hand"].ToString();
-                            string profilePic = reader.IsDBNull(reader.GetOrdinal("ProfilePic"))
-                                ? "No Image"
-                                : reader["ProfilePic"].ToString();
+                            int? age = reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age"));
+                            string hand = reader.IsDBNull(reader.GetOrdinal("Hand")) ? "N/A" : reader["Hand"].ToString();
+                            string image = reader.IsDBNull(reader.GetOrdinal("ProfilePic")) ? "No Image" : reader["ProfilePic"].ToString();
+                            string comments = reader.IsDBNull(reader.GetOrdinal("About")) ? "No Information" : reader["About"].ToString();
 
 
                             Console.WriteLine(
-                                $"Email: {email}, Password: {passwordHash}, Age: {age}, Hand: {hand}, Profile Picture: {profilePic}");
+                                $"Email: {email}, Password: {passwordHash}, Age: {age}, Hand: {hand}, Profile Picture: {image}, About: {comments}");
                         }
                     }
                 }
