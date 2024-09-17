@@ -73,7 +73,7 @@ namespace RollRadar
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("1-7 fool, try again");
+                        Console.WriteLine("1-9, try again");
                         break;
                 }
             }

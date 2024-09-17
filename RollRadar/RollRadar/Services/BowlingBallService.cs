@@ -3,136 +3,76 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class BowlingBallService
+    public abstract class BowlingBallService : BaseService<BowlingBall>
     {
         private readonly string _connectionString;
 
-        public BowlingBallService(string connectionString)
+        public BowlingBallService(string connectionString) : base(connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public void AddBowlingBall(BowlingBall bowlingBall)
+        public void AddBowlingBall(BowlingBall ball)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Name, Image, Comments)
+                         VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Name, @Image, @Comments)";
+
+            var parameters = new Dictionary<string, object?>
             {
-                connection.Open();
+                { "@Brand", ball.Brand },
+                { "@Cost", ball.Cost },
+                { "@Surface", ball.Surface },
+                { "@HookPotential", ball.HookPotential },
+                { "@Type", ball.Type },
+                { "@Name", ball.Name },
+                { "@Image", ball.Image },
+                { "@Comments", ball.Comments }
+            };
 
-                string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Image, Comments )" +
-                               "VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Image, @Comments)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Brand", bowlingBall.Brand);
-                    command.Parameters.AddWithValue("@Cost", (object)bowlingBall.Cost ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Surface", bowlingBall.Surface);
-                    command.Parameters.AddWithValue("@HookPotential", bowlingBall.HookPotential);
-                    command.Parameters.AddWithValue("@Type", bowlingBall.Type);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingBall.Image ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Comments", (object)bowlingBall.Comments ?? DBNull.Value);
-
-                    command.ExecuteNonQuery();
-                }
-            }
+            Add(query, parameters);
         }
 
-        public void CreateBowlingBall()
+        public void PrintBowlingBalls()
         {
-            string GetValidInput(string prompt)
+            string query = "SELECT * FROM BowlingBalls";
+
+            Print(query, reader =>
             {
-                string input;
-                while (true)
-                {
-                    Console.WriteLine(prompt);
-                    input = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(input))
-                    {
-                        return input;
-                    }
-                    Console.WriteLine("Please provide a valid input.");
-                }
-            }
-
-            decimal? GetOptionalDecimal(string prompt)
-            {
-                while (true)
-                {
-                    Console.WriteLine(prompt);
-                    var input = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(input)) return null;
-                    if (decimal.TryParse(input, out decimal result)) return result;
-                    Console.WriteLine("Please provide a valid number.");
-                }
-                
-            }
-
-            int GetIntRange(string prompt, int min, int max)
-            {
-                int value;
-                while (true)
-                {
-                    Console.WriteLine(prompt);
-                    var input = Console.ReadLine();
-                    if (int.TryParse(input, out value) && value >= min && value <= max)
-                    {
-                        return value;
-                    }
-
-                    Console.WriteLine($"please write a number between {min} and {max}.");
-                }
-            }
-
-            string brand = GetValidInput("Write the brand of the ball:");
-            string name = GetValidInput("Write the name of the ball:");
-            decimal? cost = GetOptionalDecimal("Write the cost of the ball (Optional):");
-            string surface = GetValidInput("Write the surface of the ball:");
-            int hookPotential = GetIntRange("Write the hook potential of the ball (0-100):", 0, 100);
-            string type = GetValidInput("Coverstock of the ball:");
-            string review = GetValidInput("Your review of the ball:");
-
-            Console.WriteLine("Link to image(Optional):");
-            var image = Console.ReadLine();
-
-            BowlingBall newBall = new BowlingBall(brand, cost, surface, hookPotential, type, name, image, review);
-
-            AddBowlingBall(newBall);
+                Console.WriteLine($"Brand: {reader["Brand"]}, Name: {reader["Name"]}, Cost: {reader["Cost"]}, " +
+                                  $"Surface: {reader["Surface"]}, HookPotential: {reader["HookPotential"]}, " +
+                                  $"Type: {reader["Type"]}, Image: {reader["Image"]}, Comments: {reader["Comments"]}");
+            });
         }
 
-        public void PrintBalls()
+        public void EditBowlingBall(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            string query = "SELECT * FROM BowlingBalls WHERE ID = @ID";
+            var parameters = new Dictionary<string, object?>
             {
-                connection.Open();
+                { "@ID", id }
+            };
 
-                string query = @"SELECT * FROM BowlingBalls";
+            BowlingBall ball = GetSingle(query, parameters, reader =>
+            {
+                return new BowlingBall(
+                    reader["Brand"].ToString(),
+                    reader.IsDBNull(reader.GetOrdinal("Cost")) ? null : reader.GetDecimal(reader.GetOrdinal("Cost")),
+                    reader["Surface"].ToString(),
+                    reader.GetInt32(reader.GetOrdinal("HookPotential")),
+                    reader["Type"].ToString(),
+                    reader["Name"].ToString(),
+                    reader["Image"].ToString(),
+                    reader["Comments"].ToString()
+                );
+            });
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string brand = reader["Brand"].ToString();
-                            decimal cost = reader.IsDBNull(reader.GetOrdinal("Cost"))
-                                ? 0
-                                : reader.GetDecimal(reader.GetOrdinal("Cost"));
-                            string surface = reader["Surface"].ToString();
-                            int hookPotential = reader.IsDBNull(reader.GetOrdinal("HookPotential"))
-                                ? 0
-                                : reader.GetInt32(reader.GetOrdinal("HookPotential"));
-                            string type = reader["Type"].ToString();
-                            string image = reader.IsDBNull(reader.GetOrdinal("Image"))
-                                ? "No Image"
-                                : reader["Image"].ToString();
-                            string review = reader["Comments"].ToString();
-
-                            Console.WriteLine(
-                                @$"Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Coverstock: {type}, Image: {image}
-Review: {review}");
-                        }
-                    }
-                }
+            if (ball == null)
+            {
+                Console.WriteLine($"No record found with ID {id}");
+                return;
             }
+
+
         }
     }
 }

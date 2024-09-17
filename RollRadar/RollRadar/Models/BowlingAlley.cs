@@ -1,6 +1,6 @@
 ﻿namespace RollRadar.Models
 {
-    public class BowlingAlley : Inherit
+    public class BowlingAlley : BaseModel
     {
         private string _location;
 
@@ -13,7 +13,7 @@
 
         public BowlingAlley(string location, string name, string? image, string comments) : base(name, image, comments)
         {
-            this.Location = location;
+            Location = location;
         } 
     }
 }

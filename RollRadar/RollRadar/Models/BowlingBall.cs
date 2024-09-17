@@ -3,7 +3,7 @@ using AppDomainSetup = System.AppDomainSetup;
 
 namespace RollRadar.Models
 {
-    public class BowlingBall : Inherit
+    public class BowlingBall : BaseModel
     {
         private string _brand;
         private decimal? _cost;

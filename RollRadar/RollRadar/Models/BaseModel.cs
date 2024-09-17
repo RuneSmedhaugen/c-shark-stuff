@@ -1,6 +1,6 @@
 ﻿namespace RollRadar.Models
 {
-    public class Inherit
+    public class BaseModel
     {
         private string _name;
         private int _id;
@@ -31,7 +31,7 @@
             set { _comments = value; }
         }
 
-        public Inherit(string name, string image, string comments)
+        public BaseModel(string name, string image, string comments)
         {
             _image = image;
             _comments = comments;

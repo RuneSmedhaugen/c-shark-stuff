@@ -2,7 +2,7 @@
 
 namespace RollRadar.Models
 {
-    public class Score : Inherit
+    public class Score : BaseModel
     {
         private int _userId;
         private int _totalScore;

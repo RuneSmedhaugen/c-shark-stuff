@@ -1,6 +1,6 @@
 ﻿namespace RollRadar.Models
 {
-    public class User : Inherit
+    public class User : BaseModel
     {
         private string _email;
         private string _passwordHash;
