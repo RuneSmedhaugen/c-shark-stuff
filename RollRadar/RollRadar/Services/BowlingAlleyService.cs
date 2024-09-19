@@ -1,95 +1,64 @@
-﻿using RollRadar.Models;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
+using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class BowlingAlleyService
+    public class BowlingAlleyService : BaseService<BowlingAlley>
     {
-        private readonly string _connectionString;
+        public BowlingAlleyService(string connectionString) : base(connectionString) { }
 
-        public BowlingAlleyService(string connectionString)
+        protected override BowlingAlley MapFromReader(SqlDataReader reader)
         {
-            _connectionString = connectionString;
-        }
-
-        public void AddBowlingAlley(BowlingAlley bowlingAlley)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                string query = @"INSERT INTO BowlingAlleys (Name, Location, Review, Image)" +
-                               "VALUES (@Name, @Location, @Review, @Image)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Name", bowlingAlley.Name);
-                    command.Parameters.AddWithValue("@Location", bowlingAlley.Location);
-                    command.Parameters.AddWithValue("@Review", bowlingAlley.Comments);
-                    command.Parameters.AddWithValue("@Image", (object)bowlingAlley.Image ?? DBNull.Value);
-
-                    command.ExecuteNonQuery();
-                }
-            }
+            return new BowlingAlley(
+                reader["Name"].ToString(),
+                reader["Location"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("Review")) ? null : reader["Review"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("Image")) ? null : reader["Image"].ToString(),
+                reader.GetInt32(reader.GetOrdinal("UserId"))
+            );
         }
 
         public void CreateBowlingAlley()
         {
-            string GetValidInput(string prompt)
+            var columnPrompts = new Dictionary<string, string>
             {
-                string input;
-                while (true)
-                {
-                    Console.WriteLine(prompt);
-                    input = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(input))
-                    {
-                        return input;
-                    }
-                    Console.WriteLine("Please provide a valid input.");
-                }
-            }
+                { "Name", "Enter the name of the alley:" },
+                { "Location", "Enter the location of the alley:" },
+                { "Review", "Enter your review of the alley (optional):" },
+                { "Image", "Enter the image URL (optional):" }
+            };
 
-            string name = GetValidInput("Name of the bowling alley:");
-            string location = GetValidInput("Location:");
-            string comments = GetValidInput("Your review:");
-
-            Console.WriteLine("Image URL(Optional):");
-            string image = Console.ReadLine();
-
-            BowlingAlley newBowlingAlley = new BowlingAlley(location, name, image, comments);
-
-            AddBowlingAlley(newBowlingAlley);
+            ManageRecord(null, "Add", columnPrompts);
         }
 
-        public void PrintAllAlleys()
+        public void PrintBowlingAlleys()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            string query = "SELECT * FROM BowlingAlleys";
+
+            Print(query, reader =>
             {
-                connection.Open();
+                Console.WriteLine($"Name: {reader["Name"]}, Location: {reader["Location"]}, " +
+                                  $"Review: {reader["Review"]}, Image: {reader["Image"]}, " +
+                                  $"Created By User ID: {reader["UserId"]}");
+            });
+        }
 
-                string query = @"SELECT * FROM BowlingAlleys";
+        public void EditBowlingAlley(int id)
+        {
+            var columnPrompts = new Dictionary<string, string>
+            {
+                { "Name", "Enter the new name of the alley (or press Enter to keep current):" },
+                { "Location", "Enter the new location of the alley (or press Enter to keep current):" },
+                { "Review", "Enter the new review of the alley (or press Enter to keep current):" },
+                { "Image", "Enter the new image URL (or press Enter to keep current):" }
+            };
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string name = reader["Name"].ToString();
-                            string location = reader["Location"].ToString();
-                            string review = reader["Review"].ToString();
-                            string image = reader.IsDBNull(reader.GetOrdinal("Image"))
-                                ? "No Image"
-                                : reader["Image"].ToString();
+            ManageRecord(id, "Edit", columnPrompts);
+        }
 
-
-                            Console.WriteLine(
-                                $"Name: {name}, Location: {location}, Review: {review}, Image: {image}");
-                        }
-                    }
-                }
-            }
+        public void DeleteBowlingAlley(int id)
+        {
+            ManageRecord(id, "Delete");
         }
     }
 }

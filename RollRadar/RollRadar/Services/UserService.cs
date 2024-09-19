@@ -3,105 +3,48 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class UserService
+    public class UserService : BaseService<User>
     {
-        private readonly string _connectionString;
+        public UserService(string connectionString) : base(connectionString) { }
 
-        public UserService(string connectionString)
+        protected override User MapFromReader(SqlDataReader reader)
         {
-            _connectionString = connectionString;
-        }
-
-        public void AddUser(User user)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                string query = @"INSERT INTO Users (Email, PasswordHash, Name, Age, Hand, ProfilePic, About)" +
-                                "VALUES (@Email, @PasswordHash, @Name, @Age, @Hand, @ProfilePic, @About)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Email", user.Email);
-                    command.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                    command.Parameters.AddWithValue("@Name", user.Name);
-                    command.Parameters.AddWithValue("@Age", (object)user.Age ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Hand", user.Hand);
-                    command.Parameters.AddWithValue("@ProfilePic", (object)user.Image ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@About", (object)user.Comments ?? DBNull.Value);
-
-
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        public void CreateUser()
-        {
-            string GetValidInput(string prompt)
-            {
-                string input;
-                while (true)
-                {
-                    Console.WriteLine(prompt);
-                    input = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(input))
-                    {
-                        return input;
-                    }
-                    Console.WriteLine("Please provide a valid input.");
-                }
-            }
-
-            string email = GetValidInput("Enter your email:");
-            string password = GetValidInput("Enter your password:");
-            string name = GetValidInput("Enter your name:");
-            string hand = GetValidInput("Enter your hand (Lefty/Righty):");
-            string comments = GetValidInput("About yourself:");
-
-            Console.Write("Enter your age (Optional): ");
-            string ageInput = Console.ReadLine();
-            int? age = string.IsNullOrEmpty(ageInput) ? (int?)null : int.Parse(ageInput);
-
-            Console.Write("Enter the path to your profile picture (Optional): ");
-            string? image = Console.ReadLine();
-
-
-            User newUser = new User(name, email, password, age, hand, image, comments);
-
-            AddUser(newUser);
+            return new User(
+                reader["Name"].ToString(),
+                reader["Email"].ToString(),
+                reader["PasswordHash"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age")),
+                reader["Hand"].ToString(),
+                reader["Image"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader["Comments"].ToString()
+            );
         }
 
         public void PrintUsers()
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            string query = "SELECT * FROM Users";
+
+            Print(query, reader =>
             {
-                connection.Open();
+                Console.WriteLine($"Name: {reader["Name"]}, About: {reader["Comments"]}");
+            });
+        }
 
-                string query = @"SELECT * FROM Users";
+        public void EditUser(int id)
+        {
+            var columnPrompts = new Dictionary<string, string>
+            {
+                { "Username", "Enter the new username (or press Enter to keep current):" },
+                { "Password", "Enter the new password (or press Enter to keep current):" },
+                { "Comments", "Enter the new comments about the user (or press Enter to keep current):" }
+            };
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string email = reader["Email"].ToString();
-                            string passwordHash = reader["PasswordHash"].ToString();
-                            string name = reader["Name"].ToString();
-                            int? age = reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age"));
-                            string hand = reader.IsDBNull(reader.GetOrdinal("Hand")) ? "N/A" : reader["Hand"].ToString();
-                            string image = reader.IsDBNull(reader.GetOrdinal("ProfilePic")) ? "No Image" : reader["ProfilePic"].ToString();
-                            string comments = reader.IsDBNull(reader.GetOrdinal("About")) ? "No Information" : reader["About"].ToString();
+            ManageRecord(id, "Edit", columnPrompts);
+        }
 
-
-                            Console.WriteLine(
-                                $"Email: {email}, Password: {passwordHash}, Age: {age}, Hand: {hand}, Profile Picture: {image}, About: {comments}");
-                        }
-                    }
-                }
-            }
+        public void DeleteUser(int id)
+        {
+            ManageRecord(id, "Delete");
         }
     }
 }

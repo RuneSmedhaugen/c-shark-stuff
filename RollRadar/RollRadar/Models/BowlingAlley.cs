@@ -3,6 +3,13 @@
     public class BowlingAlley : BaseModel
     {
         private string _location;
+        private int _userId;
+
+        public int UserId
+        {
+            get { return _userId; }
+            set { _userId = value; }
+        }
 
         public string Location
         {
@@ -11,9 +18,10 @@
         }
 
 
-        public BowlingAlley(string location, string name, string? image, string comments) : base(name, image, comments)
+        public BowlingAlley(string location, string name, string? image, string comments, int userId) : base(name, image, comments)
         {
             Location = location;
+            UserId = userId;
         } 
     }
 }

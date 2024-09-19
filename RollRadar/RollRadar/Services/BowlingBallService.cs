@@ -3,33 +3,39 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public abstract class BowlingBallService : BaseService<BowlingBall>
+    public class BowlingBallService : BaseService<BowlingBall>
     {
-        private readonly string _connectionString;
+        public BowlingBallService(string connectionString) : base(connectionString) { }
 
-        public BowlingBallService(string connectionString) : base(connectionString)
+        protected override BowlingBall MapFromReader(SqlDataReader reader)
         {
-            _connectionString = connectionString;
+            return new BowlingBall(
+                reader["Brand"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("Cost")) ? null : reader.GetDecimal(reader.GetOrdinal("Cost")),
+                reader["Surface"].ToString(),
+                reader.GetInt32(reader.GetOrdinal("HookPotential")),
+                reader["Type"].ToString(),
+                reader["Name"].ToString(),
+                reader["Image"].ToString(),
+                reader["Comments"].ToString()
+            );
         }
 
-        public void AddBowlingBall(BowlingBall ball)
+        public void CreateBowlingBall(int userId)
         {
-            string query = @"INSERT INTO BowlingBalls (Brand, Cost, Surface, HookPotential, Type, Name, Image, Comments)
-                         VALUES (@Brand, @Cost, @Surface, @HookPotential, @Type, @Name, @Image, @Comments)";
-
-            var parameters = new Dictionary<string, object?>
+            var columnPrompts = new Dictionary<string, string>
             {
-                { "@Brand", ball.Brand },
-                { "@Cost", ball.Cost },
-                { "@Surface", ball.Surface },
-                { "@HookPotential", ball.HookPotential },
-                { "@Type", ball.Type },
-                { "@Name", ball.Name },
-                { "@Image", ball.Image },
-                { "@Comments", ball.Comments }
+                { "Brand", "Enter the brand of the ball:" },
+                { "Name", "Enter the name of the ball:" },
+                { "Cost", "Enter the cost of the ball (optional):" },
+                { "Surface", "Enter the surface of the ball:" },
+                { "HookPotential", "Enter the hook potential (0-100):" },
+                { "Type", "Enter the coverstock type:" },
+                { "Image", "Enter the image URL (optional):" },
+                { "Comments", "Enter your review of the ball:" }
             };
 
-            Add(query, parameters);
+            ManageRecord(null, "Add", columnPrompts, userId);
         }
 
         public void PrintBowlingBalls()
@@ -40,39 +46,31 @@ namespace RollRadar.Services
             {
                 Console.WriteLine($"Brand: {reader["Brand"]}, Name: {reader["Name"]}, Cost: {reader["Cost"]}, " +
                                   $"Surface: {reader["Surface"]}, HookPotential: {reader["HookPotential"]}, " +
-                                  $"Type: {reader["Type"]}, Image: {reader["Image"]}, Comments: {reader["Comments"]}");
+                                  $"Type: {reader["Type"]}, Image: {reader["Image"]}, Comments: {reader["Comments"]}, " +
+                                  $"CreatedBy: {reader["UserId"]}");
             });
         }
 
-        public void EditBowlingBall(int id)
+        public void EditBowlingBall(int id, int userId)
         {
-            string query = "SELECT * FROM BowlingBalls WHERE ID = @ID";
-            var parameters = new Dictionary<string, object?>
+            var columnPrompts = new Dictionary<string, string>
             {
-                { "@ID", id }
+                { "Brand", "Enter the new brand of the ball (or press Enter to keep current):" },
+                { "Name", "Enter the new name of the ball (or press Enter to keep current):" },
+                { "Cost", "Enter the new cost of the ball (or press Enter to keep current):" },
+                { "Surface", "Enter the new surface of the ball (or press Enter to keep current):" },
+                { "HookPotential", "Enter the new hook potential (0-100) (or press Enter to keep current):" },
+                { "Type", "Enter the new coverstock type (or press Enter to keep current):" },
+                { "Image", "Enter the new image URL (or press Enter to keep current):" },
+                { "Comments", "Enter the new review of the ball (or press Enter to keep current):" }
             };
 
-            BowlingBall ball = GetSingle(query, parameters, reader =>
-            {
-                return new BowlingBall(
-                    reader["Brand"].ToString(),
-                    reader.IsDBNull(reader.GetOrdinal("Cost")) ? null : reader.GetDecimal(reader.GetOrdinal("Cost")),
-                    reader["Surface"].ToString(),
-                    reader.GetInt32(reader.GetOrdinal("HookPotential")),
-                    reader["Type"].ToString(),
-                    reader["Name"].ToString(),
-                    reader["Image"].ToString(),
-                    reader["Comments"].ToString()
-                );
-            });
+            ManageRecord(id, "Edit", columnPrompts, userId);
+        }
 
-            if (ball == null)
-            {
-                Console.WriteLine($"No record found with ID {id}");
-                return;
-            }
-
-
+        public void DeleteBowlingBall(int id, int userId)
+        {
+            ManageRecord(id, "Delete", null, GetCurrentUserId());
         }
     }
 }
