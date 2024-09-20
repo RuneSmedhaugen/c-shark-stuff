@@ -10,9 +10,22 @@ namespace RollRadar.Services
     public class AuthenticationService
     {
         private readonly string _connectionString;
+        
+
         public AuthenticationService(string connectionString)
         {
             _connectionString = connectionString;
+        }
+
+        public int? GetLoggedInUserId(string email)
+        {
+            string query = "SELECT Id FROM Users WHERE Email = @Email";
+            var parameters = new Dictionary<string, object?>
+            {
+                { "@Email", email }
+            };
+
+            return GetSingle(query, parameters, r => (int?)r["Id"]);
         }
 
         public int ExecuteNonQuery(string query, Dictionary<string, object?> parameters)
@@ -32,7 +45,7 @@ namespace RollRadar.Services
             }
         }
 
-        public T GetSingle<T>(string query, Dictionary<string, object?> parameters, Func<SqlDataReader, T> map)
+        public T? GetSingle<T>(string query, Dictionary<string, object?> parameters, Func<SqlDataReader, T> map)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -48,14 +61,18 @@ namespace RollRadar.Services
                     {
                         if (reader.Read())
                         {
+                            // The map function is expected to return the correct type (e.g., User)
                             return map(reader);
                         }
                     }
                 }
             }
 
-            return default!;
+            // If no record is found, return the default value for T (null in the case of reference types like User)
+            return default(T);
         }
+
+
 
 
         public bool Login(string email, string password)
@@ -76,6 +93,11 @@ namespace RollRadar.Services
             return VerifyPassword(password, storedPasswordHash);
         }
 
+        public bool VerifyPassword(string inputPassword, string storedHash)
+        {
+            string inputHash = HashPassword(inputPassword);
+            return inputHash == storedHash;
+        }
 
         public void Register(string name, string email, string password, int? age, string hand, string image, string about)
         {
@@ -122,12 +144,6 @@ namespace RollRadar.Services
 
                 return sb.ToString();
             }
-        }
-
-        public bool VerifyPassword(string inputPassword, string storedHash)
-        {
-            string inputHash = HashPassword(inputPassword);
-            return inputHash == storedHash;
         }
     }
 }

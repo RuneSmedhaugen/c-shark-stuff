@@ -5,7 +5,7 @@ namespace RollRadar.Services
 {
     public class BowlingBallService : BaseService<BowlingBall>
     {
-        public BowlingBallService(string connectionString) : base(connectionString) { }
+        public BowlingBallService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
 
         protected override BowlingBall MapFromReader(SqlDataReader reader)
         {
@@ -68,9 +68,16 @@ namespace RollRadar.Services
             ManageRecord(id, "Edit", columnPrompts, userId);
         }
 
-        public void DeleteBowlingBall(int id, int userId)
+        public void DeleteBowlingBall(int id, int userId, string loggedInUserEmail)
         {
-            ManageRecord(id, "Delete", null, GetCurrentUserId());
+            int currentUserId = GetCurrentUserId(loggedInUserEmail);
+            ManageRecord(id, "Delete", null, currentUserId);
         }
+
+        public void GetAllBowlingBalls()
+        {
+            GetAll("BowlingBalls");
+        }
+
     }
 }

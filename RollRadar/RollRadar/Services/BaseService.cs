@@ -7,14 +7,24 @@ namespace RollRadar.Services
     public abstract class BaseService<T>
     {
         private readonly string _connectionString;
+        private readonly AuthenticationService _authService;
 
-        protected BaseService(string connectionString)
+        protected BaseService(string connectionString, AuthenticationService authService)
         {
             _connectionString = connectionString;
+            _authService = authService;
         }
 
-        protected abstract int GetCurrentUserId();
 
+        protected virtual int GetCurrentUserId(string loggedInUserEmail)
+        {
+            int? userId = _authService.GetLoggedInUserId(loggedInUserEmail);
+            if (userId.HasValue)
+            {
+                return userId.Value;
+            }
+            throw new InvalidOperationException("No user is currently logged in.");
+        }
 
         public void ManageRecord(int? id = null, string operationType = "Add", Dictionary<string, string>? columnPrompts = null, int? currentUserId = null)
         {
@@ -34,7 +44,7 @@ namespace RollRadar.Services
                 { "@UserId", reader["UserId"] }
             };
 
-                    string creatorName = GetSingle(creatorQuery, creatorParams, r => r["Username"].ToString());
+                    string creatorName = GetSingle(creatorQuery, creatorParams, r => r["Name"].ToString());
 
                     Console.WriteLine($"Record: {reader["Name"]}, created by: {creatorName}");
                 });
@@ -121,18 +131,6 @@ namespace RollRadar.Services
             Console.WriteLine($"{operationType} operation completed successfully.");
         }
 
-        public void PrintAllUserRecords()
-        {
-            int currentUserId = GetCurrentUserId();
-            string query = $"SELECT * FROM {typeof(T).Name} WHERE UserId = @UserId";
-            var parameters = new Dictionary<string, object?> { { "@UserId", currentUserId } };
-
-            Print(query, reader =>
-            {
-                Console.WriteLine($"ID: {reader["ID"]}, Brand: {reader["Brand"]}, Name: {reader["Name"]}");
-            });
-        }
-
         public void Print(string query, Action<SqlDataReader> printAction)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -151,7 +149,7 @@ namespace RollRadar.Services
             }
         }
 
-        public string GetSingle(string query, Dictionary<string, object?> parameters, Func<SqlDataReader, string> map)
+        public T? GetSingle<T>(string query, Dictionary<string, object?> parameters, Func<SqlDataReader, T> map)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -160,7 +158,7 @@ namespace RollRadar.Services
                 {
                     foreach (var param in parameters)
                     {
-                        command.Parameters.AddWithValue(param.Key, param.Value);
+                        command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
                     }
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -172,8 +170,9 @@ namespace RollRadar.Services
                     }
                 }
             }
-            // litt usikker på akkurat denne
-            return string.Empty;
+
+            
+            return default(T);
         }
 
         protected string GetValidInput(string prompt)
@@ -232,5 +231,23 @@ namespace RollRadar.Services
         }
 
         protected abstract T MapFromReader(SqlDataReader reader);
+
+        public void GetAll(string tableName)
+        {
+            string query = $"SELECT * FROM {tableName}";
+
+            Print(query, reader =>
+            {
+                string creatorQuery = "SELECT Name FROM Users WHERE UserId = @UserId";
+                var creatorParams = new Dictionary<string, object?>
+                {
+                    { "@UserId", reader["UserId"] }
+                };
+
+                string creatorName = GetSingle(creatorQuery, creatorParams, r => r["Name"].ToString());
+
+                Console.WriteLine($"Record: {reader["Name"]}, created by: {creatorName}");
+            });
+        }
     }
 }

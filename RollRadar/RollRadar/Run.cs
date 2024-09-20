@@ -16,11 +16,11 @@ namespace RollRadar
         public Run(string connectionString)
         {
             _connectionString = connectionString;
-            _bowlingBallService = new BowlingBallService(_connectionString);
-            _userService = new UserService(_connectionString);
-            _bowlingAlleyService = new BowlingAlleyService(_connectionString);
-            _scoreService = new ScoreService(_connectionString);
             _authenticationService = new AuthenticationService(_connectionString);
+            _bowlingBallService = new BowlingBallService(_connectionString, _authenticationService);
+            _userService = new UserService(_connectionString, _authenticationService);
+            _bowlingAlleyService = new BowlingAlleyService(_connectionString, _authenticationService);
+            _scoreService = new ScoreService(_connectionString, _authenticationService);
         }
 
         public void RunAll()
@@ -31,11 +31,8 @@ namespace RollRadar
         private void MainMenu()
         {
             Console.WriteLine("Welcome to RollRadar! Please log in or create an account.");
-
-            
             HandleUserLogin();
 
-            
             while (true)
             {
                 Console.WriteLine($@"Here is your menu:
@@ -83,18 +80,51 @@ namespace RollRadar
                 switch (loginOption)
                 {
                     case "1":
-                        _currentUser = _authenticationService.Login(email, password);
+                        Console.Write("Enter email: ");
+                        var email = Console.ReadLine();
+                        Console.Write("Enter password: ");
+                        var password = Console.ReadLine();
+
+                        if (_authenticationService.Login(email, password))
+                        {
+                            _currentUser = _userService.GetUserByEmail(email);
+                            Console.WriteLine($"Welcome, {_currentUser.Name}!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid email or password. Please try again.");
+                        }
                         break;
+
                     case "2":
-                         _authenticationService.Register();
+                        Console.Write("Enter name: ");
+                        var name = Console.ReadLine();
+
+                        Console.Write("Enter email: ");
+                        var newEmail = Console.ReadLine();
+
+                        Console.Write("Enter password: ");
+                        var newPassword = Console.ReadLine();
+
+                        Console.Write("Enter age (optional): ");
+                        var ageInput = Console.ReadLine();
+                        int? age = string.IsNullOrWhiteSpace(ageInput) ? (int?)null : int.Parse(ageInput);
+
+                        Console.Write("Enter hand (optional): ");
+                        var hand = Console.ReadLine();
+
+                        Console.Write("Enter profile picture URL (optional): ");
+                        var image = Console.ReadLine();
+
+                        Console.Write("Enter about (optional): ");
+                        var about = Console.ReadLine();
+
+                        _authenticationService.Register(name, newEmail, newPassword, age, hand, image, about);
+                        Console.WriteLine("Account successfully created!");
                         break;
-                    default:
-                        Console.WriteLine("Please choose either 1 or 2.");
-                        break;
+
                 }
             }
-
-            Console.WriteLine($"Welcome, {_currentUser.Name}!");
         }
 
         private void BowlingBallMenu()
@@ -113,13 +143,34 @@ namespace RollRadar
                 switch (choice)
                 {
                     case "1":
+                        _bowlingBallService.GetAllBowlingBalls();
                         break;
                     case "2":
+                        // Get the ID of the bowling ball to edit
+                        Console.Write("Enter the ID of the bowling ball you want to edit: ");
+                        if (int.TryParse(Console.ReadLine(), out int bowlingBallId))
+                        {
+                            // Pass the bowling ball ID and the current user ID
+                            _bowlingBallService.EditBowlingBall(bowlingBallId, _currentUser.Id);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid ID. Please enter a numeric value.");
+                        }
                         break;
                     case "3":
+                        Console.Write("Enter the ID of the bowling ball you want to delete: ");
+                        if (int.TryParse(Console.ReadLine(), out int deletebowlingBallId))
+                        {
+                            _bowlingBallService.DeleteBowlingBall(deletebowlingBallId, _currentUser.Id, _currentUser.Email);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid ID. Please enter a numeric value.");
+                        }
                         break;
                     case "4":
-                        return; 
+                        return;
                     default:
                         Console.WriteLine("Please choose an option between 1 and 4.");
                         break;
@@ -142,12 +193,14 @@ namespace RollRadar
 
                 switch (choice)
                 {
-                    case "1":
-                        
+                    case "1": 
+                        _scoreService.GetAllScores();
                         break;
                     case "2":
+                        _scoreService.EditScore(_currentUser.Id);
                         break;
                     case "3":
+                        _scoreService.DeleteScore(_currentUser.Id);
                         break;
                     case "4":
                         return;
@@ -174,10 +227,13 @@ namespace RollRadar
                 switch (choice)
                 {
                     case "1":
+                        _bowlingAlleyService.GetAllBowlingAlleys();
                         break;
                     case "2":
+                        _bowlingAlleyService.EditBowlingAlley(_currentUser.Id);
                         break;
                     case "3":
+                        _bowlingAlleyService.DeleteBowlingAlley(_currentUser.Id);
                         break;
                     case "4":
                         return;

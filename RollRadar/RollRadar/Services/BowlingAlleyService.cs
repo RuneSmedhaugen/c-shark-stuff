@@ -1,11 +1,16 @@
 ﻿using System.Data.SqlClient;
 using RollRadar.Models;
 
+
 namespace RollRadar.Services
 {
     public class BowlingAlleyService : BaseService<BowlingAlley>
     {
-        public BowlingAlleyService(string connectionString) : base(connectionString) { }
+
+        public BowlingAlleyService(string connectionString, AuthenticationService authService) : base(connectionString, authService)
+        {
+
+        }
 
         protected override BowlingAlley MapFromReader(SqlDataReader reader)
         {
@@ -60,5 +65,12 @@ namespace RollRadar.Services
         {
             ManageRecord(id, "Delete");
         }
+
+        public void GetAllBowlingAlleys()
+        {
+            GetAll("BowlingAlleys");
+        }
+
+
     }
 }

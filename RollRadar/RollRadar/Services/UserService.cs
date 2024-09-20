@@ -5,7 +5,7 @@ namespace RollRadar.Services
 {
     public class UserService : BaseService<User>
     {
-        public UserService(string connectionString) : base(connectionString) { }
+        public UserService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
 
         protected override User MapFromReader(SqlDataReader reader)
         {
@@ -18,6 +18,29 @@ namespace RollRadar.Services
                 reader["Image"].ToString(),
                 reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader["Comments"].ToString()
             );
+        }
+
+        public User? GetUserByEmail(string email)
+        {
+            string query = "SELECT Name, Email, PasswordHash, Age, Hand, Image, Comments FROM Users WHERE Email = @Email";
+            var parameters = new Dictionary<string, object?>
+            {
+                { "@Email", email }
+            };
+
+            return GetSingle(query, parameters, reader =>
+            {
+                // Ensure we're properly returning a User object, not a string
+                return new User(
+                    reader["Name"] as string ?? string.Empty,
+                    reader["Email"] as string ?? string.Empty,
+                    reader["PasswordHash"] as string ?? string.Empty,
+                    reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age")),
+                    reader["Hand"] as string ?? string.Empty,
+                    reader.IsDBNull(reader.GetOrdinal("Image")) ? string.Empty : reader["Image"].ToString(), 
+                    reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader["Comments"].ToString()
+                );
+            });
         }
 
         public void PrintUsers()
@@ -46,5 +69,11 @@ namespace RollRadar.Services
         {
             ManageRecord(id, "Delete");
         }
+
+        public void GetAllUsers()
+        {
+            GetAll("Users");
+        }
+
     }
 }

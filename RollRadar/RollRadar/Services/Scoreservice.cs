@@ -5,7 +5,7 @@ namespace RollRadar.Services
 {
     public class ScoreService : BaseService<Score>
     {
-        public ScoreService(string connectionString) : base(connectionString) { }
+        public ScoreService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
 
         protected override Score MapFromReader(SqlDataReader reader)
         {
@@ -58,6 +58,11 @@ namespace RollRadar.Services
         public void DeleteScore(int id)
         {
             ManageRecord(id, "Delete");
+        }
+
+        public void GetAllScores()
+        {
+            GetAll("Scores");
         }
     }
 }
