@@ -2,7 +2,7 @@
 
 namespace RollRadar.Models
 {
-    public class Score : BaseModel
+    public class Scores : BaseModel
     {
         private int _userId;
         private int _totalScore;
@@ -57,7 +57,7 @@ namespace RollRadar.Models
 
         public string BowlingAlleyName { get; set; }
 
-        public Score(string name, int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string bowlingAlleyName, string image, string comments) : base(name, image, comments)
+        public Scores(string name, int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string bowlingAlleyName, string image, string comments) : base(name, image, comments)
         {
             this.TotalScore = totalScore;
             this.Strikes = strikes;

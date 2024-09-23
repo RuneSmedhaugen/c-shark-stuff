@@ -15,30 +15,19 @@ namespace RollRadar.Services
             _authService = authService;
         }
 
-
-        protected virtual int GetCurrentUserId(string loggedInUserEmail)
-        {
-            int? userId = _authService.GetLoggedInUserId(loggedInUserEmail);
-            if (userId.HasValue)
-            {
-                return userId.Value;
-            }
-            throw new InvalidOperationException("No user is currently logged in.");
-        }
-
+        //Mulig jeg må bryte ned denne her i flere metoder, begynner å bli litt vel lang.
         public void ManageRecord(int? id = null, string operationType = "Add", Dictionary<string, string>? columnPrompts = null, int? currentUserId = null)
         {
             string query = "";
             var parameters = new Dictionary<string, object?>();
 
-            
             if (operationType == "ViewAll")
             {
                 query = $"SELECT * FROM {typeof(T).Name}";
 
                 Print(query, reader =>
                 {
-                    string creatorQuery = "SELECT Username FROM Users WHERE UserId = @UserId";
+                    string creatorQuery = "SELECT Name FROM Users WHERE UserId = @UserId";
                     var creatorParams = new Dictionary<string, object?>
             {
                 { "@UserId", reader["UserId"] }
@@ -52,23 +41,69 @@ namespace RollRadar.Services
                 return;
             }
 
-            // Add/Edit/Delete stuff
+            if (operationType == "Add")
+            {
+                // Add a new record
+                if (columnPrompts == null || columnPrompts.Count == 0)
+                {
+                    Console.WriteLine("Column prompts are required for the Add operation.");
+                    return;
+                }
+
+                foreach (var column in columnPrompts.Keys)
+                {
+                    if (column == "Cost")
+                    {
+                        decimal? newDecimalValue = GetOptionalDecimal($"Enter {columnPrompts[column]}:");
+                        if (newDecimalValue.HasValue)
+                        {
+                            parameters.Add($"@{column}", newDecimalValue);
+                        }
+                    }
+                    else if (column == "TotalScore" || column == "Strikes" || column == "Spares" || column == "Holes")
+                    {
+                        int newIntValue = GetIntRange($"Enter {columnPrompts[column]}:", 0, int.MaxValue);
+                        parameters.Add($"@{column}", newIntValue);
+                    }
+                    else
+                    {
+                        string newValue = GetValidInput($"Enter {columnPrompts[column]}:");
+                        parameters.Add($"@{column}", newValue);
+                    }
+                }
+
+                //Add the UserId
+                parameters.Add("@UserId", currentUserId);
+
+                // Create the insert query
+                query = $"INSERT INTO {typeof(T).Name} ({string.Join(", ", parameters.Keys.Select(k => k.TrimStart('@')))}) " +
+                        $"VALUES ({string.Join(", ", parameters.Keys)})";
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    ExecuteNonQuery(query, parameters, connection);
+                }
+
+                Console.WriteLine($"{operationType} operation completed successfully.");
+                return;
+            }
+
+            // Edit or Delete operations
             if (operationType == "Edit" || operationType == "Delete")
             {
-                
                 if (currentUserId == null)
                 {
                     Console.WriteLine("User ID is required for editing or deleting.");
                     return;
                 }
 
-                // her filtrerer vi for å få bare records fra logga inn bruker
+                // Filtering records for the logged-in user
                 query = $"SELECT * FROM {typeof(T).Name} WHERE UserId = @UserId";
                 parameters.Add("@UserId", currentUserId);
 
                 var userRecords = new List<T>();
 
-                
                 Print(query, reader =>
                 {
                     T record = MapFromReader(reader);
@@ -90,14 +125,29 @@ namespace RollRadar.Services
 
                 if (operationType == "Edit")
                 {
-                    // edit
+                    // Edit
                     foreach (var column in columnPrompts.Keys)
                     {
-                        Console.WriteLine($"Enter new {columnPrompts[column]} or press Enter to keep current:");
-                        string newValue = Console.ReadLine();
-                        if (!string.IsNullOrEmpty(newValue))
+                        if (column == "Cost")
                         {
-                            parameters.Add($"@{column}", newValue);
+                            decimal? newDecimalValue = GetOptionalDecimal($"Enter new {columnPrompts[column]} or press Enter to keep current:");
+                            if (newDecimalValue.HasValue)
+                            {
+                                parameters.Add($"@{column}", newDecimalValue);
+                            }
+                        }
+                        else if (column == "TotalScore" || column == "Strikes" || column == "Spares" || column == "Holes")
+                        {
+                            int newIntValue = GetIntRange($"Enter new {columnPrompts[column]} or press Enter to keep current:", 0, int.MaxValue);
+                            parameters.Add($"@{column}", newIntValue);
+                        }
+                        else
+                        {
+                            string newValue = GetValidInput($"Enter new {columnPrompts[column]} or press Enter to keep current:");
+                            if (!string.IsNullOrEmpty(newValue))
+                            {
+                                parameters.Add($"@{column}", newValue);
+                            }
                         }
                     }
 
@@ -106,7 +156,7 @@ namespace RollRadar.Services
                 }
                 else if (operationType == "Delete")
                 {
-                    // delete
+                    // Delete
                     Console.WriteLine("Are you sure you want to delete this record? (yes/no)");
                     string confirmation = Console.ReadLine();
                     if (confirmation.ToLower() == "yes")
@@ -130,6 +180,8 @@ namespace RollRadar.Services
 
             Console.WriteLine($"{operationType} operation completed successfully.");
         }
+
+
 
         public void Print(string query, Action<SqlDataReader> printAction)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using RollRadar.Models;
@@ -61,37 +62,40 @@ namespace RollRadar.Services
                     {
                         if (reader.Read())
                         {
-                            // The map function is expected to return the correct type (e.g., User)
                             return map(reader);
                         }
                     }
                 }
             }
-
-            // If no record is found, return the default value for T (null in the case of reference types like User)
             return default(T);
         }
 
-
-
-
-        public bool Login(string email, string password)
+        public int? Login(string email, string password)
         {
+            int? currentUserId;
             string query = "SELECT PasswordHash FROM Users WHERE Email = @Email";
             var parameters = new Dictionary<string, object?>
             {
                 { "@Email", email }
             };
 
-            string? storedPasswordHash = GetSingle(query, parameters, r => r["PasswordHash"].ToString());
-            if (storedPasswordHash == null)
+            var result = GetSingle(query, parameters, r => new { PasswordHash = r["PasswordHash"].ToString(), UserId = (int?)r["Id"] });
+            if (result == null)
             {
                 Console.WriteLine("User not found.");
-                return false;
+                return null;
             }
 
-            return VerifyPassword(password, storedPasswordHash);
+            if (VerifyPassword(password, result.PasswordHash))
+            {
+                Console.WriteLine("Login successful.");
+                return result.UserId;
+            }
+
+            Console.WriteLine("Invalid password.");
+            return null;
         }
+
 
         public bool VerifyPassword(string inputPassword, string storedHash)
         {

@@ -4,7 +4,7 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class BowlingAlleyService : BaseService<BowlingAlley>
+    public class BowlingAlleyService : BaseService<BowlingAlleys>
     {
 
         public BowlingAlleyService(string connectionString, AuthenticationService authService) : base(connectionString, authService)
@@ -12,9 +12,9 @@ namespace RollRadar.Services
 
         }
 
-        protected override BowlingAlley MapFromReader(SqlDataReader reader)
+        protected override BowlingAlleys MapFromReader(SqlDataReader reader)
         {
-            return new BowlingAlley(
+            return new BowlingAlleys(
                 reader["Name"].ToString(),
                 reader["Location"].ToString(),
                 reader.IsDBNull(reader.GetOrdinal("Review")) ? null : reader["Review"].ToString(),
@@ -23,7 +23,7 @@ namespace RollRadar.Services
             );
         }
 
-        public void CreateBowlingAlley()
+        public void CreateBowlingAlley(int currentUserId)
         {
             var columnPrompts = new Dictionary<string, string>
             {
@@ -33,7 +33,7 @@ namespace RollRadar.Services
                 { "Image", "Enter the image URL (optional):" }
             };
 
-            ManageRecord(null, "Add", columnPrompts);
+            ManageRecord(null, "Add", columnPrompts, currentUserId);
         }
 
         public void PrintBowlingAlleys()

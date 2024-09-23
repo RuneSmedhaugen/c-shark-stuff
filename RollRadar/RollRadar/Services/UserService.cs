@@ -3,13 +3,13 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class UserService : BaseService<User>
+    public class UserService : BaseService<Users>
     {
         public UserService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
 
-        protected override User MapFromReader(SqlDataReader reader)
+        protected override Users MapFromReader(SqlDataReader reader)
         {
-            return new User(
+            return new Users(
                 reader["Name"].ToString(),
                 reader["Email"].ToString(),
                 reader["PasswordHash"].ToString(),
@@ -20,9 +20,9 @@ namespace RollRadar.Services
             );
         }
 
-        public User? GetUserByEmail(string email)
+        public Users? GetUserByEmail(string email)
         {
-            string query = "SELECT Name, Email, PasswordHash, Age, Hand, Image, Comments FROM Users WHERE Email = @Email";
+            string query = "SELECT Id, Name, Email, PasswordHash, Age, Hand, Image, Comments FROM Users WHERE Email = @Email";
             var parameters = new Dictionary<string, object?>
             {
                 { "@Email", email }
@@ -30,8 +30,7 @@ namespace RollRadar.Services
 
             return GetSingle(query, parameters, reader =>
             {
-                // Ensure we're properly returning a User object, not a string
-                return new User(
+                return new Users(
                     reader["Name"] as string ?? string.Empty,
                     reader["Email"] as string ?? string.Empty,
                     reader["PasswordHash"] as string ?? string.Empty,

@@ -3,7 +3,7 @@ using AppDomainSetup = System.AppDomainSetup;
 
 namespace RollRadar.Models
 {
-    public class BowlingBall : BaseModel
+    public class BowlingBalls : BaseModel
     {
         private string _brand;
         private decimal? _cost;
@@ -27,11 +27,13 @@ namespace RollRadar.Models
             set => _type = value;
         }
 
-        public BowlingBall(string brand, decimal? cost, string surface, int hookPotential, string type, string name, string image, string comments) : base(name, image, comments)
+        public BowlingBalls(string brand, decimal? cost, string surface, int hookPotential, string type, string name, string image, string comments) : base(name, image, comments)
         {
-            _brand = brand;
-            _surface = surface;
-            _type = type;
+            Cost = cost;
+            Brand = brand;
+            Surface = surface;
+            Type = type;
+            HookPotential = hookPotential;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using RollRadar.Models;
+﻿using Microsoft.AspNetCore.SignalR;
+using RollRadar.Models;
 using RollRadar.Services;
 
 namespace RollRadar
@@ -11,7 +12,7 @@ namespace RollRadar
         private BowlingAlleyService _bowlingAlleyService;
         private ScoreService _scoreService;
         private AuthenticationService _authenticationService;
-        private User? _currentUser;
+        private Users? _currentUser;
 
         public Run(string connectionString)
         {
@@ -31,7 +32,7 @@ namespace RollRadar
         private void MainMenu()
         {
             Console.WriteLine("Welcome to RollRadar! Please log in or create an account.");
-            HandleUserLogin();
+            UserLogin();
 
             while (true)
             {
@@ -69,7 +70,7 @@ namespace RollRadar
             }
         }
 
-        private void HandleUserLogin()
+        private void UserLogin()
         {
             while (_currentUser == null)
             {
@@ -85,7 +86,9 @@ namespace RollRadar
                         Console.Write("Enter password: ");
                         var password = Console.ReadLine();
 
-                        if (_authenticationService.Login(email, password))
+                        var userId = _authenticationService.Login(email, password);
+
+                        if (userId.HasValue)
                         {
                             _currentUser = _userService.GetUserByEmail(email);
                             Console.WriteLine($"Welcome, {_currentUser.Name}!");
@@ -133,9 +136,10 @@ namespace RollRadar
             {
                 Console.WriteLine($@"Bowling Ball Menu:
 1: View All Bowling Balls
-2: Edit Your Bowling Ball
-3: Delete Your Bowling Ball
-4: Back to Main Menu
+2: Add a new Bowling Ball
+3: Edit Your Bowling Ball
+4: Delete one of your Bowling Balls
+5: Back to Main Menu
 ");
 
                 var choice = Console.ReadLine();
@@ -146,30 +150,15 @@ namespace RollRadar
                         _bowlingBallService.GetAllBowlingBalls();
                         break;
                     case "2":
-                        // Get the ID of the bowling ball to edit
-                        Console.Write("Enter the ID of the bowling ball you want to edit: ");
-                        if (int.TryParse(Console.ReadLine(), out int bowlingBallId))
-                        {
-                            // Pass the bowling ball ID and the current user ID
-                            _bowlingBallService.EditBowlingBall(bowlingBallId, _currentUser.Id);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid ID. Please enter a numeric value.");
-                        }
+                        _bowlingBallService.CreateBowlingBall(_currentUser.Id);
                         break;
                     case "3":
-                        Console.Write("Enter the ID of the bowling ball you want to delete: ");
-                        if (int.TryParse(Console.ReadLine(), out int deletebowlingBallId))
-                        {
-                            _bowlingBallService.DeleteBowlingBall(deletebowlingBallId, _currentUser.Id, _currentUser.Email);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid ID. Please enter a numeric value.");
-                        }
+                        _bowlingBallService.EditBowlingBall(_currentUser.Id);
                         break;
                     case "4":
+                    _bowlingBallService.DeleteBowlingBall(_currentUser.Id);
+                        break;
+                    case "5":
                         return;
                     default:
                         Console.WriteLine("Please choose an option between 1 and 4.");
@@ -184,6 +173,7 @@ namespace RollRadar
             {
                 Console.WriteLine($@"Score Menu:
 1: View All Scores
+2: Add a new Score
 2: Edit Your Score
 3: Delete Your Score
 4: Back to Main Menu
@@ -197,12 +187,15 @@ namespace RollRadar
                         _scoreService.GetAllScores();
                         break;
                     case "2":
-                        _scoreService.EditScore(_currentUser.Id);
+                        _scoreService.CreateScore(_currentUser.Id);
                         break;
                     case "3":
-                        _scoreService.DeleteScore(_currentUser.Id);
+                        _scoreService.EditScore(_currentUser.Id);
                         break;
                     case "4":
+                        _scoreService.DeleteScore(_currentUser.Id);
+                        break;
+                    case "5":
                         return;
                     default:
                         Console.WriteLine("Please choose an option between 1 and 4.");
@@ -216,10 +209,11 @@ namespace RollRadar
             while (true)
             {
                 Console.WriteLine($@"Bowling Alley Menu:
-1: View All Bowling Alleys
-2: Edit Your Bowling Alley
-3: Delete Your Bowling Alley
-4: Back to Main Menu
+1: View All Bowling Alley Reviews
+2: Add a new Bowling Alley Review
+3: Edit Your Bowling Alley Review
+4: Delete Your Bowling Alley Review
+5: Back to Main Menu
 ");
 
                 var choice = Console.ReadLine();
@@ -230,12 +224,15 @@ namespace RollRadar
                         _bowlingAlleyService.GetAllBowlingAlleys();
                         break;
                     case "2":
-                        _bowlingAlleyService.EditBowlingAlley(_currentUser.Id);
+                        _bowlingAlleyService.CreateBowlingAlley(_currentUser.Id);
                         break;
                     case "3":
-                        _bowlingAlleyService.DeleteBowlingAlley(_currentUser.Id);
+                        _bowlingAlleyService.EditBowlingAlley(_currentUser.Id);
                         break;
                     case "4":
+                        _bowlingAlleyService.DeleteBowlingAlley(_currentUser.Id);
+                        break;
+                    case "5":
                         return;
                     default:
                         Console.WriteLine("Please choose an option between 1 and 4.");

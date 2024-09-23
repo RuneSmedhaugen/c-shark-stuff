@@ -1,6 +1,6 @@
 ﻿namespace RollRadar.Models
 {
-    public class BowlingAlley : BaseModel
+    public class BowlingAlleys : BaseModel
     {
         private string _location;
         private int _userId;
@@ -18,7 +18,7 @@
         }
 
 
-        public BowlingAlley(string location, string name, string? image, string comments, int userId) : base(name, image, comments)
+        public BowlingAlleys(string location, string name, string? image, string comments, int userId) : base(name, image, comments)
         {
             Location = location;
             UserId = userId;

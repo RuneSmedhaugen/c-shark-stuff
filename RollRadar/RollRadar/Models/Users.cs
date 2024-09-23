@@ -1,6 +1,6 @@
 ﻿namespace RollRadar.Models
 {
-    public class User : BaseModel
+    public class Users : BaseModel
     {
         private string _email;
         private string _passwordHash;
@@ -30,7 +30,7 @@
             get => _hand;
             set => _hand = value;
         }
-        public User(string name, string email, string passwordHash, int? age, string hand, string image, string comments) : base(name, image, comments)
+        public Users(string name, string email, string passwordHash, int? age, string hand, string image, string comments) : base(name, image, comments)
         {
             this.Email = email;
             this.PasswordHash = passwordHash;

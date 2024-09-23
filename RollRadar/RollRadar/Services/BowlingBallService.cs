@@ -3,13 +3,18 @@ using RollRadar.Models;
 
 namespace RollRadar.Services
 {
-    public class BowlingBallService : BaseService<BowlingBall>
+    public class BowlingBallService : BaseService<BowlingBalls>
     {
-        public BowlingBallService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
 
-        protected override BowlingBall MapFromReader(SqlDataReader reader)
+        public BowlingBallService(string connectionString ,AuthenticationService authService) 
+            : base(connectionString, authService)
         {
-            return new BowlingBall(
+
+        }
+
+        protected override BowlingBalls MapFromReader(SqlDataReader reader)
+        {
+            return new BowlingBalls(
                 reader["Brand"].ToString(),
                 reader.IsDBNull(reader.GetOrdinal("Cost")) ? null : reader.GetDecimal(reader.GetOrdinal("Cost")),
                 reader["Surface"].ToString(),
@@ -21,7 +26,7 @@ namespace RollRadar.Services
             );
         }
 
-        public void CreateBowlingBall(int userId)
+        public void CreateBowlingBall(int currentUserId)
         {
             var columnPrompts = new Dictionary<string, string>
             {
@@ -35,7 +40,7 @@ namespace RollRadar.Services
                 { "Comments", "Enter your review of the ball:" }
             };
 
-            ManageRecord(null, "Add", columnPrompts, userId);
+            ManageRecord(null, "Add", columnPrompts, currentUserId);
         }
 
         public void PrintBowlingBalls()
@@ -51,7 +56,7 @@ namespace RollRadar.Services
             });
         }
 
-        public void EditBowlingBall(int id, int userId)
+        public void EditBowlingBall(int id)
         {
             var columnPrompts = new Dictionary<string, string>
             {
@@ -65,19 +70,17 @@ namespace RollRadar.Services
                 { "Comments", "Enter the new review of the ball (or press Enter to keep current):" }
             };
 
-            ManageRecord(id, "Edit", columnPrompts, userId);
+            ManageRecord(id, "Edit", columnPrompts);
         }
 
-        public void DeleteBowlingBall(int id, int userId, string loggedInUserEmail)
+        public void DeleteBowlingBall(int id)
         {
-            int currentUserId = GetCurrentUserId(loggedInUserEmail);
-            ManageRecord(id, "Delete", null, currentUserId);
+            ManageRecord(id, "Delete", null);
         }
 
         public void GetAllBowlingBalls()
         {
             GetAll("BowlingBalls");
         }
-
     }
 }
