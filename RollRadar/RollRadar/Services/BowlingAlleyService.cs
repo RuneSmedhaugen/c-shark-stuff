@@ -1,76 +1,73 @@
-﻿using System.Data.SqlClient;
-using RollRadar.Models;
+﻿using RollRadar.Models;
 
-
-namespace RollRadar.Services
+public class BowlingAlleyService : BaseService
 {
-    public class BowlingAlleyService : BaseService<BowlingAlleys>
+    private readonly Users _currentUser;
+
+    public BowlingAlleyService(string connectionString, Users currentUser) : base(connectionString)
     {
+        _currentUser = currentUser;
+    }
 
-        public BowlingAlleyService(string connectionString, AuthenticationService authService) : base(connectionString, authService)
+    public void AddBowlingAlley()
+    {
+        Console.Write("Enter alley name: ");
+        string name = Console.ReadLine();
+
+        Console.Write("Enter alley location: ");
+        string location = Console.ReadLine();
+
+        Console.Write("Enter a review (optional): ");
+        string review = Console.ReadLine();
+
+        Console.Write("Enter an image URL (optional): ");
+        string image = Console.ReadLine();
+
+        string query = "INSERT INTO BowlingAlleys (Name, Location, Review, Image, UserId) " +
+                       "VALUES (@Name, @Location, @Review, @Image, @UserId)";
+        ExecuteNonQuery(query, (cmd) =>
         {
+            cmd.Parameters.AddWithValue("@Name", name);
+            cmd.Parameters.AddWithValue("@Location", location);
+            cmd.Parameters.AddWithValue("@Review", review);
+            cmd.Parameters.AddWithValue("@Image", image);
+            cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
+        });
 
-        }
+        Console.WriteLine("Bowling alley added successfully.");
+    }
 
-        protected override BowlingAlleys MapFromReader(SqlDataReader reader)
+    public void EditBowlingAlley(int id)
+    {
+        // Similar structure to AddBowlingAlley, but with an update query
+    }
+
+    public void DeleteBowlingAlley(int id)
+    {
+        string query = "DELETE FROM BowlingAlleys WHERE Id = @Id AND UserId = @UserId";
+        ExecuteNonQuery(query, (cmd) =>
         {
-            return new BowlingAlleys(
-                reader["Name"].ToString(),
-                reader["Location"].ToString(),
-                reader.IsDBNull(reader.GetOrdinal("Review")) ? null : reader["Review"].ToString(),
-                reader.IsDBNull(reader.GetOrdinal("Image")) ? null : reader["Image"].ToString(),
-                reader.GetInt32(reader.GetOrdinal("UserId"))
-            );
-        }
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
+        });
 
-        public void CreateBowlingAlley(int currentUserId)
+        Console.WriteLine("Bowling alley deleted successfully.");
+    }
+
+    public void ViewAllBowlingAlleys()
+    {
+        string query = "SELECT * FROM BowlingAlleys WHERE UserId = @UserId";
+        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
         {
-            var columnPrompts = new Dictionary<string, string>
+            while (reader.Read())
             {
-                { "Name", "Enter the name of the alley:" },
-                { "Location", "Enter the location of the alley:" },
-                { "Review", "Enter your review of the alley (optional):" },
-                { "Image", "Enter the image URL (optional):" }
-            };
+                int id = reader.GetInt32(reader.GetOrdinal("Id"));
+                string name = reader.GetString(reader.GetOrdinal("Name"));
+                string location = reader.GetString(reader.GetOrdinal("Location"));
+                string review = reader.GetString(reader.GetOrdinal("Review"));
 
-            ManageRecord(null, "Add", columnPrompts, currentUserId);
+                Console.WriteLine($"ID: {id}, Name: {name}, Location: {location}, Review: {review}");
+            }
         }
-
-        public void PrintBowlingAlleys()
-        {
-            string query = "SELECT * FROM BowlingAlleys";
-
-            Print(query, reader =>
-            {
-                Console.WriteLine($"Name: {reader["Name"]}, Location: {reader["Location"]}, " +
-                                  $"Review: {reader["Review"]}, Image: {reader["Image"]}, " +
-                                  $"Created By User ID: {reader["UserId"]}");
-            });
-        }
-
-        public void EditBowlingAlley(int id)
-        {
-            var columnPrompts = new Dictionary<string, string>
-            {
-                { "Name", "Enter the new name of the alley (or press Enter to keep current):" },
-                { "Location", "Enter the new location of the alley (or press Enter to keep current):" },
-                { "Review", "Enter the new review of the alley (or press Enter to keep current):" },
-                { "Image", "Enter the new image URL (or press Enter to keep current):" }
-            };
-
-            ManageRecord(id, "Edit", columnPrompts);
-        }
-
-        public void DeleteBowlingAlley(int id)
-        {
-            ManageRecord(id, "Delete");
-        }
-
-        public void GetAllBowlingAlleys()
-        {
-            GetAll("BowlingAlleys");
-        }
-
-
     }
 }

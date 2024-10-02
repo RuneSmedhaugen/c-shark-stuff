@@ -1,78 +1,55 @@
-﻿using System.Data.SqlClient;
-using RollRadar.Models;
+﻿using RollRadar.Models;
+using System;
+using System.Data.SqlClient;
 
-namespace RollRadar.Services
+public class UserService : BaseService
 {
-    public class UserService : BaseService<Users>
+    public UserService(string connectionString) : base(connectionString) { }
+
+    public void Register(Users user, string password)
     {
-        public UserService(string connectionString, AuthenticationService authService) : base(connectionString, authService) { }
-
-        protected override Users MapFromReader(SqlDataReader reader)
+        string query = "INSERT INTO Users (Name, Email, PasswordHash, Age, Hand, Image, Comments) VALUES (@Name, @Email, @PasswordHash, @Age, @Hand, @Image, @Comments)";
+        ExecuteNonQuery(query, (cmd) =>
         {
-            return new Users(
-                reader["Name"].ToString(),
-                reader["Email"].ToString(),
-                reader["PasswordHash"].ToString(),
-                reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age")),
-                reader["Hand"].ToString(),
-                reader["Image"].ToString(),
-                reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader["Comments"].ToString()
-            );
-        }
+            cmd.Parameters.AddWithValue("@Name", user.Name);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@PasswordHash", HashPassword(password));
+            cmd.Parameters.AddWithValue("@Age", user.Age);
+            cmd.Parameters.AddWithValue("@Hand", user.Hand);
+            cmd.Parameters.AddWithValue("@Image", user.Image);
+            cmd.Parameters.AddWithValue("@Comments", user.Comments);
+        });
+    }
 
-        public Users? GetUserByEmail(string email)
+    public Users GetByEmail(string email)
+    {
+        string query = "SELECT * FROM Users WHERE Email = @Email";
+        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@Email", email)))
         {
-            string query = "SELECT Id, Name, Email, PasswordHash, Age, Hand, Image, Comments FROM Users WHERE Email = @Email";
-            var parameters = new Dictionary<string, object?>
+            if (reader.Read())
             {
-                { "@Email", email }
-            };
-
-            return GetSingle(query, parameters, reader =>
-            {
-                return new Users(
-                    reader["Name"] as string ?? string.Empty,
-                    reader["Email"] as string ?? string.Empty,
-                    reader["PasswordHash"] as string ?? string.Empty,
-                    reader.IsDBNull(reader.GetOrdinal("Age")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Age")),
-                    reader["Hand"] as string ?? string.Empty,
-                    reader.IsDBNull(reader.GetOrdinal("Image")) ? string.Empty : reader["Image"].ToString(), 
-                    reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader["Comments"].ToString()
-                );
-            });
+                return new Users
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Email = reader.GetString(reader.GetOrdinal("Email")),
+                    PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
+                    Age = reader.GetInt32(reader.GetOrdinal("Age")),
+                    Hand = reader.GetString(reader.GetOrdinal("Hand")),
+                    Image = reader["Image"] as string,
+                    Comments = reader["Comments"] as string
+                };
+            }
         }
+        return null;
+    }
 
-        public void PrintUsers()
+    public string HashPassword(string password)
+    {
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
         {
-            string query = "SELECT * FROM Users";
-
-            Print(query, reader =>
-            {
-                Console.WriteLine($"Name: {reader["Name"]}, About: {reader["Comments"]}");
-            });
+            byte[] hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
-
-        public void EditUser(int id)
-        {
-            var columnPrompts = new Dictionary<string, string>
-            {
-                { "Username", "Enter the new username (or press Enter to keep current):" },
-                { "Password", "Enter the new password (or press Enter to keep current):" },
-                { "Comments", "Enter the new comments about the user (or press Enter to keep current):" }
-            };
-
-            ManageRecord(id, "Edit", columnPrompts);
-        }
-
-        public void DeleteUser(int id)
-        {
-            ManageRecord(id, "Delete");
-        }
-
-        public void GetAllUsers()
-        {
-            GetAll("Users");
-        }
-
     }
 }

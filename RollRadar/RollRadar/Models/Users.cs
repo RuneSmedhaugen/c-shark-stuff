@@ -37,6 +37,11 @@
             this.Age = age;
             this.Hand = hand;
         }
+
+        public Users()
+        {
+            
+        }
     }
 }
 

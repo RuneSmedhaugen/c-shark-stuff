@@ -66,5 +66,10 @@ namespace RollRadar.Models
             this.ScoreDate = scoreDate;
             this.BowlingAlleyName = bowlingAlleyName;
         }
+
+        public Scores()
+        {
+            
+        }
     }
 }

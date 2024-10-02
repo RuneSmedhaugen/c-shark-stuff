@@ -37,5 +37,10 @@
             _comments = comments;
             _name = name;
         }
+
+        public BaseModel()
+        {
+            
+        }
     }
 }

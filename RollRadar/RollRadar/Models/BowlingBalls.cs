@@ -10,6 +10,7 @@ namespace RollRadar.Models
         private string _surface;
         private int _hookPotential;
         private string _type;
+        private int _userId;
 
         public  string Brand { get => _brand;
             set => _brand = value;
@@ -27,13 +28,25 @@ namespace RollRadar.Models
             set => _type = value;
         }
 
-        public BowlingBalls(string brand, decimal? cost, string surface, int hookPotential, string type, string name, string image, string comments) : base(name, image, comments)
+        public int UserId
+        {
+            get => _userId;
+            set => _userId = value;
+        }
+
+        public BowlingBalls(string brand, decimal? cost, string surface, int hookPotential, string type, string name, string image, string comments, int userId) : base(name, image, comments)
         {
             Cost = cost;
             Brand = brand;
             Surface = surface;
             Type = type;
             HookPotential = hookPotential;
+            UserId = userId;
+        }
+
+        public BowlingBalls()
+        {
+            
         }
     }
 }

@@ -22,6 +22,11 @@
         {
             Location = location;
             UserId = userId;
-        } 
+        }
+
+        public BowlingAlleys()
+        {
+            
+        }
     }
 }
