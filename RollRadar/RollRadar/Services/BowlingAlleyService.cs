@@ -39,7 +39,7 @@ public class BowlingAlleyService : BaseService
 
     public void EditBowlingAlley(int id)
     {
-        // Similar structure to AddBowlingAlley, but with an update query
+        //TO DO
     }
 
     public void DeleteBowlingAlley(int id)

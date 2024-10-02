@@ -56,7 +56,7 @@ public class ScoreService : BaseService
 
     public void EditScore(int id)
     {
-        // Update Score details based on user input, similar to AddScore
+        //TO DO
     }
 
     public void DeleteScore(int id)

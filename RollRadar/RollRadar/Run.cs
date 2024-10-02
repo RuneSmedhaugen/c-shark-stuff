@@ -65,10 +65,8 @@ public class Run
 
         if (_loggedInUser != null)
         {
-            // Set _currentUserId
             _currentUserId = _loggedInUser.Id;
 
-            // Re-initialize services with the correct logged-in user
             _bowlingBallService = new BowlingBallService(_connectionString, _loggedInUser);
             _bowlingAlleyService = new BowlingAlleyService(_connectionString, _loggedInUser);
             _scoreService = new ScoreService(_connectionString, _loggedInUser);
