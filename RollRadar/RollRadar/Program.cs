@@ -7,6 +7,7 @@ using RollRadar;
 //Edit profil seksjon
 class Program
 {
+
     public static void Main(string[] args)
     {
         string connectionString = "Server=localhost\\SQLEXPRESS;Database=BowlingDB;Integrated Security=True;";

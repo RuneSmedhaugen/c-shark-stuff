@@ -57,8 +57,9 @@ namespace RollRadar.Models
 
         public string BowlingAlleyName { get; set; }
 
-        public Scores(string name, int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string bowlingAlleyName, string image, string comments) : base(name, image, comments)
+        public Scores(int userId,string name, int totalScore, int strikes, int spares, int holes, DateTime scoreDate, string bowlingAlleyName, string image, string comments) : base(name, image, comments)
         {
+            this.UserId = userId;
             this.TotalScore = totalScore;
             this.Strikes = strikes;
             this.Spares = spares;

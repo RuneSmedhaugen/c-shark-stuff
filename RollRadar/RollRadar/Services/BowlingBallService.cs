@@ -62,6 +62,7 @@ public class BowlingBallService : BaseService
     public void DeleteBowlingBall(int id)
     {
         string query = "DELETE FROM BowlingBalls WHERE Id = @Id AND UserId = @UserId";
+        
         ExecuteNonQuery(query, (cmd) =>
         {
             cmd.Parameters.AddWithValue("@Id", id);
@@ -73,20 +74,26 @@ public class BowlingBallService : BaseService
 
     public void ViewAllBowlingBalls()
     {
-        string query = "SELECT * FROM BowlingBalls WHERE UserId = @UserId";
-        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
+        string query = @"
+        SELECT b.*, u.Name AS UserName 
+        FROM BowlingBalls b
+        JOIN Users u ON b.UserId = u.Id";
+
+        using (var reader = ExecuteReader(query, cmd => { }))
         {
             while (reader.Read())
             {
                 int id = reader.GetInt32(reader.GetOrdinal("Id"));
+                int userId = reader.GetInt32(reader.GetOrdinal("UserId"));
                 string name = reader.GetString(reader.GetOrdinal("Name"));
                 string brand = reader.GetString(reader.GetOrdinal("Brand"));
                 decimal cost = reader.GetDecimal(reader.GetOrdinal("Cost"));
                 string surface = reader.GetString(reader.GetOrdinal("Surface"));
                 int hookPotential = reader.GetInt32(reader.GetOrdinal("HookPotential"));
                 string type = reader.GetString(reader.GetOrdinal("Type"));
+                string createdByName = reader.GetString(reader.GetOrdinal("UserName"));
 
-                Console.WriteLine($"ID: {id}, Name: {name}, Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Type: {type}");
+                Console.WriteLine($"ID: {id}, Name: {name}, Brand: {brand}, Cost: {cost}, Surface: {surface}, Hook Potential: {hookPotential}, Type: {type}, Created by: {createdByName}");
             }
         }
     }

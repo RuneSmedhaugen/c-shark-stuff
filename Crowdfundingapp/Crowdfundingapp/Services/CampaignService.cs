@@ -99,8 +99,38 @@ namespace Crowdfunding_app.Services
             }
         }
 
-        public Campaign GetCampaignById(int id)
+        public async Task<Campaign> GetCampaignByIdAsync(int id)
         {
+            string query = "SELECT * FROM Campaigns WHERE ID = @ID";
+            Campaign campaign = null;
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@ID", id);
+
+                await _connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        campaign = new Campaign
+                        {
+                            ID = reader.GetInt32(0),
+                            UserID = reader.GetInt32(1),
+                            Title = reader.GetString(2),
+                            Description = reader.GetString(3),
+                            GoalAmount = reader.GetDecimal(4),
+                            CurrentAmount = reader.GetDecimal(5),
+                            StartDate = reader.GetDateTime(6),
+                            EndDate = reader.GetDateTime(7),
+                            IsActive = reader.GetBoolean(8)
+                        };
+                    }
+                }
+                await _connection.CloseAsync();
+            }
+
+            return campaign;
         }
 
     }

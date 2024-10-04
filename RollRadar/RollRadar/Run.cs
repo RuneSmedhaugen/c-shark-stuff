@@ -249,7 +249,7 @@ public class Run
                     _bowlingAlleyService.ViewAllBowlingAlleys();
                     break;
                 case "2":
-                    _bowlingAlleyService.AddBowlingAlley();
+                    _bowlingAlleyService.AddBowlingAlley(_currentUserId);
                     break;
                 case "3":
                     Console.Write("Enter the Bowling Alley ID to edit: ");

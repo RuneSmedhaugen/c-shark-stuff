@@ -9,7 +9,7 @@ public class BowlingAlleyService : BaseService
         _currentUser = currentUser;
     }
 
-    public void AddBowlingAlley()
+    public void AddBowlingAlley(int userId)
     {
         Console.Write("Enter alley name: ");
         string name = Console.ReadLine();
