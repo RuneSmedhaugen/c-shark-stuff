@@ -1,43 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RollRadar.Models;
+using RollRadar.Services;
+using System.Collections.Generic;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ScoreController : ControllerBase
+namespace RollRadar.Controllers
 {
-    private readonly ScoreService _scoreService;
-
-    public ScoreController(ScoreService scoreService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ScoreController : ControllerBase
     {
-        _scoreService = scoreService;
-    }
+        private readonly ScoreService _scoreService;
 
-    [HttpGet]
-    public IActionResult GetAllScores()
-    {
-        var scores = _scoreService.ViewAllScores();
-        return Ok(scores);
-    }
+        public ScoreController(ScoreService scoreService)
+        {
+            _scoreService = scoreService;
+        }
 
+        [HttpGet]
+        public ActionResult<List<Scores>> GetAllScores()
+        {
+            var scores = _scoreService.ViewAllScores();
+            return Ok(scores);
+        }
 
         [HttpPost]
-    public IActionResult AddScore([FromBody] Scores score)
-    {
-        _scoreService.AddScore();
-        return Ok("Score added.");
-    }
+        public ActionResult AddScore([FromBody] Scores score)
+        {
+            _scoreService.AddScore(score);
+            return Ok("Score added successfully.");
+        }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteScore(int id)
-    {
-        _scoreService.DeleteScore(id);
-        return Ok("Score deleted.");
-    }
+        [HttpPut("{id}")]
+        public ActionResult EditScore(int id, [FromBody] Scores score)
+        {
+            score.Id = id;
+            _scoreService.EditScore(score);
+            return Ok("Score updated successfully.");
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult EditScore(int id, [FromBody] Scores score)
-    {
-        _scoreService.EditScore(id);
-        return Ok("Score updated.");
+        [HttpDelete("{id}")]
+        public ActionResult DeleteScore(int id)
+        {
+            _scoreService.DeleteScore(id);
+            return Ok("Score deleted successfully.");
+        }
     }
 }

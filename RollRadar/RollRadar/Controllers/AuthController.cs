@@ -1,40 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using RollRadar.Models;
-using RollRadar.Services;
 
-[ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+[ApiController]
+public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly AuthenticationService _authenticationService;
 
-    public UserController(IConfiguration configuration, AuthenticationService authenticationService)
+    public AuthController(IConfiguration configuration)
     {
         _configuration = configuration;
-        _authenticationService = authenticationService;
     }
 
-    // Login method
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login([FromBody] Users request) // Use Users directly for the login
+    public async Task<ActionResult<string>> Login([FromBody] LoginRequest request)
     {
-        // Authenticate the user
-        var user = _authenticationService.Login(request.Email, request.PasswordHash); // Ensure the Users model includes Email and Password properties
-        if (user == null)
-        {
-            return Unauthorized("Invalid credentials");
-        }
+        // Validate the user credentials here (e.g., against a database)
 
         // Create token
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Use user's email as the subject
+            new Claim(JwtRegisteredClaimNames.Sub, request.Username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -48,6 +39,12 @@ public class UserController : ControllerBase
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: creds);
 
-        return Ok(new JwtSecurityTokenHandler().WriteToken(token)); // Returns the token as a string
+        return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
     }
+}
+
+public class LoginRequest
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

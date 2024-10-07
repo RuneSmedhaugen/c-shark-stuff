@@ -1,42 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RollRadar.Models;
+using RollRadar.Services;
+using System.Collections.Generic;
 
-[ApiController]
-[Route("api/[controller]")]
-public class BowlingAlleyController : ControllerBase
+namespace RollRadar.Controllers
 {
-    private readonly BowlingAlleyService _bowlingAlleyService;
-
-    public BowlingAlleyController(BowlingAlleyService bowlingAlleyService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BowlingAlleyController : ControllerBase
     {
-        _bowlingAlleyService = bowlingAlleyService;
-    }
+        private readonly BowlingAlleyService _bowlingAlleyService;
 
-    [HttpGet]
-    public IActionResult GetAllAlleys()
-    {
-        var alleys = _bowlingAlleyService.ViewAllBowlingAlleys();
-        return Ok(alleys);
-    }
+        public BowlingAlleyController(BowlingAlleyService bowlingAlleyService)
+        {
+            _bowlingAlleyService = bowlingAlleyService;
+        }
 
-    [HttpPost]
-    public IActionResult AddAlley([FromBody] BowlingAlleys alley)
-    {
-        _bowlingAlleyService.AddBowlingAlley(alley.UserId);
-        return Ok("Bowling alley added.");
-    }
+        [HttpGet]
+        public ActionResult<List<BowlingAlleys>> GetAllBowlingAlleys()
+        {
+            var alleys = _bowlingAlleyService.GetAllBowlingAlleys();
+            return Ok(alleys);
+        }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteAlley(int id)
-    {
-        _bowlingAlleyService.DeleteBowlingAlley(id);
-        return Ok("Bowling alley deleted.");
-    }
+        [HttpPost]
+        public ActionResult AddBowlingAlley([FromBody] BowlingAlleys alley)
+        {
+            _bowlingAlleyService.AddBowlingAlley(alley);
+            return Ok("Bowling alley added successfully.");
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult EditAlley(int id, [FromBody] BowlingAlleys alley)
-    {
-        _bowlingAlleyService.EditBowlingAlley(id);
-        return Ok("Bowling alley updated.");
+        [HttpPut("{id}")]
+        public ActionResult EditBowlingAlley(int id, [FromBody] BowlingAlleys alley)
+        {
+            alley.Id = id;
+            _bowlingAlleyService.EditBowlingAlley(alley);
+            return Ok("Bowling alley updated successfully.");
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteBowlingAlley(int id)
+        {
+            _bowlingAlleyService.DeleteBowlingAlley(id);
+            return Ok("Bowling alley deleted successfully.");
+        }
     }
 }

@@ -3,72 +3,57 @@
 public class ScoreService : BaseService
 {
     private readonly Users _currentUser;
+    private readonly string _connectionString;
 
-    public ScoreService(string connectionString, Users currentUser) : base(connectionString)
+    public ScoreService(string connectionString) : base(connectionString)
     {
-        _currentUser = currentUser;
+        _connectionString = connectionString;
     }
 
-    public void AddScore()
+    public void AddScore(Scores score)
     {
-        Console.Write("Enter total score: ");
-        int totalScore = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter number of strikes: ");
-        int strikes = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter number of spares: ");
-        int spares = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter number of holes: ");
-        int holes = int.Parse(Console.ReadLine());
-
-        Console.Write("Enter the date the score was recorded (yyyy-mm-dd): ");
-        DateTime scoreDate = DateTime.Parse(Console.ReadLine());
-
-        Console.Write("Enter the name of the bowling alley: ");
-        string bowlingAlley = Console.ReadLine();
-
-        Console.Write("Enter an image URL (optional): ");
-        string image = Console.ReadLine();
-
-        Console.Write("Enter any comments (optional): ");
-        string comments = Console.ReadLine();
-
         string query = "INSERT INTO Scores (UserId, TotalScore, Strikes, Spares, Holes, ScoreDate, Image, Comments, BowlingAlley, Name) " +
                        "VALUES (@UserId, @TotalScore, @Strikes, @Spares, @Holes, @ScoreDate, @Image, @Comments, @BowlingAlley, @Name)";
-        ExecuteNonQuery(query, (cmd) =>
+        ExecuteNonQuery(query, cmd =>
         {
             cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
-            cmd.Parameters.AddWithValue("@TotalScore", totalScore);
-            cmd.Parameters.AddWithValue("@Strikes", strikes);
-            cmd.Parameters.AddWithValue("@Spares", spares);
-            cmd.Parameters.AddWithValue("@Holes", holes);
-            cmd.Parameters.AddWithValue("@ScoreDate", scoreDate);
-            cmd.Parameters.AddWithValue("@Image", image);
-            cmd.Parameters.AddWithValue("@Comments", comments);
-            cmd.Parameters.AddWithValue("@BowlingAlley", bowlingAlley);
+            cmd.Parameters.AddWithValue("@TotalScore", score.TotalScore);
+            cmd.Parameters.AddWithValue("@Strikes", score.Strikes);
+            cmd.Parameters.AddWithValue("@Spares", score.Spares);
+            cmd.Parameters.AddWithValue("@Holes", score.Holes);
+            cmd.Parameters.AddWithValue("@ScoreDate", score.ScoreDate);
+            cmd.Parameters.AddWithValue("@Image", score.Image);
+            cmd.Parameters.AddWithValue("@Comments", score.Comments);
+            cmd.Parameters.AddWithValue("@BowlingAlley", score.BowlingAlleyName);
             cmd.Parameters.AddWithValue("@Name", _currentUser.Name);
         });
-
-        Console.WriteLine("Score added successfully.");
     }
 
-    public void EditScore(int id)
+    public void EditScore(Scores score)
     {
-        //TO DO
+        string query = "UPDATE Scores SET TotalScore = @TotalScore, Strikes = @Strikes, Spares = @Spares, Holes = @Holes, ScoreDate = @ScoreDate, Image = @Image, Comments = @Comments WHERE Id = @Id AND UserId = @UserId";
+        ExecuteNonQuery(query, cmd =>
+        {
+            cmd.Parameters.AddWithValue("@Id", score.Id);
+            cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
+            cmd.Parameters.AddWithValue("@TotalScore", score.TotalScore);
+            cmd.Parameters.AddWithValue("@Strikes", score.Strikes);
+            cmd.Parameters.AddWithValue("@Spares", score.Spares);
+            cmd.Parameters.AddWithValue("@Holes", score.Holes);
+            cmd.Parameters.AddWithValue("@ScoreDate", score.ScoreDate);
+            cmd.Parameters.AddWithValue("@Image", score.Image);
+            cmd.Parameters.AddWithValue("@Comments", score.Comments);
+        });
     }
 
     public void DeleteScore(int id)
     {
         string query = "DELETE FROM Scores WHERE Id = @Id AND UserId = @UserId";
-        ExecuteNonQuery(query, (cmd) =>
+        ExecuteNonQuery(query, cmd =>
         {
             cmd.Parameters.AddWithValue("@Id", id);
             cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
         });
-
-        Console.WriteLine("Score deleted successfully.");
     }
 
     public List<Scores> ViewAllScores()
@@ -76,11 +61,11 @@ public class ScoreService : BaseService
         string query = "SELECT * FROM Scores WHERE UserId = @UserId";
         List<Scores> scores = new List<Scores>();
 
-        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
+        using (var reader = ExecuteReader(query, cmd => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
         {
             while (reader.Read())
             {
-                var score = new Scores
+                scores.Add(new Scores
                 {
                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
                     UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
@@ -92,13 +77,10 @@ public class ScoreService : BaseService
                     ScoreDate = reader.GetDateTime(reader.GetOrdinal("ScoreDate")),
                     Comments = reader.GetString(reader.GetOrdinal("Comments")),
                     BowlingAlleyName = reader.GetString(reader.GetOrdinal("BowlingAlley"))
-                };
-
-                scores.Add(score);
+                });
             }
         }
 
         return scores;
     }
-
 }

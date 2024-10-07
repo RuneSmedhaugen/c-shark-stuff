@@ -1,6 +1,4 @@
 ﻿using RollRadar.Models;
-using System;
-using System.Data.SqlClient;
 
 public class UserService : BaseService
 {
@@ -9,7 +7,7 @@ public class UserService : BaseService
     public void Register(Users user, string password)
     {
         string query = "INSERT INTO Users (Name, Email, PasswordHash, Age, Hand, Image, Comments) VALUES (@Name, @Email, @PasswordHash, @Age, @Hand, @Image, @Comments)";
-        ExecuteNonQuery(query, (cmd) =>
+        ExecuteNonQuery(query, cmd =>
         {
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Email", user.Email);
@@ -24,7 +22,7 @@ public class UserService : BaseService
     public Users GetByEmail(string email)
     {
         string query = "SELECT * FROM Users WHERE Email = @Email";
-        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@Email", email)))
+        using (var reader = ExecuteReader(query, cmd => cmd.Parameters.AddWithValue("@Email", email)))
         {
             if (reader.Read())
             {
@@ -42,6 +40,21 @@ public class UserService : BaseService
             }
         }
         return null;
+    }
+
+    public void UpdateUser(Users user)
+    {
+        string query = "UPDATE Users SET Name = @Name, Email = @Email, Age = @Age, Hand = @Hand, Image = @Image, Comments = @Comments WHERE Id = @Id";
+        ExecuteNonQuery(query, cmd =>
+        {
+            cmd.Parameters.AddWithValue("@Id", user.Id);
+            cmd.Parameters.AddWithValue("@Name", user.Name);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@Age", user.Age);
+            cmd.Parameters.AddWithValue("@Hand", user.Hand);
+            cmd.Parameters.AddWithValue("@Image", user.Image);
+            cmd.Parameters.AddWithValue("@Comments", user.Comments);
+        });
     }
 
     public string HashPassword(string password)

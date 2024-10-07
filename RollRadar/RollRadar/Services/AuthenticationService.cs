@@ -1,28 +1,26 @@
-﻿using System;
-using RollRadar.Models;
+﻿using RollRadar.Models;
 
-public class AuthenticationService
+namespace RollRadar.Services
 {
-    private readonly UserService _userService;
-
-    public AuthenticationService(UserService userService)
+    public class AuthenticationService
     {
-        _userService = userService;
-    }
+        private readonly UserService _userService;
 
-    public Users Login(string email, string password)
-    {
-        Users user = _userService.GetByEmail(email);
-        if (user != null && VerifyPassword(password, user.PasswordHash))
+        public AuthenticationService(UserService userService)
         {
-            return user;
+            _userService = userService;
         }
-        return null;
-    }
 
-    private bool VerifyPassword(string inputPassword, string hashedPassword)
-    {
-        string inputHash = _userService.HashPassword(inputPassword);
-        return inputHash == hashedPassword;
+        public Users Login(string email, string password)
+        {
+            var user = _userService.GetByEmail(email);
+            return user != null && VerifyPassword(password, user.PasswordHash) ? user : null;
+        }
+
+        private bool VerifyPassword(string inputPassword, string hashedPassword)
+        {
+            string inputHash = _userService.HashPassword(inputPassword);
+            return inputHash == hashedPassword;
+        }
     }
 }
