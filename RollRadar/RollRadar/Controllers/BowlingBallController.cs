@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RollRadar.Models;
-/*
+
 [ApiController]
 [Route("api/[controller]")]
 public class BowlingBallController : ControllerBase
@@ -40,4 +40,3 @@ public class BowlingBallController : ControllerBase
         return Ok("Bowling ball updated.");
     }
 }
-*/

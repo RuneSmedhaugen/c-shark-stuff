@@ -71,24 +71,34 @@ public class ScoreService : BaseService
         Console.WriteLine("Score deleted successfully.");
     }
 
-    public void ViewAllScores()
+    public List<Scores> ViewAllScores()
     {
         string query = "SELECT * FROM Scores WHERE UserId = @UserId";
+        List<Scores> scores = new List<Scores>();
+
         using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
         {
             while (reader.Read())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("Id"));
-                int totalScore = reader.GetInt32(reader.GetOrdinal("TotalScore"));
-                int strikes = reader.GetInt32(reader.GetOrdinal("Strikes"));
-                int spares = reader.GetInt32(reader.GetOrdinal("Spares"));
-                int holes = reader.GetInt32(reader.GetOrdinal("Holes"));
-                DateTime scoreDate = reader.GetDateTime(reader.GetOrdinal("ScoreDate"));
-                string bowlingAlley = reader.GetString(reader.GetOrdinal("BowlingAlley"));
-                string comments = reader.GetString(reader.GetOrdinal("Comments"));
+                var score = new Scores
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    TotalScore = reader.GetInt32(reader.GetOrdinal("TotalScore")),
+                    Strikes = reader.GetInt32(reader.GetOrdinal("Strikes")),
+                    Spares = reader.GetInt32(reader.GetOrdinal("Spares")),
+                    Holes = reader.GetInt32(reader.GetOrdinal("Holes")),
+                    ScoreDate = reader.GetDateTime(reader.GetOrdinal("ScoreDate")),
+                    Comments = reader.GetString(reader.GetOrdinal("Comments")),
+                    BowlingAlleyName = reader.GetString(reader.GetOrdinal("BowlingAlley"))
+                };
 
-                Console.WriteLine($"ID: {id}, Total Score: {totalScore}, Strikes: {strikes}, Spares: {spares}, Holes: {holes}, Date: {scoreDate}, Alley: {bowlingAlley}, Comments: {comments}");
+                scores.Add(score);
             }
         }
+
+        return scores;
     }
+
 }

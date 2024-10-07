@@ -1,8 +1,4 @@
-﻿/*
-namespace RollRadar.Controllers
-
-{
-    using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
     using RollRadar.Models;
 
     [ApiController]
@@ -37,5 +33,3 @@ namespace RollRadar.Controllers
         }
     }
 
-}
-*/

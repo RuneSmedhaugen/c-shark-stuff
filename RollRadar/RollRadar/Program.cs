@@ -1,17 +1,34 @@
-using System;
-using RollRadar;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RollRadar.Servies;
 
-//Users.Hand kan bare være Lefty eller Righty, må finne ut hvor og hvordan jeg reverserer det
-//GUI
-//Fikse Add metod og Edit metoder
-//Edit profil seksjon
-class Program
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers(); // Add support for controllers and APIs
+
+// Register your services for dependency injection
+builder.Services.AddScoped<ScoreService>();
+builder.Services.AddScoped<BowlingAlleyService>();
+builder.Services.AddScoped<BowlingBallService>();
+builder.Services.AddScoped<UserService>();
+
+// Add database connection string as a configuration
+string connectionString = "Server=localhost\\SQLEXPRESS;Database=BowlingDB;Integrated Security=True;";
+builder.Services.AddSingleton(connectionString); // Register the connection string
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
 {
-
-    public static void Main(string[] args)
-    {
-        string connectionString = "Server=localhost\\SQLEXPRESS;Database=BowlingDB;Integrated Security=True;";
-        var app = new Run(connectionString);
-        app.Start();
-    }
+    app.UseDeveloperExceptionPage(); // Enable detailed error pages in development
 }
+
+app.UseHttpsRedirection(); // Redirect HTTP to HTTPS
+app.UseAuthorization(); // Enable authorization middleware
+
+app.MapControllers(); // Map controller routes
+
+app.Run(); // Run the application

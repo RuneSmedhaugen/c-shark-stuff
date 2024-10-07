@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RollRadar.Models;
-/*
+
 [ApiController]
 [Route("api/[controller]")]
 public class BowlingAlleyController : ControllerBase
@@ -36,8 +36,7 @@ public class BowlingAlleyController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult EditAlley(int id, [FromBody] BowlingAlleys alley)
     {
-        _bowlingAlleyService.EditBowlingAlley(id, alley);
+        _bowlingAlleyService.EditBowlingAlley(id);
         return Ok("Bowling alley updated.");
     }
 }
-*/

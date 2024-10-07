@@ -1,8 +1,4 @@
-﻿/*
-namespace RollRadar.Controllers
-{
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RollRadar.Models;
 
 [ApiController]
@@ -23,7 +19,8 @@ public class ScoreController : ControllerBase
         return Ok(scores);
     }
 
-    [HttpPost]
+
+        [HttpPost]
     public IActionResult AddScore([FromBody] Scores score)
     {
         _scoreService.AddScore();
@@ -44,6 +41,3 @@ public class ScoreController : ControllerBase
         return Ok("Score updated.");
     }
 }
-
-}
-*/

@@ -39,8 +39,66 @@ public class BowlingAlleyService : BaseService
 
     public void EditBowlingAlley(int id)
     {
-        //TO DO
+        // Query to get the existing bowling alley by ID
+        string selectQuery = "SELECT * FROM BowlingAlleys WHERE Id = @Id AND UserId = @UserId";
+
+        BowlingAlleys existingAlley = null;
+
+        // Step 1: Retrieve the existing bowling alley
+        using (var reader = ExecuteReader(selectQuery, cmd =>
+        {
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@UserId", _currentUser.Id); // Only the owner can edit
+        }))
+        {
+            if (reader.Read())
+            {
+                existingAlley = new BowlingAlleys
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Location = reader.GetString(reader.GetOrdinal("Location")),
+                    Comments = reader.GetString(reader.GetOrdinal("Review")),
+                    Image = reader.GetString(reader.GetOrdinal("Image")),
+                    UserId = reader.GetInt32(reader.GetOrdinal("UserId"))
+                };
+            }
+        }
+
+        if (existingAlley == null)
+        {
+            Console.WriteLine("Bowling alley not found or you do not have permission to edit.");
+            return;
+        }
+
+        // Step 2: Prompt user to edit fields (or handle updates programmatically)
+        Console.Write("Enter new name (current: {0}): ", existingAlley.Name);
+        string newName = Console.ReadLine();
+        existingAlley.Name = !string.IsNullOrEmpty(newName) ? newName : existingAlley.Name;
+
+        Console.Write("Enter new location (current: {0}): ", existingAlley.Location);
+        string newLocation = Console.ReadLine();
+        existingAlley.Location = !string.IsNullOrEmpty(newLocation) ? newLocation : existingAlley.Location;
+
+        // Step 3: Update the bowling alley in the database
+        string updateQuery = @"
+        UPDATE BowlingAlleys 
+        SET Name = @Name, Location = @Location, Image = @Image, Comments = @Review
+        WHERE Id = @Id AND UserId = @UserId";
+
+        ExecuteNonQuery(updateQuery, cmd =>
+        {
+            cmd.Parameters.AddWithValue("@Id", existingAlley.Id);
+            cmd.Parameters.AddWithValue("@UserId", _currentUser.Id);
+            cmd.Parameters.AddWithValue("@Name", existingAlley.Name);
+            cmd.Parameters.AddWithValue("@Location", existingAlley.Location);
+            cmd.Parameters.AddWithValue("@Image", existingAlley.Location);
+            cmd.Parameters.AddWithValue("@Review", existingAlley.Location);
+        });
+
+        Console.WriteLine("Bowling alley updated successfully.");
     }
+
 
     public void DeleteBowlingAlley(int id)
     {
@@ -54,20 +112,28 @@ public class BowlingAlleyService : BaseService
         Console.WriteLine("Bowling alley deleted successfully.");
     }
 
-    public void ViewAllBowlingAlleys()
+    public List<BowlingAlleys> ViewAllBowlingAlleys()
     {
-        string query = "SELECT * FROM BowlingAlleys WHERE UserId = @UserId";
-        using (var reader = ExecuteReader(query, (cmd) => cmd.Parameters.AddWithValue("@UserId", _currentUser.Id)))
+        List<BowlingAlleys> alleys = new List<BowlingAlleys>();
+
+        string query = "SELECT * FROM BowlingAlleys";
+        using (var reader = ExecuteReader(query, cmd => { }))
         {
             while (reader.Read())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("Id"));
-                string name = reader.GetString(reader.GetOrdinal("Name"));
-                string location = reader.GetString(reader.GetOrdinal("Location"));
-                string review = reader.GetString(reader.GetOrdinal("Review"));
-
-                Console.WriteLine($"ID: {id}, Name: {name}, Location: {location}, Review: {review}");
+                BowlingAlleys alley = new BowlingAlleys
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Location = reader.GetString(reader.GetOrdinal("Location")),
+                    Comments = reader.GetString(reader.GetOrdinal("Review")),
+                    Image = reader.GetString(reader.GetOrdinal("Image")),
+                    UserId = reader.GetInt32(reader.GetOrdinal("UserId"))
+                };
+                alleys.Add(alley);
             }
         }
+        return alleys;
     }
+
 }
