@@ -5,27 +5,36 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using RollRadar.Models;
+using RollRadar.Services;
 
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
+    private readonly AuthenticationService _authenticationService;
 
-    public AuthController(IConfiguration configuration)
+    public AuthController(IConfiguration configuration, AuthenticationService authenticationService)
     {
         _configuration = configuration;
+        _authenticationService = authenticationService;
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login([FromBody] LoginRequest request)
     {
-        // Validate the user credentials here (e.g., against a database)
+        // Validate the user credentials using the AuthenticationService
+        var user = _authenticationService.Login(request.Username, request.Password);
+        if (user == null)
+        {
+            return Unauthorized("Invalid username or password."); // Return 401 if login fails
+        }
 
         // Create token
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, request.Username),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Use user.Email instead of request.Username
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -45,6 +54,6 @@ public class AuthController : ControllerBase
 
 public class LoginRequest
 {
-    public string Username { get; set; }
+    public string Username { get; set; } // Assuming this is the user's email
     public string Password { get; set; }
 }
