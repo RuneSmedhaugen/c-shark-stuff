@@ -27,13 +27,13 @@ namespace VisionHub.Services
                         }
                         connection.Open();
                         int rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine($"Rows affected: {rowsAffected}"); // Log number of affected rows
+                        Console.WriteLine($"Rows affected: {rowsAffected}"); //Litt logging for å se hva som skjer
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in ExecuteNonQuery: " + ex.Message); // Log the error
+                Console.WriteLine("Error in ExecuteNonQuery: " + ex.Message); 
             }
         }
 

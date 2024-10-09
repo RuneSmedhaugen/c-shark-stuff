@@ -42,12 +42,12 @@ namespace VisionHub.Services
             var parameters = new[]
             {
                 new SqlParameter("@CommentText", newCommentText),
-                new SqlParameter("@CommentID", commentId) // Fixed the parameter name
+                new SqlParameter("@CommentID", commentId)
             };
             ExecuteNonQuery(query, parameters);
         }
 
-        // Updated method to return a list of Comments instead of a DataTable
+        
         public List<Comments> GetAllComments(int artworkId)
         {
             string query = "SELECT * FROM Comments WHERE ArtworkID = @ArtworkID";
@@ -56,11 +56,9 @@ namespace VisionHub.Services
             {
                 new SqlParameter("@ArtworkID", artworkId)
             };
-
-            // Execute the query and get the DataTable
+            
             DataTable dataTable = ExecuteQuery(query, parameters);
 
-            // Convert the DataTable to a list of Comments
             return ConvertDataTableToCommentsList(dataTable);
         }
 
@@ -73,9 +71,9 @@ namespace VisionHub.Services
                 var comment = new Comments
                 {
                     Id = Convert.ToInt32(row["CommentID"]),
-                    ArtworkID = Convert.ToInt32(row["ArtworkID"]), // Fixed column name
+                    ArtworkID = Convert.ToInt32(row["ArtworkID"]),
                     UserID = Convert.ToInt32(row["UserID"]),
-                    CommentText = row["CommentText"].ToString(), // Fixed column name
+                    CommentText = row["CommentText"].ToString(),
                 };
 
                 commentsList.Add(comment);
