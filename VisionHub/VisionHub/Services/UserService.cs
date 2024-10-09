@@ -12,15 +12,16 @@ namespace VisionHub.Services
         {
         }
 
-        public void AddUser(string Username, string Email, string Password, string Biography, DateTime Birthdate)
+        public void AddUser(string Username, string Email, string Name, string Password, string Biography, DateTime Birthdate)
         {
             string salt = GenerateSalt();
             string passwordHash = HashPassword(Password, salt);
             string query =
-                "INSERT INTO Users (Username, Email, PasswordHash, Salt, Biography, Birthdate, RegisterDate) VALUES (@Username, @Email, @PasswordHash, @Salt, @Biography, @Birthdate, @RegisterDate)";
+                "INSERT INTO Users (Username, Email, Name, PasswordHash, Salt, Biography, Birthdate, RegisterDate) VALUES (@Username, @Email, @Name, @PasswordHash, @Salt, @Biography, @Birthdate, @RegisterDate)";
             var parameters = new[]
             {
                 new SqlParameter("@Username", Username),
+                new SqlParameter("@Name", Name),
                 new SqlParameter("@Email", Email),
                 new SqlParameter("@PasswordHash", passwordHash),
                 new SqlParameter("@Salt", salt),
@@ -41,15 +42,16 @@ namespace VisionHub.Services
             ExecuteNonQuery(query, parameters);
         }
 
-        public void UpdateUser(int UserID, string newUsername, string newEmail, string NewPassword, string newBiography, DateTime newBirthdate)
+        public void UpdateUser(int UserID, string newUsername, string newName, string newEmail, string NewPassword, string newBiography, DateTime newBirthdate)
         {
             string salt = GenerateSalt();
             string passwordHash = HashPassword(NewPassword, salt);
-            string query = "UPDATE Users SET Username = @Username, Email = @Email, PasswordHash = @PasswordHash, Biography = @Biography, Birthdate = @Birthdate WHERE UserID = @UserID";
+            string query = "UPDATE Users SET Username = @Username, Name = @Name, Email = @Email, PasswordHash = @PasswordHash, Biography = @Biography, Birthdate = @Birthdate WHERE UserID = @UserID";
             var parameters = new[]
             {
                 new SqlParameter("@UserID", UserID),
                 new SqlParameter("@Username", newUsername),
+                new SqlParameter("@Name", newName),
                 new SqlParameter("@Email", newEmail),
                 new SqlParameter("@PasswordHash", passwordHash),
                 new SqlParameter("@Salt", salt),
@@ -59,15 +61,17 @@ namespace VisionHub.Services
             ExecuteNonQuery(query, parameters);
         }
 
-        public DataTable GetUserInfo(int UserID)
+        public List<Users> GetUserInfo(int userID)
         {
-            string query = "SELECT * FROM Users WHERE UserID = @UserId";
+            string query = "SELECT * FROM Users WHERE UserID = @UserID";
             var parameters = new[]
             {
-                new SqlParameter("@UserID", UserID),
+                new SqlParameter("@UserID", userID),
             };
-            return ExecuteQuery(query, parameters);
+            DataTable dataTable = ExecuteQuery(query, parameters);
+            return ConvertDataTableToUserList(dataTable);
         }
+
 
         public List<Users> GetAllUsers()
         {

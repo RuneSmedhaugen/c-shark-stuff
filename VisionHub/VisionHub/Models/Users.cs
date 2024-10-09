@@ -7,7 +7,6 @@ namespace VisionHub.Models
         private string _name;
         private string _username;
         private string _email;
-        private string _password;
         private string _passwordHash;
         private string? _biography;
         private DateTime _birthDate;
@@ -29,12 +28,6 @@ namespace VisionHub.Models
         {
             get => _email;
             set => _email = value;
-        }
-
-        public string Password
-        {
-            get => _password;
-            set => _password = value;
         }
 
         public string PasswordHash
@@ -61,20 +54,19 @@ namespace VisionHub.Models
             private set => _registerDate = value;
         }
 
-        public Users(int id, string username, string name, string email, string password, string passwordHash, string? biography, DateTime birthdate, string connectionString) : base(id, connectionString)
+        public Users(int id, string username, string name, string email, string passwordHash, string? biography, DateTime birthdate) : base(id)
         {
             UserName = username;
             Name = name;
             Email = email;
-            Password = password;
             PasswordHash = passwordHash;
             Biography = biography;
             BirthDate = birthdate;
         }
 
+        // Default constructor
         public Users()
         {
-            
         }
     }
 }

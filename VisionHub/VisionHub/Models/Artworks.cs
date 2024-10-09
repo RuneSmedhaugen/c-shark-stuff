@@ -14,7 +14,7 @@
         public DateTime UploadDate { get { return _uploadDate; } private set { _uploadDate = value; } }
         public string ImageUrl { get { return _url; } set { _url = value; } }
 
-        public Artworks(int id, int userID, string title, string description, string imageUrl, DateTime uploadDate, string connectionString) : base(id, connectionString)
+        public Artworks(int id, int userID, string title, string description, string imageUrl, DateTime uploadDate) : base(id)
         {
             UserID = userID;
             Title = title;

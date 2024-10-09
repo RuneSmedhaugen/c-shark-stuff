@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace VisionHub.Models
+﻿namespace VisionHub.Models
 {
     public abstract class BaseModel
     {
         private int _id;
-        private string _connectionString;
 
         public int Id
         {
@@ -13,21 +10,13 @@ namespace VisionHub.Models
             set => _id = value;
         }
 
-        public string ConnectionString
-        {
-            get => _connectionString;
-            set => _connectionString = value;
-        }
-
-        public BaseModel(int id, string connectionString)
+        public BaseModel(int id)
         {
             Id = id;
-            ConnectionString = connectionString;
         }
 
         public BaseModel()
         {
-            
         }
     }
 }

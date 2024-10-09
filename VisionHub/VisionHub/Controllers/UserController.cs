@@ -21,7 +21,7 @@ namespace VisionHub.Controllers
         {
             try
             {
-                _userService.AddUser(model.UserName, model.Email, model.PasswordHash, model.Biography, model.BirthDate);
+                _userService.AddUser(model.UserName, model.Email, model.Name, model.PasswordHash, model.Biography, model.BirthDate);
                 return Ok(new { message = "User registered successfully!" });
             }
             catch (Exception ex)
@@ -36,7 +36,7 @@ namespace VisionHub.Controllers
         {
             try
             {
-                _userService.UpdateUser(model.Id, model.UserName, model.Email, model.PasswordHash, model.Biography, model.BirthDate);
+                _userService.UpdateUser(model.Id, model.UserName, model.Name, model.Email, model.PasswordHash, model.Biography, model.BirthDate);
                 return Ok(new { message = "User updated successfully!" });
             }
             catch (Exception ex)
@@ -66,18 +66,19 @@ namespace VisionHub.Controllers
         {
             try
             {
-                var user = _userService.GetUserInfo(id);
-                if (user.Rows.Count == 0)
+                var users = _userService.GetUserInfo(id);
+                if (users.Count == 0)
                 {
                     return NotFound(new { message = "User not found!" });
                 }
-                return Ok(user);
+                return Ok(users[0]);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
         }
+
 
         // GET api/user/all
         [HttpGet("all")]

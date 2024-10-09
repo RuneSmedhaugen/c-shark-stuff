@@ -31,7 +31,7 @@
             private set { _commentDate = value; }
         }
 
-        public Comments(int id, int artworkID, int userID, string commentText, string connectionString) : base(id, connectionString)
+        public Comments(int id, int artworkID, int userID, string commentText) : base(id)
         {
             ArtworkID = artworkID;
             UserID = userID;
