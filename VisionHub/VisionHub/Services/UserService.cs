@@ -14,10 +14,13 @@ namespace VisionHub.Services
 
         public void AddUser(string Username, string Email, string Name, string Password, string Biography, DateTime Birthdate)
         {
+            // Generate salt and hash password
             string salt = GenerateSalt();
             string passwordHash = HashPassword(Password, salt);
+
             string query =
                 "INSERT INTO Users (Username, Email, Name, PasswordHash, Salt, Biography, Birthdate, RegisterDate) VALUES (@Username, @Email, @Name, @PasswordHash, @Salt, @Biography, @Birthdate, @RegisterDate)";
+
             var parameters = new[]
             {
                 new SqlParameter("@Username", Username),
@@ -25,12 +28,14 @@ namespace VisionHub.Services
                 new SqlParameter("@Email", Email),
                 new SqlParameter("@PasswordHash", passwordHash),
                 new SqlParameter("@Salt", salt),
-                new SqlParameter("@Biography", Biography),
+                new SqlParameter("@Biography", Biography ?? (object)DBNull.Value), 
                 new SqlParameter("@Birthdate", Birthdate),
                 new SqlParameter("@RegisterDate", DateTime.Now)
             };
+
             ExecuteNonQuery(query, parameters);
         }
+
 
         public void RemoveUser(int UserID)
         {
@@ -70,6 +75,29 @@ namespace VisionHub.Services
             };
             DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToUserList(dataTable);
+        }
+
+        public Users ValidateUser(string username, string password)
+        {
+            string query = "SELECT * FROM Users WHERE Username = @UserName";
+            var parameters = new[]
+            {
+                new SqlParameter("@Username", username)
+            };
+
+            DataTable dataTable = ExecuteQuery(query, parameters);
+            var userList = ConvertDataTableToUserList(dataTable);
+
+            if (userList.Count == 0) return null;
+
+            var user = userList.First();
+            // Verify the password
+            if (!VerifyPassword(password, user.PasswordHash, user.Salt))
+            {
+                return null; // Invalid password
+            }
+
+            return user; // Return user object
         }
 
 
@@ -121,6 +149,7 @@ namespace VisionHub.Services
                     Biography = row["Biography"].ToString(),
                     BirthDate = Convert.ToDateTime(row["Birthdate"]),
                     Name = row["Name"].ToString(),
+                    Salt = row["Salt"].ToString(),
                 };
 
                 userList.Add(user);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
 using VisionHub.Models;
 using VisionHub.Services;
 
@@ -17,11 +18,12 @@ namespace VisionHub.Controllers
 
         // POST api/artwork/add
         [HttpPost("add")]
-        public IActionResult AddArtwork([FromBody] Artworks model)
+        public IActionResult AddArtwork([FromForm] int UserID, [FromForm] int CategoryId, [FromForm] string Title, [FromForm] string Description, [FromForm] string ImageUrl)
         {
             try
             {
-                _artworkService.AddArt(model.UserID, model.Title, model.Description, model.ImageUrl);
+                // Directly use ImageUrl without converting any image data
+                _artworkService.AddArt(UserID, CategoryId, Title, Description, ImageUrl);
                 return Ok(new { message = "Artwork added successfully!" });
             }
             catch (Exception ex)
@@ -43,7 +45,7 @@ namespace VisionHub.Controllers
         }
 
         // GET api/artwork
-        [HttpGet]
+        [HttpGet("all")]
         public IActionResult GetAllArtworks()
         {
             var artworks = _artworkService.GetAllArt();
@@ -77,6 +79,20 @@ namespace VisionHub.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("featured")]
+        public IActionResult GetFeaturedArtworks()
+        {
+            try
+            {
+                var artworks = _artworkService.GetFeaturedArtworks();
+                return Ok(artworks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
     }

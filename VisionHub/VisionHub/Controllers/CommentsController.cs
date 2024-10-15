@@ -35,11 +35,11 @@ namespace VisionHub.Controllers
             }
         }
 
-        // GET api/comment/{id}
-        [HttpGet("{id}")]
-        public IActionResult GetComment(int id)
+        // GET api/comment/all
+        [HttpGet("all")]
+        public IActionResult GetComment()
         {
-            var comments = _commentService.GetAllComments(id); // Assuming this method returns comments for a specific artwork
+            var comments = _commentService.GetAllComments();
 
             if (comments == null || comments.Count == 0)
             {
@@ -53,10 +53,22 @@ namespace VisionHub.Controllers
         [HttpGet("artwork/{artworkId}")]
         public IActionResult GetCommentsByArtwork(int artworkId)
         {
-            var comments = _commentService.GetAllComments(artworkId);
+            var comments = _commentService.GetCommentsArtworkID(artworkId);
             if (comments == null || comments.Count == 0)
             {
                 return NotFound(new { message = "No comments found for this artwork." });
+            }
+            return Ok(comments);
+        }
+
+        // GET api/comment/user/{userID}
+        [HttpGet("User/{UserID}")]
+        public IActionResult GetCommentsByUserID(int UserID)
+        {
+            var comments = _commentService.GetCommentsByUser(UserID);
+            if (comments == null || comments.Count == 0)
+            {
+                return NotFound(new { message = "No comments found for this user." });
             }
             return Ok(comments);
         }

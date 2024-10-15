@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using VisionHub.Models;
 
@@ -13,16 +14,17 @@ namespace VisionHub.Services
 
         }
 
-        public void AddArt(int userID, string title, string description, string imageUrl)
+        public void AddArt(int userID, int categoryId, string title, string description, string imageUrl)
         {
             string query =
-                "INSERT INTO Artworks (UserID, Title, Description, UploadDate, ImageUrl) VALUES (@UserID, @Title, @Description, @UploadDate, @ImageUrl)";
+                "INSERT INTO Artworks (UserID, CategoryId, Title, Description, UploadDate, ImageUrl) VALUES (@UserID, @CategoryId, @Title, @Description, @UploadDate, @ImageUrl)";
             var parameters = new[]
             {
                 new SqlParameter("@UserID", userID),
+                new SqlParameter("@CategoryId", categoryId ),
                 new SqlParameter("@Title", title),
                 new SqlParameter("@Description", description),
-                new SqlParameter("@ImageUrl", imageUrl),
+                new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)imageUrl ?? DBNull.Value }, 
                 new SqlParameter("@UploadDate", DateTime.Now)
             };
 
@@ -38,7 +40,7 @@ namespace VisionHub.Services
             new SqlParameter("@ArtID", artID),
             new SqlParameter("@Title", newTitle),
             new SqlParameter("@Description", newDescription),
-            new SqlParameter("@ImageUrl", newImageUrl)
+            new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)newImageUrl ?? DBNull.Value },
 
         };
 
@@ -86,6 +88,13 @@ namespace VisionHub.Services
             return ConvertDataTableToArtworksList(dataTable);
         }
 
+        public List<Artworks> GetFeaturedArtworks()
+        {
+            string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()"; // Select 5 random featured artworks
+            DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToArtworksList(dataTable);
+        }
+
         public List<Artworks> ConvertDataTableToArtworksList(DataTable dataTable)
         {
             List<Artworks> artworksList = new List<Artworks>();
@@ -99,6 +108,7 @@ namespace VisionHub.Services
                     Title = row["Title"].ToString(),
                     Description = row["Description"].ToString(),
                     ImageUrl = row["ImageUrl"].ToString(),
+                    
                 };
 
                 artworksList.Add(artwork);

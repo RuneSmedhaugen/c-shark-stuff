@@ -27,7 +27,7 @@ namespace VisionHub.Services
                         }
                         connection.Open();
                         int rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine($"Rows affected: {rowsAffected}"); //Litt logging for å se hva som skjer
+                        Console.WriteLine($"Rows affected: {rowsAffected}");
                     }
                 }
             }

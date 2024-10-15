@@ -48,17 +48,50 @@ namespace VisionHub.Services
         }
 
         
-        public List<Comments> GetAllComments(int artworkId)
+        public List<Comments> GetAllComments()
+        {
+            string query = "SELECT * FROM Comments";
+            
+            DataTable dataTable = ExecuteQuery(query);
+
+            return ConvertDataTableToCommentsList(dataTable);
+        }
+
+        public List<Comments> GetCommentsId(int commentID)
+        {
+            string query = "SELECT * FROM Comments WHERE CommentID = @CommentID";
+
+            var parameters = new[]
+            {
+                new SqlParameter("@CommentID", commentID)
+            };
+
+            DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToCommentsList(dataTable);
+        }
+
+        public List<Comments> GetCommentsArtworkID(int ArtworkID)
         {
             string query = "SELECT * FROM Comments WHERE ArtworkID = @ArtworkID";
 
             var parameters = new[]
             {
-                new SqlParameter("@ArtworkID", artworkId)
+                new SqlParameter("@ArtworkID", ArtworkID)
             };
-            
-            DataTable dataTable = ExecuteQuery(query, parameters);
 
+            DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToCommentsList(dataTable);
+        }
+
+        public List<Comments> GetCommentsByUser(int UserID)
+        {
+            string query = "SELECT * FROM Comments WHERE UserID = @UserID";
+
+            var parameters = new[]
+            {
+                new SqlParameter("UserID", UserID)
+            };
+            DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToCommentsList(dataTable);
         }
 

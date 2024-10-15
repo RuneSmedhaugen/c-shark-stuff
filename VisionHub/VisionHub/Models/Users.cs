@@ -9,8 +9,15 @@ namespace VisionHub.Models
         private string _email;
         private string _passwordHash;
         private string? _biography;
+        private string _salt;
         private DateTime _birthDate;
         private DateTime _registerDate = DateTime.Now;
+
+        public string Salt
+        {
+            get => _salt;
+            set => _salt = value;
+        }
 
         public string Name
         {
@@ -54,12 +61,13 @@ namespace VisionHub.Models
             private set => _registerDate = value;
         }
 
-        public Users(int id, string username, string name, string email, string passwordHash, string? biography, DateTime birthdate) : base(id)
+        public Users(int id, string username, string name, string email, string passwordHash, string salt, string? biography, DateTime birthdate) : base(id)
         {
             UserName = username;
             Name = name;
             Email = email;
             PasswordHash = passwordHash;
+            Salt = salt;
             Biography = biography;
             BirthDate = birthdate;
         }
