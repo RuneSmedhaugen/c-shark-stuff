@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-//import style from './styles/featuredstyle.css';
 
 const FeaturedArtworks = () => {
     const [artworks, setArtworks] = useState([]);
