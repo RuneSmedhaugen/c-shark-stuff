@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { categoryService } from '../services/apiService'; // Adjust the import path as necessary
 
-const CategoryList = () => {
-    const [categories, setCategories] = useState([]); // State to hold the categories
-    const [error, setError] = useState(''); // State to hold error messages
+import React, { useEffect, useState } from 'react';
+import { categoryService } from '../services/apiService';
+
+const CategoryList = ({ onCategoryClick }) => {
+    const [categories, setCategories] = useState([]);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const data = await categoryService.getAllCategories(); // Fetch categories from the API
-                setCategories(data); // Update the state with the fetched categories
+                const data = await categoryService.getAllCategories();
+                setCategories(data);
             } catch (error) {
-                setError('Failed to load categories.'); // Handle errors
+                setError('Failed to load categories.');
                 console.error('Error fetching categories:', error);
             }
         };
 
-        fetchCategories(); // Call the fetch function
-    }, []); // Empty dependency array means this runs once when the component mounts
+        fetchCategories();
+    }, []);
 
     return (
         <div className="category-list">
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error message if any */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <ul className="categories">
-                {categories.map((category, index) => (
-                    <li key={index} className="category-item">
-                        {category.name} {/* Assuming each category has a 'name' property */}
+                {categories.map((category) => (
+                    <li
+                        key={category.id}
+                        className="category-item"
+                        onClick={() => onCategoryClick(category.id)}
+                    >
+                        {category.name}
                     </li>
                 ))}
             </ul>

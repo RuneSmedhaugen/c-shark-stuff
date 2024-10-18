@@ -9,7 +9,7 @@ const LoginDropdown = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Check if the user is already logged in by looking for a token or userId
+    // Check if the user is already logged in
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         setIsLoggedIn(!!userId);
@@ -26,8 +26,8 @@ const LoginDropdown = () => {
             localStorage.setItem('userId', userData.id); // Store user ID or token
             alert('Login successful!');
             
-            setIsLoggedIn(true); // Set login state
-            setIsDropdownOpen(false); // Close the dropdown
+            setIsLoggedIn(true);
+            setIsDropdownOpen(false);
             setUsername('');
             setPassword('');
         } catch (error) {
@@ -38,51 +38,55 @@ const LoginDropdown = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('userId'); // Clear user ID/token
-        setIsLoggedIn(false); // Set logout state
-        setIsDropdownOpen(false); // Close the dropdown
+        setIsLoggedIn(false);
+        setIsDropdownOpen(false);
         alert('Logged out successfully!');
     };
 
     return (
         <div className="login-dropdown">
             {isLoggedIn ? (
-                <div className="options-dropdown">
-                    <button className="options-btn" onClick={toggleDropdown}>
+                <div>
+                    <button className="login-button" onClick={toggleDropdown}>
                         Options
                     </button>
                     {isDropdownOpen && (
-                        <div className="dropdown-menu">
-                            <Link to="/profile">
-                                <button>Profile</button>
-                            </Link>
-                            <button onClick={handleLogout}>Logout</button>
+                        <div className="dropdown-overlay">
+                            <div className="dropdown-window">
+                                <Link to="/profile">
+                                    <button className="login-button">Profile</button>
+                                </Link>
+                                <button className="login-button" onClick={handleLogout}>Logout</button>
+                            </div>
                         </div>
                     )}
                 </div>
             ) : (
                 <div>
-                    <button className="login-btn" onClick={toggleDropdown}>
+                    <button className="login-button" onClick={toggleDropdown}>
                         Login
                     </button>
                     {isDropdownOpen && (
-                        <div className="dropdown-menu">
-                            <input
-                                type="text"
-                                placeholder="Username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <button onClick={handleLogin}>Login</button>
-                            {errorMessage && <p className="error-message">{errorMessage}</p>}
-                            <Link to="/register">
-                                <button>Register</button>
-                            </Link>
+                        <div className="dropdown-overlay">
+                            <div className="dropdown-window">
+                                <input
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <button className="login-button" onClick={handleLogin}>Login</button>
+                                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                <Link to="/register">
+                                    <button className="login-button">Register</button>
+                                </Link>
+                            </div>
                         </div>
                     )}
                 </div>

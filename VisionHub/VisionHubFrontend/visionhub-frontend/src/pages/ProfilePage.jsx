@@ -8,12 +8,11 @@ const ProfilePage = () => {
     const [showEditDropdown, setShowEditDropdown] = useState(false);
 
     useEffect(() => {
-        // Fetch user data and uploaded artworks when the component mounts
         const fetchUserData = async () => {
             try {
-                const userId = 'current_user_id'; // Replace with actual logic to get the current user ID
+                const userId = 'current_user_id';
                 const userResponse = await userService.getUser(userId);
-                const artworksResponse = await artworkService.getAllArtworks // Adjust this based on your API
+                const artworksResponse = await artworkService.getAllArtworks
                 setUserData(userResponse);
                 setArtworks(artworksResponse);
             } catch (error) {
@@ -36,7 +35,6 @@ const ProfilePage = () => {
                     <p><strong>Username:</strong> {userData.username}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
                     <p><strong>Biography:</strong> {userData.biography}</p>
-                    {/* Add other user info as needed */}
                 </div>
             )}
 

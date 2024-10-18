@@ -9,7 +9,7 @@
 
 /* Individual artwork card */
 .artwork-card {
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
@@ -46,7 +46,7 @@
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+    color: #ffffff;
     font-size: 1.2rem;
     font-weight: bold;
     padding: 10px;

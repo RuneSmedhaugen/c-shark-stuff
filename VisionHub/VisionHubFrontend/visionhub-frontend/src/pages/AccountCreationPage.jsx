@@ -18,7 +18,7 @@ const AccountCreationPage = () => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        console.log(`Field changed: ${e.target.name}, New value: ${e.target.value}`); // Log field change
+        console.log(`Field changed: ${e.target.name}, New value: ${e.target.value}`);
     };
 
     const handleSubmit = async (event) => {
@@ -29,9 +29,9 @@ const AccountCreationPage = () => {
             UserName: username,
             Email: email,
             Name: name,
-            Password: password,  // Send the plain password
+            Password: password, 
             Biography: biography,
-            BirthDate: birthdate, // Ensure this is in the correct format
+            BirthDate: birthdate,
         };
 
         try {
@@ -41,11 +41,11 @@ const AccountCreationPage = () => {
                 },
             });
             console.log('Account created:', response.data);
-            setSuccessMessage('Account created successfully!'); // Set success message
-            setError(''); // Clear any previous errors
+            setSuccessMessage('Account created successfully!');
+            setError(''); 
         } catch (error) {
-            console.error('Error creating account:', error); // Log error details
-            setError('Error creating account: ' + (error.response?.data.message || 'Something went wrong')); // Set error message
+            console.error('Error creating account:', error);
+            setError('Error creating account: ' + (error.response?.data.message || 'Something went wrong'));
         }
     };
 

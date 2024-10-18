@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Set the base URL for your API requests
 const API_BASE_URL = 'https://localhost:7213/api'; 
 
 // Function to handle any GET request
@@ -73,6 +72,8 @@ export const artworkService = {
     getAllArtworks: () => get('/artwork'),
     updateArtwork: (artworkId, artworkData) => put(`/artwork/update/${artworkId}`, artworkData),
     deleteArtwork: (artworkId) => remove(`/artwork/delete/${artworkId}`),
+    getArtworksByCategory: (categoryId) => get(`/artwork/category/${categoryId}`),
+    getFeaturedArtworks: () => get(`/artwork/featured/`)
 };
 
 // Categories API

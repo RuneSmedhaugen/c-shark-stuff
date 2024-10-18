@@ -18,12 +18,11 @@ namespace VisionHub.Controllers
 
         // POST api/artwork/add
         [HttpPost("add")]
-        public IActionResult AddArtwork([FromForm] int UserID, [FromForm] int CategoryId, [FromForm] string Title, [FromForm] string Description, [FromForm] string ImageUrl)
+        public IActionResult AddArtwork([FromForm] int UserID, [FromForm] int CategoryId, [FromForm] string Title, [FromForm] string Description, [FromForm] string ImageUrl, [FromForm] bool IsFeatured)
         {
             try
             {
-                // Directly use ImageUrl without converting any image data
-                _artworkService.AddArt(UserID, CategoryId, Title, Description, ImageUrl);
+                _artworkService.AddArt(UserID, CategoryId, Title, Description, ImageUrl, IsFeatured);
                 return Ok(new { message = "Artwork added successfully!" });
             }
             catch (Exception ex)
@@ -94,6 +93,18 @@ namespace VisionHub.Controllers
             {
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
+        }
+
+        // GET api/artwork/{categoryid}
+        [HttpGet("category/{categoryId}")]
+        public IActionResult GetArtCategoryId(int categoryId)
+        {
+            var artworks = _artworkService.GetArtCategoryId(categoryId);
+            if (artworks == null || artworks.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(artworks);
         }
     }
 }

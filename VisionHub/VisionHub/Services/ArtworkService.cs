@@ -14,18 +14,18 @@ namespace VisionHub.Services
 
         }
 
-        public void AddArt(int userID, int categoryId, string title, string description, string imageUrl)
+        public void AddArt(int userID, int categoryId, string title, string description, string imageUrl, bool isFeatured)
         {
-            string query =
-                "INSERT INTO Artworks (UserID, CategoryId, Title, Description, UploadDate, ImageUrl) VALUES (@UserID, @CategoryId, @Title, @Description, @UploadDate, @ImageUrl)";
+            string query = "INSERT INTO Artworks (UserID, CategoryId, Title, Description, UploadDate, ImageUrl, IsFeatured) VALUES (@UserID, @CategoryId, @Title, @Description, @UploadDate, @ImageUrl, @IsFeatured)";
             var parameters = new[]
             {
                 new SqlParameter("@UserID", userID),
-                new SqlParameter("@CategoryId", categoryId ),
+                new SqlParameter("@CategoryId", categoryId),
                 new SqlParameter("@Title", title),
                 new SqlParameter("@Description", description),
-                new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)imageUrl ?? DBNull.Value }, 
-                new SqlParameter("@UploadDate", DateTime.Now)
+                new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)imageUrl ?? DBNull.Value },
+                new SqlParameter("@UploadDate", DateTime.Now),
+                new SqlParameter("@IsFeatured", isFeatured)
             };
 
             ExecuteNonQuery(query, parameters);
@@ -90,8 +90,19 @@ namespace VisionHub.Services
 
         public List<Artworks> GetFeaturedArtworks()
         {
-            string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()"; // Select 5 random featured artworks
+            string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()";
             DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToArtworksList(dataTable);
+        }
+
+        public List<Artworks> GetArtCategoryId(int categoryId)
+        {
+            string query = "SELECT * FROM Artworks WHERE CategoryId = @CategoryId";
+            var parameters = new[]
+            {
+                new SqlParameter("@CategoryId", categoryId)
+            };
+            DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToArtworksList(dataTable);
         }
 
@@ -108,7 +119,7 @@ namespace VisionHub.Services
                     Title = row["Title"].ToString(),
                     Description = row["Description"].ToString(),
                     ImageUrl = row["ImageUrl"].ToString(),
-                    
+                    CategoryId = Convert.ToInt32(row["CategoryId"])
                 };
 
                 artworksList.Add(artwork);

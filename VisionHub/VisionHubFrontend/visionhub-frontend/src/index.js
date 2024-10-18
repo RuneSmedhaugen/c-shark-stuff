@@ -4,6 +4,7 @@ import './styles/index.css';
 import './styles/App.css';
 import './styles/featuredstyle.css';
 import './styles/Layout.css';
+import './styles/CategoryList.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

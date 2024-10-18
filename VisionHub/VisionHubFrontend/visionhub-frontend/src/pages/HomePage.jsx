@@ -5,7 +5,6 @@ import FeaturedArtworks from '../components/FeaturedArtwork.jsx';
 const HomePage = () => {
     return (
         <Layout>
-            {/* Main Content */}
             <main className="featured-artworks">
                 <FeaturedArtworks />
             </main>
