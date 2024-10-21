@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import CategoryList from './CategoryList.jsx';
 import LoginDropdown from './LoginDropDown.jsx';
 import { artworkService, commentService } from '../services/apiService';
+import AuthService from '../services/authService.js';
 
 const Layout = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,13 +54,6 @@ const Layout = () => {
         fetchArtworks();
     }, [selectedCategory]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-        setSelectedCategory(null);
-        setArtworks([]);
-    };
-
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory(categoryId);
     };
@@ -76,6 +70,7 @@ const Layout = () => {
     const handleArtworkClick = (artwork) => {
         setSelectedArtwork(artwork);
         fetchComments(artwork.id);
+        console.log('Fetched comments:', fetchComments(artwork.id));
     };
 
     const closeArtworkModal = () => {
@@ -86,6 +81,7 @@ const Layout = () => {
     const fetchComments = async (artworkId) => {
         try {
             const data = await commentService.getCommentsByArtwork(artworkId);
+            console.log('Fetched comments:', data);
             setComments(data);
         } catch (error) {
             console.error('Error fetching comments:', error);
@@ -95,7 +91,20 @@ const Layout = () => {
     const handleCommentSubmit = async () => {
         if (commentText.trim()) {
             try {
-                await artworkService.postComment(selectedArtwork.id, commentText);
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    console.error('User is not logged in.');
+                    return; 
+                }
+    
+                const commentData = {
+                    artworkId: selectedArtwork.id,
+                    userId: userId, 
+                    text: commentText,
+                };
+                console.log("hehe", userId);
+    
+                await commentService.addComment(commentData);
                 fetchComments(selectedArtwork.id);
                 setCommentText('');
             } catch (error) {
@@ -118,7 +127,7 @@ const Layout = () => {
                             <button className="options-button">Options</button>
                             <div className="dropdown-content">
                                 <Link to="/profile">Profile</Link>
-                                <button onClick={handleLogout}>Logout</button>
+                                <button onClick={AuthService.logout()}>Logout</button>
                             </div>
                         </div>
                     ) : (
@@ -177,14 +186,12 @@ const Layout = () => {
                                 <ul>
                                     {comments.map((comment) => (
                                         <li key={comment.id}>
-                                            <p><strong>{comment.username}:</strong> {comment.text}</p>
+                                            <p><strong>{comment.username}:</strong> {comment.commentText}</p>
                                             <p className="comment-date">{new Date(comment.commentDate).toLocaleString()}</p>
                                         </li>
                                     ))}
                                 </ul>
-                                
-                                {/* Input for writing comments if logged in */}
-                               
+                            
                                     <div className="comment-input">
                                         <textarea
                                             value={commentText}

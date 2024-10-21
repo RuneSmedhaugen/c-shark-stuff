@@ -23,8 +23,8 @@ const LoginDropdown = () => {
     const handleLogin = async () => {
         try {
             const userData = await authService.login(username, password);
-            localStorage.setItem('userId', userData.id); // Store user ID or token
-            alert('Login successful!');
+            localStorage.setItem('userId', userData.id);
+            console.log('User ID stored:', userData.id);
             setIsLoggedIn(true);
             setIsDropdownOpen(false);
             setUsername('');
@@ -39,7 +39,6 @@ const LoginDropdown = () => {
         localStorage.removeItem('userId'); // Clear user ID/token
         setIsLoggedIn(false);
         setIsDropdownOpen(false);
-        alert('Logged out successfully!');
     };
 
     // Close the dropdown if clicking outside of it

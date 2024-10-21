@@ -50,10 +50,10 @@ namespace VisionHub.Controllers
         }
 
         // GET api/comment/artwork/{artworkId}
-        [HttpGet("artwork/{artworkId}")]
-        public IActionResult GetCommentsByArtwork(int artworkId)
+        [HttpGet("artwork/{artworkID}")]
+        public IActionResult GetCommentsByArtwork(int artworkID)
         {
-            var comments = _commentService.GetCommentsArtworkID(artworkId);
+            var comments = _commentService.GetCommentsArtworkID(artworkID);
             if (comments == null || comments.Count == 0)
             {
                 return NotFound(new { message = "No comments found for this artwork." });

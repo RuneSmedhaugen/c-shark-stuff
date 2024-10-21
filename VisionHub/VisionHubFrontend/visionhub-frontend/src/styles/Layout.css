@@ -302,18 +302,11 @@ body {
     margin-top: 10px;
 }
 
-.login-button {
-    margin-left: 10px;
-    text-decoration: none;
-    color: #4b0082; /* Link color */
-    transition: color 0.3s;
-}
-
 .login-button:hover {
-    color: #00b4db; /* Change color on hover */
+    color: #00b4db;
 }
 
-/* Additional styles for a visually appealing modal */
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -321,6 +314,7 @@ body {
 }
 
 .close-modal {
+    
     display: flex;
     cursor: pointer;
     font-size: 10px;
@@ -329,5 +323,5 @@ body {
 }
 
 .close-modal:hover {
-    color: #00b4db; /* Change color on hover */
+    color: #00b4db;
 }

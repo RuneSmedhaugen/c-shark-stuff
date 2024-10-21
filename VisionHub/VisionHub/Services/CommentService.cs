@@ -79,7 +79,7 @@ namespace VisionHub.Services
                 new SqlParameter("@ArtworkID", ArtworkID)
             };
 
-            DataTable dataTable = ExecuteQuery(query);
+            DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToCommentsList(dataTable);
         }
 
