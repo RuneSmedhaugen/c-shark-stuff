@@ -1,6 +1,4 @@
 /* Layout.css */
-
-/* General styles */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -10,78 +8,74 @@ body {
 
 .layout {
     display: grid;
-    grid-template-rows: auto 1fr; /* Responsive layout for top banner and main content */
-    min-height: 100vh; /* Ensure the layout takes full viewport height */
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
 }
 
 .layout.dark-mode {
-    background-color: #1f1f1f; /* Dark mode background */
-    color: white; /* Text color for dark mode */
+    background-color: #1f1f1f;
+    color: white;
 }
 
-/* Top banner styles */
 .top-banner {
     display: flex;
-    justify-content: space-between; /* Space between logo and search section */
-    align-items: center; /* Center vertically */
-    padding: 15px; /* Padding for top banner */
-    background: linear-gradient(45deg, #4b0082, #00b4db, #4b0082); /* Gradient background */
-    color: white; /* White text */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for floating effect */
+    justify-content: space-between;
+    align-items: center;
+    
+    background: linear-gradient(45deg, #4b0082, #00b4db, #4b0082);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Logo styles */
 .logo {
     font-size: 24px;
     text-decoration: none;
-    color: white; /* Logo color */
+    color: white;
 }
 
-/* Search section styles */
 .search-section {
     display: flex;
-    align-items: center; /* Center vertically */
+    align-items: center;
 }
 
 .search-section input {
-    padding: 10px; /* Padding for input */
-    border: none; /* Remove border */
-    border-radius: 25px 0 0 25px; /* Rounded corners for left side */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Shadow for input */
+    padding: 10px 15px;
+    border-radius: 25px 0 0 25px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     outline: none;
+    border: none;
 }
 
 .search-section button {
-    padding: 10px 20px; /* Padding for button */
-    border: none; /* Remove border */
-    background: linear-gradient(45deg, #4a00e0, #00b4db); /* Gradient for button */
-    color: white; /* Button text color */
-    border-radius: 0 25px 25px 0; /* Rounded corners for right side */
-    cursor: pointer; /* Pointer on hover */
-    height: 42px; /* Same height as input */
+    padding: 10px 15px;
+    background: linear-gradient(45deg, #4a00e0, #00b4db);
+    color: white;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    border: none;
+    height: 36px;
     transition: background 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for a floating effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search-section button:hover {
-    background: linear-gradient(45deg, #00b4db, #4a00e0); /* Reverse gradient on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+    background: linear-gradient(45deg, #00b4db, #4a00e0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Login and Options buttons (small, styled similarly to the search button) */
 .auth-section .login-button,
 .auth-section .options-button {
     font-size: 12px;
-    padding: 5px 15px;
-    border: none;
+    padding: 5px 30px;
     border-radius: 20px;
     cursor: pointer;
-    background: linear-gradient(45deg, #4a00e0, #00b4db); /* Gradient style */
+    background: linear-gradient(45deg, #4a00e0, #00b4db);
     color: white;
-    font-size: 14px; /* Keep the font size smaller than the search button */
+    font-size: 14px;
     transition: background 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for a floating effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .auth-section .login-button:hover,
@@ -94,40 +88,39 @@ body {
 .dark-mode-toggle {
     color: white;
     cursor: pointer;
-    background: linear-gradient(45deg, #4a00e0, #00b4db); /* Same gradient as login button */
-    padding: 5px 15px; /* Same size as login button */
+    background: linear-gradient(45deg, #4a00e0, #00b4db);
+    padding: 5px 15px;
     border-radius: 20px;
     transition: background 0.3s ease, transform 0.3s ease;
-    margin-left: 20px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Same shadow effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .dark-mode-toggle:hover {
-    background: linear-gradient(45deg, #00b4db, #4a00e0); /* Reverse gradient on hover */
-    transform: translateY(-2px); /* Same lift effect */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+    background: linear-gradient(45deg, #00b4db, #4a00e0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Dropdown styles */
 .dropdown-content {
-    display: none; /* Initially hidden */
-    position: absolute; /* Positioned relative to button */
-    background-color: #f9f9f9; /* Background color for dropdown */
-    min-width: 160px; /* Minimum width */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Shadow */
-    z-index: 1; /* Ensure it appears above other content */
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
 .options-dropdown:hover .dropdown-content {
-    display: block; /* Show on hover */
+    display: block;
 }
 
 /* Artwork list styles */
 .artwork-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid for artworks */
-    gap: 20px; /* Space between artworks */
-    padding: 20px; /* Padding for artwork list */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
 
 /* Button styles for back to homepage */
@@ -154,9 +147,9 @@ body {
 
     .search-section,
     .auth-section {
-        width: 100%; /* Full width for sections */
-        justify-content: space-between; /* Space between items */
-        margin-top: 10px; /* Space between sections */
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
     }
 }
 
@@ -166,7 +159,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,4 +173,161 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     min-width: 300px;
     z-index: 1001;
+}
+
+/* Artwork card styles */
+.artwork-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.artwork-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.artwork-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.artwork-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.artwork-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.artwork-card:hover .artwork-image {
+    transform: scale(1.05);
+}
+
+.artwork-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.artwork-title {
+    font-size: 20px;
+    color: #4b0082;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.artwork-description {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .artwork-card {
+        width: 100%;
+    }
+}
+
+.artwork-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); /* Dark background for modal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    position: relative;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.fullsize-artwork {
+    max-width: 60%;
+    margin-right: 20px;
+}
+
+.artwork-details {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+
+.comment-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-input textarea {
+    resize: none; /* Disable resizing */
+    height: 80px; /* Fixed height for textarea */
+}
+
+.comment-input button {
+    align-self: flex-start;
+}
+
+.login-prompt {
+    margin-top: 10px;
+}
+
+.login-button {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #4b0082; /* Link color */
+    transition: color 0.3s;
+}
+
+.login-button:hover {
+    color: #00b4db; /* Change color on hover */
+}
+
+/* Additional styles for a visually appealing modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-modal {
+    display: flex;
+    cursor: pointer;
+    font-size: 10px;
+    color: #4b0082;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: #00b4db; /* Change color on hover */
 }

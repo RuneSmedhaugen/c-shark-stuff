@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../services/authService';
 
@@ -8,6 +8,7 @@ const LoginDropdown = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const dropdownRef = useRef(null);  // Create a reference for the dropdown
 
     // Check if the user is already logged in
     useEffect(() => {
@@ -22,10 +23,8 @@ const LoginDropdown = () => {
     const handleLogin = async () => {
         try {
             const userData = await authService.login(username, password);
-            
             localStorage.setItem('userId', userData.id); // Store user ID or token
             alert('Login successful!');
-            
             setIsLoggedIn(true);
             setIsDropdownOpen(false);
             setUsername('');
@@ -43,6 +42,25 @@ const LoginDropdown = () => {
         alert('Logged out successfully!');
     };
 
+    // Close the dropdown if clicking outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
+
     return (
         <div className="login-dropdown">
             {isLoggedIn ? (
@@ -52,7 +70,7 @@ const LoginDropdown = () => {
                     </button>
                     {isDropdownOpen && (
                         <div className="dropdown-overlay">
-                            <div className="dropdown-window">
+                            <div className="dropdown-window" ref={dropdownRef}>
                                 <Link to="/profile">
                                     <button className="login-button">Profile</button>
                                 </Link>
@@ -68,7 +86,7 @@ const LoginDropdown = () => {
                     </button>
                     {isDropdownOpen && (
                         <div className="dropdown-overlay">
-                            <div className="dropdown-window">
+                            <div className="dropdown-window" ref={dropdownRef}>
                                 <input
                                     type="text"
                                     placeholder="Username"
