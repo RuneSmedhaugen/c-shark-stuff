@@ -13,9 +13,9 @@ const App = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/account-creation" element={<AccountCreationPage />} />
                 <Route path="/upload" element={<UploadArtwork />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                {/*<Route path="/profile" element={<ProfilePage />} /> */}
                 <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile />} />
+                {/*<Route path="/profile" element={<Profile />} /> */}
                 {/* Add routes for editing user info, changing password, and deleting profile */}
             </Routes>
         </Router>

@@ -1,58 +1,55 @@
+/*
 import React, { useState, useEffect } from 'react';
-import { artworkService, userService } from '../services/apiService';
-import EditProfileDropdown from '../components/EditProfileDropdown.jsx';
+import { useParams } from 'react-router-dom'; // To get the userId from the URL
+import ProfileHeader from './ProfileHeader';
+import UserStats from './UserStats';
+import UploadedArtworks from './UploadedArtworks';
+import EditProfileButton from './EditProfileButton';
+import Layout from './Layout';  // This includes your top banner, search bar, etc.
 
 const ProfilePage = () => {
-    const [userData, setUserData] = useState(null);
-    const [artworks, setArtworks] = useState([]);
-    const [showEditDropdown, setShowEditDropdown] = useState(false);
+  const { userId } = useParams(); // Get userId from the URL, if it exists
+  const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({});
+  const [artworks, setArtworks] = useState([]);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userId = 'current_user_id';
-                const userResponse = await userService.getUser(userId);
-                const artworksResponse = await artworkService.getAllArtworks
-                setUserData(userResponse);
-                setArtworks(artworksResponse);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // If there's no userId in the URL, fetch the current logged-in user
+      const endpoint = userId ? `/api/users/${userId}` : '/api/users/me';
 
-        fetchUserData();
-    }, []);
+      const userData = await fetch(endpoint); // Fetch user data dynamically
+      const userStats = await fetch(`${endpoint}/stats`); // Fetch the stats for the user
+      const userArtworks = await fetch(`${endpoint}/artworks`); // Fetch their artworks
 
-    const handleEditToggle = () => {
-        setShowEditDropdown((prev) => !prev);
+      setUser(await userData.json());
+      setStats(await userStats.json());
+      setArtworks(await userArtworks.json());
+
+      // Check if the profile belongs to the logged-in user (for showing the Edit button)
+      if (!userId) setIsOwnProfile(true);
     };
 
-    return (
-        <div className="profile-page">
-            <h2>Your Profile</h2>
-            {userData && (
-                <div className="user-info">
-                    <p><strong>Username:</strong> {userData.username}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                    <p><strong>Biography:</strong> {userData.biography}</p>
-                </div>
-            )}
+    fetchUserData();
+  }, [userId]); // Rerun this effect if the userId in the URL changes
 
-            <button onClick={handleEditToggle}>Edit Profile</button>
-            {showEditDropdown && <EditProfileDropdown />}
+  if (!user) return <p>Loading...</p>;
 
-            <h3>Your Artworks</h3>
-            <div className="artwork-list">
-                {artworks.map((artwork) => (
-                    <div key={artwork.id} className="artwork-item">
-                        <h4>{artwork.Title}</h4>
-                        <img src={artwork.ImageUrl} alt={artwork.Title} />
-                        <p>{artwork.Description}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <Layout>
+      <div className="profile-page">
+        <ProfileHeader user={user} />
+        <UserStats stats={stats} />
+        <UploadedArtworks artworks={artworks} />
+        
+        {isOwnProfile && (
+          <EditProfileButton onEditClick={() => alert('Edit Profile clicked!')} />
+        )}
+      </div>
+    </Layout>
+  );
 };
 
 export default ProfilePage;
+*/

@@ -50,6 +50,7 @@ const remove = async (endpoint) => {
 export const userService = {
     registerUser: (userData) => post('/user/register', userData),
     updateUser: (userData) => put('/user/update', userData),
+    loginUser: (loginData) => post('/user/login', loginData),
     deleteUser: (userId) => remove(`/user/${userId}`),
     getUser: (userId) => get(`/user/${userId}`),
     getAllUsers: () => get('/user/all'),
