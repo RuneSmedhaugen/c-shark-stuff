@@ -8,6 +8,7 @@
     padding: 10px 0;
     position: relative;
     top: 0;
+    height: 4%;
     width: 100%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for a 3D effect */
 }
@@ -22,14 +23,13 @@
 }
 
 .category-item {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: bold;
     padding: 15px 25px;
     text-transform: uppercase;
     color: #ffffff;
     background-color: rgba(255, 255, 255, 0.2); /* Slight transparency */
     border-radius: 30px; /* Rounded pill-shaped buttons */
-    margin: 0 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Soft shadow around each item */

@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.OpenApi.Models;
 using VisionHub.Services;
+using System.IO;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +21,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Ensure the artworks directory exists
+var artworkDirectory = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "images", "artworks");
+if (!Directory.Exists(artworkDirectory))
+{
+    Directory.CreateDirectory(artworkDirectory);
+}
+
 // Add services to the container
 builder.Services.AddScoped<ArtworkService>(provider =>
-    new ArtworkService(builder.Configuration.GetConnectionString("VisionHubDB")));
+    new ArtworkService(builder.Configuration.GetConnectionString("VisionHubDB"), builder.Configuration["ImageStoragePath"]));
 builder.Services.AddScoped<CommentService>(provider =>
     new CommentService(builder.Configuration.GetConnectionString("VisionHubDB")));
 builder.Services.AddScoped<UserService>(provider =>
@@ -26,7 +38,7 @@ builder.Services.AddScoped<UserService>(provider =>
 builder.Services.AddScoped<CategoryService>(provider =>
     new CategoryService(builder.Configuration.GetConnectionString("VisionHubDB")));
 
-
+// JWT Authentication configuration
 var secretKey = builder.Configuration["Jwt:SecretKey"];
 builder.Services.AddAuthentication(options =>
 {
@@ -47,17 +59,37 @@ builder.Services.AddAuthentication(options =>
 // Add Controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "VisionHub API", Version = "v1" });
+
+    // Add custom operation filter to handle file uploads
+    options.OperationFilter<FileUploadOperationFilter>();
+});
+
+// Configure large file size for form uploads
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = long.MaxValue; // Set large file upload limits
+});
+
+// Configure static files to serve images from wwwroot
+builder.Services.Configure<StaticFileOptions>(options =>
+{
+    options.FileProvider = new PhysicalFileProvider(artworkDirectory);
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    // Enable Swagger in development mode
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Serve static files, including images from wwwroot
+app.UseStaticFiles();
 
 app.UseCors("AllowLocalhost3000");
 
@@ -67,5 +99,5 @@ app.UseAuthentication(); // Add authentication middleware
 app.UseAuthorization(); // Add authorization middleware
 
 app.MapControllers(); // Map controller routes
-app.UseStaticFiles();
+
 app.Run(); // Run the application

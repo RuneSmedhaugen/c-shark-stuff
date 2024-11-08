@@ -1,109 +1,102 @@
 ﻿using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using VisionHub.Models;
 
 namespace VisionHub.Services
-
-
 {
     public class ArtworkService : BaseService
     {
-        public ArtworkService(string connectionString) : base(connectionString)
-        {
+        private readonly string _imageStoragePath;
 
+        public ArtworkService(string connectionString, string imageStoragePath) : base(connectionString)
+        {
+            _imageStoragePath = imageStoragePath;
         }
 
-        public void AddArt(int userID, int categoryId, string title, string description, string imageUrl, bool isFeatured)
+        public async Task AddArt(int userID, int categoryId, string title, string description, FileUploadModel model, bool isFeatured)
         {
-            string query = "INSERT INTO Artworks (UserID, CategoryId, Title, Description, UploadDate, ImageUrl, IsFeatured) VALUES (@UserID, @CategoryId, @Title, @Description, @UploadDate, @ImageUrl, @IsFeatured)";
-            var parameters = new[]
+            try
             {
-                new SqlParameter("@UserID", userID),
-                new SqlParameter("@CategoryId", categoryId),
-                new SqlParameter("@Title", title),
-                new SqlParameter("@Description", description),
-                new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)imageUrl ?? DBNull.Value },
-                new SqlParameter("@UploadDate", DateTime.Now),
-                new SqlParameter("@IsFeatured", isFeatured)
+                // Upload the image and get the file path
+                string relativeImagePath = await UploadArtworkAsync(model);
+
+                string query = "INSERT INTO Artworks (UserID, CategoryId, Title, Description, UploadDate, ImagePath, IsFeatured) " +
+                               "VALUES (@UserID, @CategoryId, @Title, @Description, @UploadDate, @ImagePath, @IsFeatured)";
+
+                var parameters = new[]
+                {
+                    new SqlParameter("@UserID", userID),
+                    new SqlParameter("@CategoryId", categoryId),
+                    new SqlParameter("@Title", title),
+                    new SqlParameter("@Description", description),
+                    new SqlParameter("@UploadDate", DateTime.Now),
+                    new SqlParameter("@ImagePath", relativeImagePath), // Store relative path in the database
+                    new SqlParameter("@IsFeatured", isFeatured)
+                };
+
+                ExecuteNonQuery(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error uploading artwork: {ex.Message}");
+            }
+        }
+
+        public async Task UpdateArt(int artID, string newTitle, string newDescription, FileUploadModel newImage)
+        {
+            string imageFileName = null;
+            if (newImage?.File != null)
+            {
+                // Generate a new filename and save the updated image file
+                imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(newImage.File.FileName);
+                string imagePath = Path.Combine(_imageStoragePath, imageFileName);
+                Directory.CreateDirectory(_imageStoragePath); // Ensure the directory exists
+
+                // Save the new image file
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await newImage.File.CopyToAsync(stream);
+                }
+            }
+
+            string query = "UPDATE Artworks SET Title = @Title, Description = @Description" +
+                           (imageFileName != null ? ", ImagePath = @ImagePath" : "") + " WHERE ArtID = @ArtID";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@ArtID", artID),
+                new SqlParameter("@Title", newTitle),
+                new SqlParameter("@Description", newDescription)
             };
 
-            ExecuteNonQuery(query, parameters);
-        }
+            if (imageFileName != null)
+            {
+                parameters.Add(new SqlParameter("@ImagePath", Path.Combine("images", "artworks", imageFileName)));
+            }
 
-        public void UpdateArt(int artID, string newTitle, string newDescription, string newImageUrl)
-        {
-        string query = "UPDATE Artworks SET Title = @Title, Description = @Description, ImageUrl = @ImageUrl WHERE ArtID = @ArtID";
-
-        var parameters = new[]
-        {
-            new SqlParameter("@ArtID", artID),
-            new SqlParameter("@Title", newTitle),
-            new SqlParameter("@Description", newDescription),
-            new SqlParameter("@ImageUrl", SqlDbType.NVarChar) { Value = (object)newImageUrl ?? DBNull.Value },
-
-        };
-
-        ExecuteNonQuery(query, parameters);
+            ExecuteNonQuery(query, parameters.ToArray());
         }
 
         public void DeleteArt(int artID)
         {
-        string Query = "DELETE Artworks WHERE ArtID = @ArtID";
-        var parameters = new[]
-        {
-            new SqlParameter("@ArtID", artID)
-        };
-        ExecuteNonQuery(Query, parameters);
-        }
+            // First, retrieve the image file name to delete the file from the server
+            string querySelect = "SELECT ImagePath FROM Artworks WHERE ArtID = @ArtID";
+            var parametersSelect = new[] { new SqlParameter("@ArtID", artID) };
+            var imagePath = ExecuteScalar(querySelect, parametersSelect)?.ToString();
 
-        public List<Artworks> GetUserArt(int userID)
-        {
-            string query = "SELECT * FROM Artworks WHERE UserID = @UserID";
-            var parameters = new[]
+            if (imagePath != null)
             {
-                new SqlParameter("@UserID", userID)
-            };
+                string fullPath = Path.Combine(_imageStoragePath, imagePath);
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                }
+            }
 
-            DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable);
-        }
-
-        public List<Artworks> GetArtId(int artID)
-        {
-            string query = "SELECT * FROM Artworks WHERE ArtID = @ArtID";
-            var parameters = new[]
-            {
-                new SqlParameter("@ArtID", artID)
-            };
-
-            DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable);
-        }
-
-        public List<Artworks> GetAllArt()
-        {
-            string query = "SELECT * FROM Artworks";
-            DataTable dataTable = ExecuteQuery(query);
-            return ConvertDataTableToArtworksList(dataTable);
-        }
-
-        public List<Artworks> GetFeaturedArtworks()
-        {
-            string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()";
-            DataTable dataTable = ExecuteQuery(query);
-            return ConvertDataTableToArtworksList(dataTable);
-        }
-
-        public List<Artworks> GetArtCategoryId(int categoryId)
-        {
-            string query = "SELECT * FROM Artworks WHERE CategoryId = @CategoryId";
-            var parameters = new[]
-            {
-                new SqlParameter("@CategoryId", categoryId)
-            };
-            DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable);
+            // Delete the artwork entry from the database
+            string queryDelete = "DELETE FROM Artworks WHERE ArtID = @ArtID";
+            var parametersDelete = new[] { new SqlParameter("@ArtID", artID) };
+            ExecuteNonQuery(queryDelete, parametersDelete);
         }
 
         public List<Artworks> ConvertDataTableToArtworksList(DataTable dataTable)
@@ -118,7 +111,7 @@ namespace VisionHub.Services
                     UserID = Convert.ToInt32(row["UserID"]),
                     Title = row["Title"].ToString(),
                     Description = row["Description"].ToString(),
-                    ImageUrl = row["ImageUrl"].ToString(),
+                    ImagePath = row["ImagePath"].ToString(), // Updated to use ImagePath
                     CategoryId = Convert.ToInt32(row["CategoryId"])
                 };
 
@@ -127,6 +120,68 @@ namespace VisionHub.Services
 
             return artworksList;
         }
+
+        public List<Artworks> GetUserArt(int userID)
+        {
+            string query = "SELECT * FROM Artworks WHERE UserID = @UserID";
+            var parameters = new[] { new SqlParameter("@UserID", userID) };
+
+            DataTable dataTable = ExecuteQuery(query, parameters);
+            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+        }
+
+        public List<Artworks> GetArtId(int artID)
+        {
+            string query = "SELECT * FROM Artworks WHERE ArtID = @ArtID";
+            var parameters = new[] { new SqlParameter("@ArtID", artID) };
+
+            DataTable dataTable = ExecuteQuery(query, parameters);
+            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+        }
+
+        public List<Artworks> GetAllArt()
+        {
+            string query = "SELECT * FROM Artworks";
+            DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+        }
+
+        public List<Artworks> GetFeaturedArtworks()
+        {
+            string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()";
+            DataTable dataTable = ExecuteQuery(query);
+            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+        }
+
+        public List<Artworks> GetArtCategoryId(int categoryId)
+        {
+            string query = "SELECT * FROM Artworks WHERE CategoryId = @CategoryId";
+            var parameters = new[] { new SqlParameter("@CategoryId", categoryId) };
+
+            DataTable dataTable = ExecuteQuery(query, parameters);
+            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+        }
+
+        public async Task<string> UploadArtworkAsync(FileUploadModel model)
+        {
+            if (model?.File == null || model.File.Length == 0)
+                throw new ArgumentException("No file uploaded.");
+
+            // Generate a unique filename for the image
+            string imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+            string imagePath = Path.Combine(_imageStoragePath, imageFileName);
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(_imageStoragePath);
+
+            // Save the image file to the server
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await model.File.CopyToAsync(stream);
+            }
+
+            // Return the relative file path for the database
+            return Path.Combine("images", "artworks", imageFileName);
+        }
     }
 }
-

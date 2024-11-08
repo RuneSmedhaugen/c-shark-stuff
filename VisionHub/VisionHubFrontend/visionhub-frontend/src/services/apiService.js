@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7213/api'; 
+const API_BASE_URL = 'https://localhost:7213/api';
 
 // Function to handle any GET request
 const get = async (endpoint) => {
@@ -14,9 +14,10 @@ const get = async (endpoint) => {
 };
 
 // Function to handle any POST request
-const post = async (endpoint, data) => {
+const post = async (endpoint, data, isFormData = false) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}${endpoint}`, data);
+        const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+        const response = await axios.post(`${API_BASE_URL}${endpoint}`, data, config);
         return response.data;
     } catch (error) {
         console.error('Error in POST request:', error);
@@ -25,9 +26,10 @@ const post = async (endpoint, data) => {
 };
 
 // Function to handle any PUT request
-const put = async (endpoint, data) => {
+const put = async (endpoint, data, isFormData = false) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}${endpoint}`, data);
+        const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+        const response = await axios.put(`${API_BASE_URL}${endpoint}`, data, config);
         return response.data;
     } catch (error) {
         console.error('Error in PUT request:', error);
@@ -68,10 +70,31 @@ export const commentService = {
 
 // Artworks API
 export const artworkService = {
-    addArtwork: (artworkData) => post('/artwork/add', artworkData),
+    addArtwork: (artworkData) => {
+        const formData = new FormData();
+        formData.append("userID", artworkData.userID);
+        formData.append("categoryId", artworkData.categoryId);
+        formData.append("title", artworkData.title);
+        formData.append("description", artworkData.description);
+        formData.append("isFeatured", artworkData.isFeatured);
+        if (artworkData.file) {
+            formData.append("file", artworkData.file);
+        }
+        return post('/artwork/add', formData, true);
+    },
+
     getArtwork: (artworkId) => get(`/artwork/${artworkId}`),
     getAllArtworks: () => get('/artwork'),
-    updateArtwork: (artworkId, artworkData) => put(`/artwork/update/${artworkId}`, artworkData),
+    updateArtwork: (artworkId, artworkData) => {
+        const formData = new FormData();
+        formData.append("title", artworkData.title);
+        formData.append("description", artworkData.description);
+        if (artworkData.file) {
+            formData.append("file", artworkData.file);
+        }
+        return put(`/artwork/update/${artworkId}`, formData, true);
+    },
+
     deleteArtwork: (artworkId) => remove(`/artwork/delete/${artworkId}`),
     getArtworksByCategory: (categoryId) => get(`/artwork/category/${categoryId}`),
     getFeaturedArtworks: () => get(`/artwork/featured/`)

@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../services/authService.js';
 import LoginDropdown from './LoginDropDown.jsx';
 
-const TopBanner = ({ isLoggedIn, toggleDarkMode, isDarkMode }) => {
+const TopBanner = ({ isLoggedIn, setIsLoggedIn, toggleDarkMode, isDarkMode }) => {
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleLogout = () => {
+        authService.logout();
+        setIsLoggedIn(false);
+        setShowDropdown(false);
+        window.location.reload();
+    };
+
     return (
         <div className="top-banner">
             <Link to="/" className="logo">VisionHub</Link>
@@ -14,16 +23,23 @@ const TopBanner = ({ isLoggedIn, toggleDarkMode, isDarkMode }) => {
             <div className="auth-section">
                 {isLoggedIn ? (
                     <div className="options-dropdown">
-                        <button className="options-button">Options</button>
-                        <div className="dropdown-content">
-                            <Link to="/profile">Profile</Link>
-                            <button onClick={authService.logout()}>Logout</button>
-                        </div>
+                        <button 
+                            className="options-button" 
+                            onClick={() => setShowDropdown((prev) => !prev)}
+                        >
+                            Options
+                        </button>
+                        {showDropdown && (
+                            <div className="dropdown-content">
+                                <Link to="/profile" onClick={() => setShowDropdown(false)}>Profile</Link>
+                                <button onClick={handleLogout}>Logout</button>
+                            </div>
+                        )}
                     </div>
                 ) : (
-                    <LoginDropdown />
+                    <LoginDropdown setIsLoggedIn={setIsLoggedIn} />
                 )}
-                <button className='dark-mode-toggle' onClick={toggleDarkMode}>
+                <button className="dark-mode-toggle" onClick={toggleDarkMode}>
                     {isDarkMode ? 'Light Mode' : 'Dark Mode'}
                 </button>
             </div>

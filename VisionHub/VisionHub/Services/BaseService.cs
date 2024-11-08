@@ -1,70 +1,90 @@
-﻿using System;
+﻿using System.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
 
-namespace VisionHub.Services
+public abstract class BaseService
 {
-    public abstract class BaseService
+    private readonly string _connectionString;
+
+    protected BaseService(string connectionString)
     {
-        private readonly string _connectionString;
+        _connectionString = connectionString;
+    }
 
-        protected BaseService(string connectionString)
+    public void ExecuteNonQuery(string query, SqlParameter[] parameters = null)
+    {
+        try
         {
-            _connectionString = connectionString;
-        }
-
-        public void ExecuteNonQuery(string query, SqlParameter[] parameters = null)
-        {
-            try
+            using (var connection = new SqlConnection(_connectionString))
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(query, connection))
                 {
-                    using (var command = new SqlCommand(query, connection))
+                    if (parameters != null)
                     {
-                        if (parameters != null)
-                        {
-                            command.Parameters.AddRange(parameters);
-                        }
-                        connection.Open();
-                        int rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine($"Rows affected: {rowsAffected}");
+                        command.Parameters.AddRange(parameters);
+                    }
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    Console.WriteLine($"Rows affected: {rowsAffected}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error in ExecuteNonQuery: " + ex.Message);
+        }
+    }
+
+    public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
+    {
+        DataTable dataTable = new DataTable();
+
+        try
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var cmd = new SqlCommand(query, connection))
+                {
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
+                    connection.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        dataTable.Load(reader);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in ExecuteNonQuery: " + ex.Message); 
-            }
         }
-
-
-        public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
+        catch (SqlException ex)
         {
-            DataTable dataTable = new DataTable();
+            Console.WriteLine("Error: " + ex.Message);
+        }
+        return dataTable;
+    }
 
-            try
+    // Add ExecuteScalar method
+    public object ExecuteScalar(string query, SqlParameter[] parameters = null)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(_connectionString))
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(query, connection))
                 {
-                    using (var  cmd = new SqlCommand(query, connection))
+                    if (parameters != null)
                     {
-                        if (parameters != null)
-                        {
-                            cmd.Parameters.AddRange(parameters);
-                        }
-                        connection.Open();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            dataTable.Load(reader);
-                        }
+                        command.Parameters.AddRange(parameters);
                     }
+                    connection.Open();
+                    return command.ExecuteScalar(); // Executes the query and returns the first column of the first row
                 }
             }
-            catch (SqlException ex) 
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            return dataTable;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error in ExecuteScalar: " + ex.Message);
+            return null;
         }
     }
 }

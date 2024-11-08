@@ -98,8 +98,12 @@ const Layout = () => {
     return (
         <div className={`layout ${isDarkMode ? 'dark-mode' : ''}`}>
             <TopBanner isLoggedIn={isLoggedIn} toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
-            <CategoryList onClick={handleCategoryClick} />
-            <button className="home-button" onClick={handleBackToHome}>Back to Homepage</button>
+            <CategoryList onCategoryClick={handleCategoryClick} /> {/* Updated prop name */}
+            {selectedCategory && (
+                <button className="home-button" onClick={handleBackToHome}>
+                    Back to Homepage
+                </button>
+            )}
             {error && <p>{error}</p>}
             <ArtworkList artworks={artworks} handleArtworkClick={handleArtworkClick} isDarkMode={isDarkMode} />
 

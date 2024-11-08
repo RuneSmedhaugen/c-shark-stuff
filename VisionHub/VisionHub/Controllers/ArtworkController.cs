@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 using VisionHub.Models;
 using VisionHub.Services;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace VisionHub.Controllers
 {
@@ -18,16 +19,22 @@ namespace VisionHub.Controllers
 
         // POST api/artwork/add
         [HttpPost("add")]
-        public IActionResult AddArtwork([FromForm] int UserID, [FromForm] int CategoryId, [FromForm] string Title, [FromForm] string Description, [FromForm] string ImageUrl, [FromForm] bool IsFeatured)
+        public async Task<IActionResult> AddArtwork([FromForm] FileUploadModel model, [FromForm] int userID, [FromForm] int categoryId, [FromForm] string title, [FromForm] string description, [FromForm] bool isFeatured)
         {
+            if (model == null || model.File == null)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
             try
             {
-                _artworkService.AddArt(UserID, CategoryId, Title, Description, ImageUrl, IsFeatured);
-                return Ok(new { message = "Artwork added successfully!" });
+                // Call the service to upload the artwork and save it to the database
+                await _artworkService.AddArt(userID, categoryId, title, description, model, isFeatured);
+                return Ok(new { Message = "Artwork uploaded successfully!" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest($"Error uploading artwork: {ex.Message}");
             }
         }
 
@@ -43,27 +50,12 @@ namespace VisionHub.Controllers
             return Ok(artworks);
         }
 
-        // GET api/artwork
+        // GET api/artwork/all
         [HttpGet("all")]
         public IActionResult GetAllArtworks()
         {
             var artworks = _artworkService.GetAllArt();
             return Ok(artworks);
-        }
-
-        // PUT api/artwork/update/{id}
-        [HttpPut("update/{id}")]
-        public IActionResult UpdateArtwork(int id, [FromBody] Artworks model)
-        {
-            try
-            {
-                _artworkService.UpdateArt(id, model.Title, model.Description, model.ImageUrl);
-                return Ok(new { message = "Artwork updated successfully!" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
         }
 
         // DELETE api/artwork/delete/{id}
@@ -81,6 +73,7 @@ namespace VisionHub.Controllers
             }
         }
 
+        // GET api/artwork/featured
         [HttpGet("featured")]
         public IActionResult GetFeaturedArtworks()
         {
@@ -95,7 +88,7 @@ namespace VisionHub.Controllers
             }
         }
 
-        // GET api/artwork/{categoryid}
+        // GET api/artwork/category/{categoryId}
         [HttpGet("category/{categoryId}")]
         public IActionResult GetArtCategoryId(int categoryId)
         {
