@@ -7,13 +7,16 @@ const RegisterPage = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [biography, setBiography] = useState('');
+    const [birthdate, setBirthdate] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async (event) => {
         event.preventDefault();
-        const userData = { username, email, password };
+        const userData = { username, email, password, name, biography, birthdate };
 
         try {
             await userService.registerUser(userData);
@@ -54,11 +57,29 @@ const RegisterPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                    <textarea
+                        placeholder="Biography"
+                        value={biography}
+                        onChange={(e) => setBiography(e.target.value)}
+                        rows="4"
+                    />
+                    <input
+                        type="date"
+                        placeholder="Birthdate"
+                        value={birthdate}
+                        onChange={(e) => setBirthdate(e.target.value)}
+                    />
                     <button type="submit">Register</button>
                 </form>
             </div>
         </div>
-
     );
 };
 

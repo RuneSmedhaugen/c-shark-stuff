@@ -108,3 +108,18 @@ export const categoryService = {
     updateCategory: (categoryId, categoryData) => put(`/category/update/${categoryId}`, categoryData),
     deleteCategory: (categoryId) => remove(`/category/delete/${categoryId}`),
 };
+
+
+// Search calls.. eller hva man skal kalle det
+export const searchService = {
+    search: async (query) => {
+        try {
+            const artworks = await get(`/artwork/search?query=${query}`);
+            const users = await get(`/user/search?query=${query}`);
+            return { artworks, users };
+        } catch (error) {
+            console.error('Error in search:', error);
+            throw error;
+        }
+    }
+};

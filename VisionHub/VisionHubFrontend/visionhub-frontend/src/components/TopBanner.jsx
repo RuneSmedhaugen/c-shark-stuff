@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { authService } from '../services/authService.js';
 import LoginDropDown from './LoginDropDown.jsx';
 import logo from '../img/visionhub_logo.png';
+import SearchField from './SearchField';  // Import the new SearchField component
 import '../styles/main.css';
 
 const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -50,8 +51,7 @@ const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
                 <img src={logo} alt="VisionHub Logo" className="logo-image" />
             </Link>
             <div className="search-section">
-                <input type="text" placeholder="Search artwork..." />
-                <button>Search</button>
+                <SearchField />  {/* Add the SearchField component */}
             </div>
             <div className="auth-section">
                 {isLoggedIn ? (
