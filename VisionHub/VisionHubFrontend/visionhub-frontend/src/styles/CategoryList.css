@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to right, #8e2de2, #4a00e0 25%, #00b4db 50%, #4a00e0 75%, #8e2de2); /* Purple to blue and back to purple */
+    background: linear-gradient(to right, #8e2de2, #4a00e0 25%, #00b4db 50%, #4a00e0 75%, #8e2de2);
     padding: 10px 0;
     position: relative;
     top: 0;

@@ -74,11 +74,6 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = long.MaxValue; // Set large file upload limits
 });
 
-// Configure static files to serve images from wwwroot
-builder.Services.Configure<StaticFileOptions>(options =>
-{
-    options.FileProvider = new PhysicalFileProvider(artworkDirectory);
-});
 
 var app = builder.Build();
 
@@ -88,8 +83,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Serve static files, including images from wwwroot
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(artworkDirectory),
+    RequestPath = "/images/artworks"
+});
+
 
 app.UseCors("AllowLocalhost3000");
 

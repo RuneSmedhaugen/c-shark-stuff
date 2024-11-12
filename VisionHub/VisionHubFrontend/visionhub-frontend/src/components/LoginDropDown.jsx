@@ -1,49 +1,59 @@
 import React, { useState } from 'react';
-import { userService } from '../services/apiService';
+import { authService } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
+import '../styles/LoginDropDown.css';
 
-function LoginDropDown({ setIsLoggedIn }) {
+const LoginDropDown = ({ closeModal, setIsLoggedIn, isDarkMode }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
-        try {
-            const response = await userService.loginUser({ username, password });
-
-            if (response && response.token) {
-                localStorage.setItem('token', response.token);
+        if (username && password) {
+            try {
+                const response = await authService.login(username, password);
                 setIsLoggedIn(true);
-                window.location.reload();
-                setErrorMessage('');
-            } else {
-                setErrorMessage('Login failed: Invalid response from server');
+                closeModal();
+            } catch (error) {
+                setError('Invalid login credentials');
             }
-        } catch (error) {
-            console.error('Login failed:', error);
-            setErrorMessage('Login failed: Invalid username or password');
+        } else {
+            setError('Please enter both username and password');
         }
     };
 
+    const handleRegisterClick = () => {
+        closeModal();
+        navigate('/register');
+    };
+
     return (
-        <div className="login-dropdown">
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="auth-section">
-                <button className="login-button" onClick={handleLogin}>Login</button>
-            </div>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        <div className={`dropdown-window ${isDarkMode ? 'dark-mode' : ''}`}>
+            <button className="close-login" onClick={closeModal}>X</button>
+            <h2>Login</h2>
+            {error && <p className="error-message">{error}</p>}
+            <form>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button type="button" onClick={handleLogin}>Login</button>
+
+                <button onClick={handleRegisterClick} className="register-link">
+                Don't have an account? Register here.
+            </button>
+            </form>
         </div>
     );
-}
+};
 
 export default LoginDropDown;

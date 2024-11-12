@@ -5,7 +5,7 @@ const ArtworkList = ({ artworks, handleArtworkClick, isDarkMode }) => {
     if (artworks.length === 0) return <p>No artworks available.</p>;
 
     return (
-        <ul>
+        <div className="artwork-list">
             {artworks.map((artwork) => (
                 <ArtworkCard
                     key={artwork.id}
@@ -14,7 +14,7 @@ const ArtworkList = ({ artworks, handleArtworkClick, isDarkMode }) => {
                     isDarkMode={isDarkMode}
                 />
             ))}
-        </ul>
+        </div>
     );
 };
 

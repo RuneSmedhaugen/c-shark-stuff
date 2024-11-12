@@ -1,0 +1,142 @@
+/* components.css */
+
+/* Buttons */
+button {
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, var(--highlight-color), var(--secondary-highlight-color));
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+/* Inputs */
+.search-section input {
+    padding: 10px;
+    border-radius: 25px 0 0 25px;
+    outline: none;
+    border: none;
+    width: 300px;
+    box-shadow: inset 0 4px 8px var(--shadow-light);
+}
+
+body.dark-mode .search-section input {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+/* artwork-modal */
+.artwork-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* Ensure it appears on top */
+
+
+    transition: visibility 0s, opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* Modal content */
+.artwork-modal.open {
+    visibility: visible; /* Make it visible when open */
+    opacity: 1; /* Fade in */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .modal-content {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode .close-modal {
+    color: #fff;
+}
+
+
+/* registerPage */
+.register-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px; /* Adjust to provide space for TopBanner */
+}
+
+.register-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.8em;
+    color: var(--primary-text-color);
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-background-color);
+    color: var(--text-color);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-color);
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--button-hover-color);
+}
+
+.error-message {
+    color: var(--error-color);
+    margin-bottom: 15px;
+}
+

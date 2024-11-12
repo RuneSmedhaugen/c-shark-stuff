@@ -1,7 +1,8 @@
 import React from 'react';
+import visionhubLogo from '../img/visionhub_logo.png';
 
 const ArtworkCard = ({ artwork, onClick, isDarkMode }) => {
-    const imageUrl = `https://localhost:7213${artwork.imageUrl}`;
+    const imageUrl = `https://localhost:7213/${artwork.imagePath}`;
 
     return (
         <div className={`artwork-card ${isDarkMode ? 'dark-mode' : ''}`} onClick={() => onClick(artwork)}>
@@ -10,7 +11,7 @@ const ArtworkCard = ({ artwork, onClick, isDarkMode }) => {
                     className="artwork-image"
                     src={imageUrl}
                     alt={artwork.title}
-                    onError={(e) => e.target.src = '/path/to/fallback-image.jpg'} // Optional fallback image
+                    onError={(e) => e.target.src = visionhubLogo}
                 />
             </div>
             <div className="artwork-info">

@@ -1,23 +1,30 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import AccountCreationPage from './pages/AccountCreationPage';
 import UploadArtwork from './pages/UploadArtwork';
-import ProfilePage from './pages/ProfilePage';
-import Register from './pages/AccountCreationPage';
 import Profile from './components/Profile';
+import RegisterPage from './pages/RegisterPage';
 
 const App = () => {
+    const [isDarkMode] = useState(false);
+
+
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/account-creation" element={<AccountCreationPage />} />
-                <Route path="/upload" element={<UploadArtwork />} />
-                {/*<Route path="/profile" element={<ProfilePage />} /> */}
-                <Route path="/register" element={<Register />} />
-                {/*<Route path="/profile" element={<Profile />} /> */}
-                {/* Add routes for editing user info, changing password, and deleting profile */}
-            </Routes>
+            <div className={isDarkMode ? 'app dark-mode' : 'app'}>
+
+                <Routes>
+                    <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} />
+                    <Route path="/upload" element={<UploadArtwork isDarkMode={isDarkMode} />} />
+                    <Route path="/register" element={<RegisterPage isDarkMode={isDarkMode} />} />
+                    <Route path="/profile" element={<Profile isDarkMode={isDarkMode} />} />
+
+                    {/* Future Routes */}
+                    {/* <Route path="/profile/edit" element={<EditUserInfo isDarkMode={isDarkMode} />} /> */}
+                    {/* <Route path="/profile/change-password" element={<ChangePassword isDarkMode={isDarkMode} />} /> */}
+                    {/* <Route path="/profile/delete" element={<DeleteProfile isDarkMode={isDarkMode} />} /> */}
+                </Routes>
+            </div>
         </Router>
     );
 };

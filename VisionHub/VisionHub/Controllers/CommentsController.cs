@@ -54,10 +54,13 @@ namespace VisionHub.Controllers
         public IActionResult GetCommentsByArtwork(int artworkID)
         {
             var comments = _commentService.GetCommentsArtworkID(artworkID);
-            if (comments == null || comments.Count == 0)
+
+            
+            if (comments == null)
             {
-                return NotFound(new { message = "No comments found for this artwork." });
+                comments = new List<Comments>();
             }
+
             return Ok(comments);
         }
 

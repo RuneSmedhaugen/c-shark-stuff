@@ -111,7 +111,7 @@ namespace VisionHub.Services
                     UserID = Convert.ToInt32(row["UserID"]),
                     Title = row["Title"].ToString(),
                     Description = row["Description"].ToString(),
-                    ImagePath = row["ImagePath"].ToString(), // Updated to use ImagePath
+                    ImagePath = row["ImagePath"].ToString(),
                     CategoryId = Convert.ToInt32(row["CategoryId"])
                 };
 
@@ -127,7 +127,7 @@ namespace VisionHub.Services
             var parameters = new[] { new SqlParameter("@UserID", userID) };
 
             DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+            return ConvertDataTableToArtworksList(dataTable);
         }
 
         public List<Artworks> GetArtId(int artID)
@@ -136,21 +136,21 @@ namespace VisionHub.Services
             var parameters = new[] { new SqlParameter("@ArtID", artID) };
 
             DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+            return ConvertDataTableToArtworksList(dataTable);
         }
 
         public List<Artworks> GetAllArt()
         {
             string query = "SELECT * FROM Artworks";
             DataTable dataTable = ExecuteQuery(query);
-            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+            return ConvertDataTableToArtworksList(dataTable);
         }
 
         public List<Artworks> GetFeaturedArtworks()
         {
             string query = "SELECT TOP 5 * FROM Artworks WHERE IsFeatured = 1 ORDER BY NEWID()";
             DataTable dataTable = ExecuteQuery(query);
-            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+            return ConvertDataTableToArtworksList(dataTable);
         }
 
         public List<Artworks> GetArtCategoryId(int categoryId)
@@ -159,7 +159,7 @@ namespace VisionHub.Services
             var parameters = new[] { new SqlParameter("@CategoryId", categoryId) };
 
             DataTable dataTable = ExecuteQuery(query, parameters);
-            return ConvertDataTableToArtworksList(dataTable); // Converts DataTable to List<Artworks>
+            return ConvertDataTableToArtworksList(dataTable);
         }
 
         public async Task<string> UploadArtworkAsync(FileUploadModel model)
@@ -181,7 +181,7 @@ namespace VisionHub.Services
             }
 
             // Return the relative file path for the database
-            return Path.Combine("images", "artworks", imageFileName);
+            return Path.Combine("/images", "artworks", imageFileName);
         }
     }
 }

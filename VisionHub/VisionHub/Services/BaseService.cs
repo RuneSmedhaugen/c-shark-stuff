@@ -63,7 +63,6 @@ public abstract class BaseService
         return dataTable;
     }
 
-    // Add ExecuteScalar method
     public object ExecuteScalar(string query, SqlParameter[] parameters = null)
     {
         try
@@ -77,7 +76,7 @@ public abstract class BaseService
                         command.Parameters.AddRange(parameters);
                     }
                     connection.Open();
-                    return command.ExecuteScalar(); // Executes the query and returns the first column of the first row
+                    return command.ExecuteScalar();
                 }
             }
         }
