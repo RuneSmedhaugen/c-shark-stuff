@@ -14,7 +14,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const loggedInUserId = authService.getUserId(); // Get current user's ID from authService
+                const loggedInUserId = authService.getUserId();
                 setIsOwnProfile(loggedInUserId === userId);
 
                 const userData = await userService.getUser(userId || loggedInUserId);

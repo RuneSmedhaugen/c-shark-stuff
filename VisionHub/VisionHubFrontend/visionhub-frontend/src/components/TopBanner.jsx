@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { authService } from '../services/authService.js';
 import LoginDropDown from './LoginDropDown.jsx';
 import logo from '../img/visionhub_logo.png';
-import SearchField from './SearchField';  // Import the new SearchField component
+import SearchField from './CombinedSearchField.jsx';
 import '../styles/main.css';
 
 const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -11,7 +11,6 @@ const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
-    // Check if dark mode preference is stored in localStorage
     useEffect(() => {
         const savedDarkMode = localStorage.getItem('isDarkMode') === 'true';
         setIsDarkMode(savedDarkMode);
@@ -26,7 +25,7 @@ const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
     const toggleDarkMode = () => {
         setIsDarkMode((prev) => {
             const newDarkMode = !prev;
-            localStorage.setItem('isDarkMode', newDarkMode); // Store preference in localStorage
+            localStorage.setItem('isDarkMode', newDarkMode);
             if (newDarkMode) {
                 document.body.classList.add('dark-mode');
             } else {
@@ -51,7 +50,7 @@ const TopBanner = ({ isLoggedIn, setIsLoggedIn }) => {
                 <img src={logo} alt="VisionHub Logo" className="logo-image" />
             </Link>
             <div className="search-section">
-                <SearchField />  {/* Add the SearchField component */}
+                <SearchField /> 
             </div>
             <div className="auth-section">
                 {isLoggedIn ? (

@@ -17,7 +17,7 @@ const SearchResultsPage = () => {
                 const data = await searchService.search(query);
                 const { artworks, users } = data;
 
-                // Split results into direct matches and relevant
+                
                 const directArtworks = artworks.filter((artwork) =>
                     artwork.title.toLowerCase().includes(query.toLowerCase()) ||
                     artwork.description.toLowerCase().includes(query.toLowerCase()) ||

@@ -39,15 +39,14 @@
     }
 }
 
-/* Ensure the logo is appropriately sized */
+
 .logo-image {
-    width: 150px; /* Adjust as necessary */
-    height: auto; /* Maintain aspect ratio */
+    width: 150px; 
+    height: auto; 
 }
 
-/* If the logo is inside a container, you may need to tweak the container as well */
 .top-banner .logo-container {
     display: flex;
-    justify-content: center;  /* Center logo horizontally */
-    align-items: center;  /* Center logo vertically */
+    justify-content: center; 
+    align-items: center; 
 }

@@ -19,7 +19,7 @@ const HomePage = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
     useEffect(() => {
-        const token = authService.getToken(); // Get token from authService
+        const token = authService.getToken();
         setIsLoggedIn(!!token);
     }, []);
 
@@ -99,8 +99,8 @@ const HomePage = () => {
     };
 
     const handleLogout = () => {
-        authService.logout(); // Use the authService to log the user out
-        setIsLoggedIn(false); // Update the logged-in state
+        authService.logout();
+        setIsLoggedIn(false);
     };
 
     return (
@@ -108,8 +108,8 @@ const HomePage = () => {
             <TopBanner
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
-                setIsLoginOpen={setIsLoginOpen} // Pass setIsLoginOpen to trigger modal
-                handleLogout={handleLogout}  // Pass handleLogout to TopBanner for logout
+                setIsLoginOpen={setIsLoginOpen}
+                handleLogout={handleLogout}
             />
             <CategoryList onCategoryClick={handleCategoryClick} />
             {error && <p>{error}</p>}
@@ -126,9 +126,6 @@ const HomePage = () => {
                     isModalOpen={isModalOpen} 
                 />
             )}
-
-
-            {/* Render the LoginDropDown as a modal overlay in the center of the viewport */}
             {isLoginOpen && (
                 <div className="dropdown-overlay">
                     <LoginDropDown closeModal={() => setIsLoginOpen(false)} setIsLoggedIn={setIsLoggedIn} isDarkMode={false} />

@@ -35,17 +35,17 @@ body.dark-mode .search-section input {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 1000; /* Ensure it appears on top */
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000;
 
 
-    transition: visibility 0s, opacity 0.3s ease-in-out; /* Smooth transition */
+    transition: visibility 0s, opacity 0.3s ease-in-out; 
 }
 
 /* Modal content */
 .artwork-modal.open {
-    visibility: visible; /* Make it visible when open */
-    opacity: 1; /* Fade in */
+    visibility: visible; 
+    opacity: 1; 
 }
 
 .modal-content {
@@ -87,7 +87,7 @@ body.dark-mode .search-section input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 60px; /* Adjust to provide space for TopBanner */
+    padding-top: 60px;
 }
 
 .register-container {
@@ -139,4 +139,79 @@ button[type="submit"]:hover {
     color: var(--error-color);
     margin-bottom: 15px;
 }
+
+
+/* Search field */
+.search-container {
+    position: relative;
+    display: inline-block;
+    margin-top: 60px;
+}
+
+.search-field {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    width: 300px; 
+    margin: 0 auto;
+}
+
+.search-field:hover {
+    transform: scale(1.05);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+
+.search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    width: 100%;
+    padding: 0;
+    cursor: pointer;
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+.talk-bubble {
+    position: absolute;
+    top: -45px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    animation: fade-in 0.5s ease;
+}
+
+.talk-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
 
