@@ -17,7 +17,7 @@ button {
     outline: none;
     border: none;
     width: 300px;
-    box-shadow: inset 0 4px 8px var(--shadow-light);
+    box-shadow: inset 0 4px 8px 20px var(--shadow-light);
 }
 
 body.dark-mode .search-section input {
@@ -156,6 +156,7 @@ button[type="submit"]:hover {
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     width: 300px; 
     margin: 0 auto;
+    
 }
 
 .search-field:hover {
@@ -172,10 +173,11 @@ button[type="submit"]:hover {
     width: 100%;
     padding: 0;
     cursor: pointer;
+    
 }
 
 .search-input::placeholder {
-    color: #888;
+    color: #cfcfcf;
 }
 
 .talk-bubble {

@@ -17,11 +17,23 @@ const HomePage = () => {
     const [commentText, setCommentText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         const token = authService.getToken();
-        setIsLoggedIn(!!token);
-    }, []);
+        const userId = localStorage.getItem('userid');
+
+        if (token && userId) {
+            setIsLoggedIn(true);  // Set login state based on token availability
+
+            // Fetch user details from the API using the userId
+            userService.getUser(userId).then((userData) => {
+                setCurrentUser(userData);  // Set current user data
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+    }, []); // Runs only on initial load
 
     const fetchFeaturedArtworks = async () => {
         try {
@@ -70,9 +82,7 @@ const HomePage = () => {
         setSelectedArtwork(artwork);
         fetchComments(artwork.id);
         setIsModalOpen(true);
-        console.log('IsModalOpen: ', isModalOpen);
     };
-
 
     const closeArtworkModal = () => {
         setSelectedArtwork(null);
@@ -103,15 +113,44 @@ const HomePage = () => {
         setIsLoggedIn(false);
     };
 
+    const handleLogin = async (username, password) => {
+        try {
+            // Attempt login
+            const loginResponse = await authService.login(username, password);
+    
+            // Assuming the response includes the user ID or token that we can use to fetch the user
+            const userId = loginResponse.userId;  // Adjust based on actual API response
+    
+            // Fetch user data after login
+            const userData = await userService.getUser(userId);
+    
+            // Set the current user in state
+            setCurrentUser(userData);
+            setIsLoggedIn(true);
+            setIsLoginOpen(false);
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
+    };
+
+    const openLoginDropdown = () => {
+        setIsLoginOpen(true);  // Correctly sets the state to open the dropdown
+    };
+
     return (
         <div className="home-page">
             <TopBanner
                 isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-                setIsLoginOpen={setIsLoginOpen}
                 handleLogout={handleLogout}
+                openLoginDropdown={openLoginDropdown}  // Correctly pass the function here
             />
             <CategoryList onCategoryClick={handleCategoryClick} />
+            
+            {/* Conditionally render the 'Back to Home' button when a category is selected */}
+            {selectedCategory && (
+                <button onClick={handleBackToHome}>Back to Home</button>
+            )}
+
             {error && <p>{error}</p>}
             <ArtworkList artworks={artworks} handleArtworkClick={handleArtworkClick} />
 
@@ -123,12 +162,17 @@ const HomePage = () => {
                     handleCommentSubmit={() => commentService.addComment(selectedArtwork.id, commentText)}
                     commentText={commentText}
                     setCommentText={setCommentText}
-                    isModalOpen={isModalOpen} 
+                    isModalOpen={isModalOpen}
+                    currentUser={currentUser}  // Pass the currentUser here
                 />
             )}
             {isLoginOpen && (
                 <div className="dropdown-overlay">
-                    <LoginDropDown closeModal={() => setIsLoginOpen(false)} setIsLoggedIn={setIsLoggedIn} isDarkMode={false} />
+                    <LoginDropDown
+                        closeModal={() => setIsLoginOpen(false)}
+                        handleLogin={handleLogin}  // Pass the handleLogin function to LoginDropDown
+                        isDarkMode={false}
+                    />
                 </div>
             )}
         </div>

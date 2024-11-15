@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { userService, artworkService } from '../services/apiService';
 import { authService } from '../services/authService';
 import TopBanner from '../components/TopBanner';
@@ -7,6 +7,7 @@ import ArtworkList from '../components/ArtworkList';
 
 const ProfilePage = () => {
     const { userId } = useParams();
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [artworks, setArtworks] = useState([]);
     const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -15,7 +16,7 @@ const ProfilePage = () => {
         const fetchProfile = async () => {
             try {
                 const loggedInUserId = authService.getUserId();
-                setIsOwnProfile(loggedInUserId === userId);
+                setIsOwnProfile(loggedInUserId === parseInt(userId, 10));
 
                 const userData = await userService.getUser(userId || loggedInUserId);
                 setUser(userData);
@@ -30,26 +31,37 @@ const ProfilePage = () => {
         fetchProfile();
     }, [userId]);
 
+    const handleEditProfile = () => {
+        navigate('/edit-profile');
+    };
+
     return (
         <div className="profile-page">
             <TopBanner />
 
-            <div className="profile-info">
+            <section className="profile-header">
                 {user && (
                     <>
-                        <h2>{user.name}</h2>
-                        <p>Username: {user.username}</p>
-                        <p>Email: {user.email}</p>
-                        <p>Biography: {user.biography}</p>
-                        <p>Birthdate: {new Date(user.birthdate).toLocaleDateString()}</p>
+                        <div className="profile-details">
+                            <h1>{user.name}</h1>
+                            <p><strong>Username:</strong> {user.username}</p>
+                            <p><strong>Email:</strong> {user.email}</p>
+                            <p><strong>Biography:</strong> {user.biography || 'No biography provided.'}</p>
+                            <p><strong>Birthdate:</strong> {user.birthdate ? new Date(user.birthdate).toLocaleDateString() : 'Not provided'}</p>
+                        </div>
+                        {isOwnProfile && (
+                            <button className="edit-profile-button" onClick={handleEditProfile}>
+                                Edit Profile
+                            </button>
+                        )}
                     </>
                 )}
-            </div>
+            </section>
 
-            <div className="user-artworks">
-                <h3>{isOwnProfile ? 'My Artworks' : `${user?.username}'s Artworks`}</h3>
+            <section className="artwork-section">
+                <h2>{isOwnProfile ? 'My Artworks' : `${user?.username}'s Artworks`}</h2>
                 <ArtworkList artworks={artworks} />
-            </div>
+            </section>
         </div>
     );
 };
