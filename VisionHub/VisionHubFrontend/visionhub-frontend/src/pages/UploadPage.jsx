@@ -120,3 +120,22 @@ const UploadPage = () => {
 };
 
 export default UploadPage;
+
+
+
+
+
+
+
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'PrintScreen' || (event.ctrlKey && event.key === 's')) {
+        
+        fetch('/log-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event: 'Unauthorized Action', timestamp: new Date() }),
+        });
+        alert('This action is logged and not permitted.');
+    }
+});
