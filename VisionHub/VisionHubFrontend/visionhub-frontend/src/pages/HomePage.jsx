@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { artworkService, commentService, userService } from '../services/apiService';
-import TopBanner from '../components/TopBanner';
 import CategoryList from '../components/CategoryList';
 import ArtworkList from '../components/ArtworkList';
 import ArtworkModal from '../components/ArtworkModal';
 import LoginDropDown from '../components/LoginDropDown';
-import { authService } from '../services/authService';
+import { useAuth } from '../services/AuthContext';
 
 const HomePage = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [artworks, setArtworks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [error, setError] = useState('');
@@ -17,23 +15,16 @@ const HomePage = () => {
     const [commentText, setCommentText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
+   
 
-    useEffect(() => {
-        const token = authService.getToken();
-        const userId = localStorage.getItem('userid');
+    const {currentUser, login } = useAuth();
 
-        if (token && userId) {
-            setIsLoggedIn(true);  // Set login state based on token availability
-
-            // Fetch user details from the API using the userId
-            userService.getUser(userId).then((userData) => {
-                setCurrentUser(userData);  // Set current user data
-            }).catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
+    const handleLogin = async (username, password) => {
+        const success = await login(username, password);
+        if (success) {
+            setIsLoginOpen(false);
         }
-    }, []); // Runs only on initial load
+    };
 
     const fetchFeaturedArtworks = async () => {
         try {
@@ -108,45 +99,10 @@ const HomePage = () => {
         }
     };
 
-    const handleLogout = () => {
-        authService.logout();
-        setIsLoggedIn(false);
-    };
-
-    const handleLogin = async (username, password) => {
-        try {
-            // Attempt login
-            const loginResponse = await authService.login(username, password);
-    
-            // Assuming the response includes the user ID or token that we can use to fetch the user
-            const userId = loginResponse.userId;  // Adjust based on actual API response
-    
-            // Fetch user data after login
-            const userData = await userService.getUser(userId);
-    
-            // Set the current user in state
-            setCurrentUser(userData);
-            setIsLoggedIn(true);
-            setIsLoginOpen(false);
-        } catch (error) {
-            console.error('Error logging in:', error);
-        }
-    };
-
-    const openLoginDropdown = () => {
-        setIsLoginOpen(true);  // Correctly sets the state to open the dropdown
-    };
-
     return (
         <div className="home-page">
-            <TopBanner
-                isLoggedIn={isLoggedIn}
-                handleLogout={handleLogout}
-                openLoginDropdown={openLoginDropdown}  // Correctly pass the function here
-            />
             <CategoryList onCategoryClick={handleCategoryClick} />
-            
-            {/* Conditionally render the 'Back to Home' button when a category is selected */}
+
             {selectedCategory && (
                 <button onClick={handleBackToHome}>Back to Home</button>
             )}
@@ -163,14 +119,15 @@ const HomePage = () => {
                     commentText={commentText}
                     setCommentText={setCommentText}
                     isModalOpen={isModalOpen}
-                    currentUser={currentUser}  // Pass the currentUser here
+                    currentUser={currentUser}
                 />
             )}
+
             {isLoginOpen && (
                 <div className="dropdown-overlay">
                     <LoginDropDown
                         closeModal={() => setIsLoginOpen(false)}
-                        handleLogin={handleLogin}  // Pass the handleLogin function to LoginDropDown
+                        handleLogin={handleLogin}
                         isDarkMode={false}
                     />
                 </div>

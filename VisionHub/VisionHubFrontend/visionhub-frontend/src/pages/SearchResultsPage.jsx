@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { searchService } from '../services/apiService';
+import { artworkService, userService } from '../services/apiService';
 import ArtworkCard from '../components/ArtworkCard';
 import UserCard from '../components/UserCard';
-import TopBanner from '../components/TopBanner';
 
 const SearchResultsPage = () => {
     const [searchResults, setSearchResults] = useState({ artworks: [], users: [] });
@@ -14,42 +13,40 @@ const SearchResultsPage = () => {
     useEffect(() => {
         const fetchSearchResults = async () => {
             try {
-                const data = await searchService.search(query);
-                const { artworks, users } = data;
+                setLoading(true);
+                const allArtworks = await artworkService.getAllArtworks();
+                const allUsers = await userService.getAllUsers();
 
-                
-                const directArtworks = artworks.filter((artwork) =>
-                    artwork.title.toLowerCase().includes(query.toLowerCase()) ||
-                    artwork.description.toLowerCase().includes(query.toLowerCase()) ||
-                    artwork.category.toLowerCase().includes(query.toLowerCase())
-                );
-                const relevantArtworks = artworks.filter((artwork) =>
-                    !directArtworks.includes(artwork) && (
-                        artwork.title.toLowerCase().includes(query.toLowerCase()) ||
-                        artwork.description.toLowerCase().includes(query.toLowerCase())
-                    )
+                const lowerCaseQuery = query.toLowerCase();
+
+                const directArtworks = allArtworks.filter((artwork) =>
+                    artwork.title.toLowerCase().includes(lowerCaseQuery) ||
+                    artwork.description.toLowerCase().includes(lowerCaseQuery) ||
+                    (artwork.category?.toLowerCase() || '').includes(lowerCaseQuery)
                 );
 
-                const directUsers = users.filter((user) =>
-                    user.username.toLowerCase().includes(query.toLowerCase()) ||
-                    user.email.toLowerCase().includes(query.toLowerCase()) ||
-                    user.name.toLowerCase().includes(query.toLowerCase())
-                );
-                const relevantUsers = users.filter((user) =>
-                    !directUsers.includes(user) && (
-                        user.username.toLowerCase().includes(query.toLowerCase()) ||
-                        user.email.toLowerCase().includes(query.toLowerCase())
-                    )
+                const relevantArtworks = allArtworks.filter(
+                    (artwork) =>
+                        !directArtworks.includes(artwork) &&
+                        (artwork.title.toLowerCase().includes(lowerCaseQuery) ||
+                            artwork.description.toLowerCase().includes(lowerCaseQuery))
                 );
 
-                setSearchResults({
-                    artworks: directArtworks,
-                    users: directUsers,
-                });
-                setRelevantResults({
-                    artworks: relevantArtworks,
-                    users: relevantUsers,
-                });
+                const directUsers = allUsers.filter((user) =>
+                    user.username.toLowerCase().includes(lowerCaseQuery) ||
+                    user.email.toLowerCase().includes(lowerCaseQuery) ||
+                    (user.name?.toLowerCase() || '').includes(lowerCaseQuery)
+                );
+
+                const relevantUsers = allUsers.filter(
+                    (user) =>
+                        !directUsers.includes(user) &&
+                        (user.username.toLowerCase().includes(lowerCaseQuery) ||
+                            user.email.toLowerCase().includes(lowerCaseQuery))
+                );
+
+                setSearchResults({ artworks: directArtworks, users: directUsers });
+                setRelevantResults({ artworks: relevantArtworks, users: relevantUsers });
             } catch (error) {
                 console.error('Search failed:', error);
             } finally {
@@ -62,7 +59,7 @@ const SearchResultsPage = () => {
 
     return (
         <div className="search-results-page">
-            <TopBanner />
+            
 
             {loading ? (
                 <div>Loading...</div>

@@ -11,16 +11,13 @@ const SearchField = () => {
             setShowTalkBubble(true);
             setTimeout(() => setShowTalkBubble(false), 3000);
         } else {
-            navigate(`/search?query=${query}`);
+            navigate(`/search?query=${encodeURIComponent(query)}`);
         }
     };
 
     return (
         <div className="search-container">
-            <div
-                className={`search-field ${showTalkBubble ? 'show-bubble' : ''}`}
-                onClick={handleSearch}
-            >
+            <div className="search-field" onClick={handleSearch}>
                 <input
                     type="text"
                     value={query}

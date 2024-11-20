@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { userService } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
-import TopBanner from '../components/TopBanner';
+
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('');
@@ -30,7 +30,7 @@ const RegisterPage = () => {
 
     return (
         <div className="register-page">
-            <TopBanner />
+            
             <div className="register-container">
                 <h2>Register</h2>
                 {error && <p className="error">{error}</p>}
