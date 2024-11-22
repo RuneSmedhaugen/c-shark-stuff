@@ -30,7 +30,7 @@ namespace VisionHub.Services
                     new SqlParameter("@Title", title),
                     new SqlParameter("@Description", description),
                     new SqlParameter("@UploadDate", DateTime.Now),
-                    new SqlParameter("@ImagePath", relativeImagePath), // Store relative path in the database
+                    new SqlParameter("@ImagePath", relativeImagePath),
                     new SqlParameter("@IsFeatured", isFeatured)
                 };
 
@@ -47,10 +47,10 @@ namespace VisionHub.Services
             string imageFileName = null;
             if (newImage?.File != null)
             {
-                // Generate a new filename and save the updated image file
+                
                 imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(newImage.File.FileName);
                 string imagePath = Path.Combine(_imageStoragePath, imageFileName);
-                Directory.CreateDirectory(_imageStoragePath); // Ensure the directory exists
+                Directory.CreateDirectory(_imageStoragePath);
 
                 // Save the new image file
                 using (var stream = new FileStream(imagePath, FileMode.Create))
@@ -79,7 +79,7 @@ namespace VisionHub.Services
 
         public void DeleteArt(int artID)
         {
-            // First, retrieve the image file name to delete the file from the server
+           
             string querySelect = "SELECT ImagePath FROM Artworks WHERE ArtID = @ArtID";
             var parametersSelect = new[] { new SqlParameter("@ArtID", artID) };
             var imagePath = ExecuteScalar(querySelect, parametersSelect)?.ToString();
@@ -93,7 +93,7 @@ namespace VisionHub.Services
                 }
             }
 
-            // Delete the artwork entry from the database
+            
             string queryDelete = "DELETE FROM Artworks WHERE ArtID = @ArtID";
             var parametersDelete = new[] { new SqlParameter("@ArtID", artID) };
             ExecuteNonQuery(queryDelete, parametersDelete);

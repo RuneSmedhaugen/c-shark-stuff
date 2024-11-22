@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { artworkService, commentService, userService } from '../services/apiService';
 import CategoryList from '../components/CategoryList';
 import ArtworkList from '../components/ArtworkList';
 import ArtworkModal from '../components/ArtworkModal';
-import LoginDropDown from '../components/LoginDropDown';
-import { useAuth } from '../services/AuthContext';
 
-const HomePage = () => {
+const HomePage = ({ isDarkMode }) => {
     const [artworks, setArtworks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [error, setError] = useState('');
@@ -14,17 +12,6 @@ const HomePage = () => {
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-   
-
-    const {currentUser, login } = useAuth();
-
-    const handleLogin = async (username, password) => {
-        const success = await login(username, password);
-        if (success) {
-            setIsLoginOpen(false);
-        }
-    };
 
     const fetchFeaturedArtworks = async () => {
         try {
@@ -86,10 +73,10 @@ const HomePage = () => {
             const data = await commentService.getCommentsByArtwork(artworkId);
             const commentsWithUsernames = await Promise.all(
                 data.map(async (comment) => {
-                    const username = await userService.getUser(comment.userID);
+                    const user = await userService.getUser(comment.userID);
                     return {
                         ...comment,
-                        username,
+                        username: user.username || 'Unknown User',
                     };
                 })
             );
@@ -119,18 +106,7 @@ const HomePage = () => {
                     commentText={commentText}
                     setCommentText={setCommentText}
                     isModalOpen={isModalOpen}
-                    currentUser={currentUser}
                 />
-            )}
-
-            {isLoginOpen && (
-                <div className="dropdown-overlay">
-                    <LoginDropDown
-                        closeModal={() => setIsLoginOpen(false)}
-                        handleLogin={handleLogin}
-                        isDarkMode={false}
-                    />
-                </div>
             )}
         </div>
     );

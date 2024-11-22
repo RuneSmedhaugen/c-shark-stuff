@@ -35,12 +35,14 @@ const LoginDropDown = ({ closeModal, handleLogin, isDarkMode }) => {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="button" onClick={handleLoginClick}>
           Login

@@ -2,9 +2,12 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../img/visionhub_logo.png';
 import SearchField from './CombinedSearchField.jsx';
+import { useAuth } from '../services/AuthContext';
 import '../styles/main.css';
 
-const TopBanner = ({ isLoggedIn, handleLogout, openLoginDropdown, handleProfile, isDarkMode, setIsDarkMode }) => {
+const TopBanner = ({ openLoginDropdown, isDarkMode, setIsDarkMode }) => {
+  const { currentUser, logout } = useAuth();
+
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add('dark-mode');
@@ -19,6 +22,10 @@ const TopBanner = ({ isLoggedIn, handleLogout, openLoginDropdown, handleProfile,
     localStorage.setItem('isDarkMode', newDarkMode);
   };
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <div className={`top-banner ${isDarkMode ? 'dark' : ''}`}>
       <Link to="/" className="logo">
@@ -28,9 +35,9 @@ const TopBanner = ({ isLoggedIn, handleLogout, openLoginDropdown, handleProfile,
         <SearchField />
       </div>
       <div className="auth-section">
-        {isLoggedIn ? (
+        {currentUser ? (
           <div className="options-dropdown">
-            <button className="profile-button" onClick={handleProfile}>Profile</button>
+            <Link to={`/profile/${currentUser.userId}`} className="profile-button">Profile</Link>
             <button className="logout-button" onClick={handleLogout}>Logout</button>
           </div>
         ) : (

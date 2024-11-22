@@ -52,11 +52,35 @@ const remove = async (endpoint) => {
 export const userService = {
     registerUser: (userData) => post('/user/register', userData),
     updateUser: (userData) => put('/user/update', userData),
-    loginUser: (loginData) => post('/user/login', loginData),
+
+    // login logic
+    login: async (loginData) => {
+        try {
+            const response = await post('/user/login', loginData);
+    
+            
+            if (!response || !response.token || !response.userId) {
+                console.error('Invalid response:', response);
+                throw new Error('Invalid login response from server');
+            }
+    
+            const user = { userId: response.userId, token: response.token };
+    
+            return user;
+        } catch (error) {
+            console.error('Login failed:', error.message || error);
+            throw error;
+        }
+    },
+    
+    
+    
+
     deleteUser: (userId) => remove(`/user/${userId}`),
     getUser: (userId) => get(`/user/${userId}`),
     getAllUsers: () => get('/user/all'),
 };
+
 
 // Comments API
 export const commentService = {
@@ -82,7 +106,7 @@ export const artworkService = {
         }
         return post('/artwork/add', formData, true);
     },
-
+    getArtworksByUser: (userId) => get(`/Artwork/user/${userId}`),
     getArtwork: (artworkId) => get(`/artwork/${artworkId}`),
     getAllArtworks: () => get('/artwork'),
     updateArtwork: (artworkId, artworkData) => {

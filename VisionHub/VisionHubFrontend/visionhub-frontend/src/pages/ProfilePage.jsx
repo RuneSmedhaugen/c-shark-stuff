@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { userService, artworkService } from '../services/apiService';
-import { useAuth } from '../services/AuthContext'; // Import useAuth to access context
+import { useAuth } from '../services/AuthContext';
 import ArtworkList from '../components/ArtworkList';
 
-const ProfilePage = () => {
-    const { userId } = useParams();
+const ProfilePage = ({ isDarkMode }) => {
+    const { id: userId } = useParams();
     const navigate = useNavigate();
-    const { currentUser } = useAuth(); // Get authentication state from context
+    const { currentUser } = useAuth();
     const [user, setUser] = useState(null);
     const [artworks, setArtworks] = useState([]);
     const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -16,38 +16,42 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                // If userId is provided in params, fetch that profile, else use currentUser
-                const loggedInUserId = currentUser?.userId; // Access currentUser from context
-                const idToFetch = userId || loggedInUserId; // Use userId param if available, otherwise use logged-in user
+                const idToFetch = userId || currentUser?.userId;
 
-                // Check if the profile is the logged-in user's profile
-                setIsOwnProfile(loggedInUserId === parseInt(userId, 10));
+                if (!idToFetch) {
+                    setError('No userId available to fetch profile.');
+                    return;
+                }
+                console.log('Fetching profile for userId:', idToFetch);
+                setIsOwnProfile(currentUser?.userId === parseInt(idToFetch, 10));
 
                 // Fetch user data
                 const userData = await userService.getUser(idToFetch);
+                console.log('User data fetched:', userData);
                 setUser(userData);
 
-                // Fetch user artworks
-                const userArtworks = await artworkService.getArtworksByUser(idToFetch);
-                setArtworks(userArtworks);
+                // Fetch user's artworks
+                try {
+                    const userArtworks = await artworkService.getArtworksByUser(idToFetch);
+                    console.log('Artworks fetched:', userArtworks);
+                    setArtworks(userArtworks);
+                } catch (artworkError) {
+                    console.warn('No artworks found or error fetching artworks:', artworkError);
+                    setArtworks([]); // Ensure artworks is empty, not undefined
+                }
 
                 setError('');
-            } catch (error) {
-                setError('Failed to load profile or artworks.');
-                console.error('Error fetching profile:', error);
+            } catch (profileError) {
+                setError('Failed to load profile.');
+                console.error('Error fetching profile:', profileError);
             }
         };
 
-        if (userId || currentUser?.userId) {
-            fetchProfile();
-        } else {
-            setError('No userId available to fetch profile.');
-        }
-    }, [userId, currentUser?.userId]); // Add dependencies to check userId or currentUser
+        fetchProfile();
+    }, [userId, currentUser]);
 
     const handleEditProfile = () => {
         if (!currentUser) {
-            // Redirect to login if trying to edit without being logged in
             navigate('/login');
         } else {
             navigate('/edit-profile');
@@ -58,8 +62,12 @@ const ProfilePage = () => {
         navigate('/');
     };
 
+    const handleUpload = () => {
+        navigate('/upload');
+    };
+
     return (
-        <div className="profile-page">
+        <div className={`profile-page ${isDarkMode ? 'dark-mode' : ''}`}>
             <section className="profile-header">
                 {error ? (
                     <p className="error-message">{error}</p>
@@ -67,15 +75,20 @@ const ProfilePage = () => {
                     <>
                         <div className="profile-details">
                             <h1>{user.name}</h1>
-                            <p><strong>Username:</strong> {user.username}</p>
+                            <p><strong>Username:</strong> {user.name}</p>
                             <p><strong>Email:</strong> {user.email}</p>
                             <p><strong>Biography:</strong> {user.biography || 'No biography provided.'}</p>
                             <p><strong>Birthdate:</strong> {user.birthdate ? new Date(user.birthdate).toLocaleDateString() : 'Not provided'}</p>
                         </div>
-                        {isOwnProfile && currentUser && ( // Only show edit button for own profile if logged in
-                            <button className="edit-profile-button" onClick={handleEditProfile}>
-                                Edit Profile
-                            </button>
+                        {isOwnProfile && currentUser && (
+                            <>
+                                <button className="edit-profile-button" onClick={handleEditProfile}>
+                                    Edit Profile
+                                </button>
+                                <button className="upload-button" onClick={handleUpload}>
+                                    Upload Artwork
+                                </button>
+                            </>
                         )}
                     </>
                 ) : (

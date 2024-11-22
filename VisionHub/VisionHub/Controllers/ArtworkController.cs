@@ -99,5 +99,25 @@ namespace VisionHub.Controllers
             }
             return Ok(artworks);
         }
+
+        // GET api/artwork/user/{userId}
+        [HttpGet("user/{userId}")]
+        public IActionResult GetUserArtworks(int userId)
+        {
+            try
+            {
+                var artworks = _artworkService.GetUserArt(userId);
+                if (artworks == null || artworks.Count == 0)
+                {
+                    return NotFound(new { message = "No artworks found for this user." });
+                }
+                return Ok(artworks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving artworks.", error = ex.Message });
+            }
+        }
     }
+
 }

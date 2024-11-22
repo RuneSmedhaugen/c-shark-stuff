@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { artworkService } from '../services/apiService';
-import TopBanner from '../components/TopBanner';
-import CategoryList from '../components/CategoryList'; // Import CategoryList component
+import CategoryList from '../components/CategoryList';
 
 const UploadPage = () => {
     const [formData, setFormData] = useState({
@@ -42,9 +41,9 @@ const UploadPage = () => {
         e.preventDefault();
 
         try {
-            const userID = localStorage.getItem('userId'); // Replace with actual user ID from auth service
+            const userID = localStorage.getItem('userId');
             await artworkService.addArtwork({ ...formData, userID });
-            navigate('/'); // Redirect to homepage or gallery after successful upload
+            navigate('/');
         } catch (error) {
             setErrorMessage('Failed to upload artwork. Please try again.');
             console.error(error);
@@ -53,7 +52,6 @@ const UploadPage = () => {
 
     return (
         <div className="upload-page">
-            <TopBanner />
             <div className="upload-form-container">
                 <h1>Upload Your Artwork</h1>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
