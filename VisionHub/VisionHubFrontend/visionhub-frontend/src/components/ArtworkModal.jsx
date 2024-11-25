@@ -34,7 +34,6 @@ const ArtworkModal = ({ artwork, closeModal, isDarkMode }) => {
         }
     
         const commentData = {
-            id: 0,
             artworkID: artwork.id,
             userID: currentUser.userId, 
             commentText: commentText,

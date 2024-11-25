@@ -119,6 +119,7 @@ namespace VisionHub.Services
                     ArtworkID = Convert.ToInt32(row["ArtworkID"]),
                     UserID = Convert.ToInt32(row["UserID"]),
                     CommentText = row["CommentText"].ToString(),
+                    Username = row["Username"].ToString()
                     
                 };
 
