@@ -47,11 +47,10 @@ namespace VisionHub.Services
             ExecuteNonQuery(query, parameters);
         }
 
-        
         public List<Comments> GetAllComments()
         {
-            string query = "SELECT * FROM Comments";
-            
+            string query = "SELECT c.*, u.Username FROM Comments c INNER JOIN Users u ON c.UserID = u.UserID";
+
             DataTable dataTable = ExecuteQuery(query);
 
             return ConvertDataTableToCommentsList(dataTable);
@@ -59,38 +58,51 @@ namespace VisionHub.Services
 
         public List<Comments> GetCommentsId(int commentID)
         {
-            string query = "SELECT * FROM Comments WHERE CommentID = @CommentID";
+            string query = @"
+                SELECT c.*, u.Username 
+                FROM Comments c 
+                INNER JOIN Users u ON c.UserID = u.UserID 
+                WHERE c.CommentID = @CommentID";
 
             var parameters = new[]
             {
                 new SqlParameter("@CommentID", commentID)
             };
 
-            DataTable dataTable = ExecuteQuery(query);
+            DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToCommentsList(dataTable);
         }
 
-        public List<Comments> GetCommentsArtworkID(int ArtworkID)
+        public List<Comments> GetCommentsArtworkID(int artworkID)
         {
-            string query = "SELECT * FROM Comments WHERE ArtworkID = @ArtworkID";
+            string query = @"
+                SELECT c.*, u.Username 
+                FROM Comments c 
+                INNER JOIN Users u ON c.UserID = u.UserID 
+                WHERE c.ArtworkID = @ArtworkID";
 
             var parameters = new[]
             {
-                new SqlParameter("@ArtworkID", ArtworkID)
+                new SqlParameter("@ArtworkID", artworkID)
             };
 
             DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToCommentsList(dataTable);
         }
 
-        public List<Comments> GetCommentsByUser(int UserID)
+        public List<Comments> GetCommentsByUser(int userID)
         {
-            string query = "SELECT * FROM Comments WHERE UserID = @UserID";
+            string query = @"
+                SELECT c.*, u.Username 
+                FROM Comments c 
+                INNER JOIN Users u ON c.UserID = u.UserID 
+                WHERE c.UserID = @UserID";
 
             var parameters = new[]
             {
-                new SqlParameter("UserID", UserID)
+                new SqlParameter("@UserID", userID)
             };
+
             DataTable dataTable = ExecuteQuery(query, parameters);
             return ConvertDataTableToCommentsList(dataTable);
         }
@@ -107,6 +119,7 @@ namespace VisionHub.Services
                     ArtworkID = Convert.ToInt32(row["ArtworkID"]),
                     UserID = Convert.ToInt32(row["UserID"]),
                     CommentText = row["CommentText"].ToString(),
+                    
                 };
 
                 commentsList.Add(comment);

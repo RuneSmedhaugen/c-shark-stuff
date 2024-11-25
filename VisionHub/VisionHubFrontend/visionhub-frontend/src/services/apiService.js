@@ -58,13 +58,16 @@ export const userService = {
         try {
             const response = await post('/user/login', loginData);
     
-            
-            if (!response || !response.token || !response.userId) {
-                console.error('Invalid response:', response);
-                throw new Error('Invalid login response from server');
+            if (!response || typeof response.token !== 'string' || typeof response.userId !== 'number' || typeof response.username !== 'string') {
+                console.error('Invalid response format:', response);
+                throw new Error('Invalid login response format.');
             }
     
-            const user = { userId: response.userId, token: response.token };
+            const user = {
+                userId: response.userId,
+                username: response.username,
+                token: response.token,
+            };
     
             return user;
         } catch (error) {
@@ -73,9 +76,6 @@ export const userService = {
         }
     },
     
-    
-    
-
     deleteUser: (userId) => remove(`/user/${userId}`),
     getUser: (userId) => get(`/user/${userId}`),
     getAllUsers: () => get('/user/all'),

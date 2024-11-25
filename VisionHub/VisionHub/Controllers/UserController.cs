@@ -40,7 +40,7 @@ namespace VisionHub.Controllers
             }
             catch (Exception ex)
             {
-                // Consider logging the exception
+                
                 return BadRequest(new { message = "An error occurred while registering the user.", error = ex.Message });
             }
         }
@@ -127,7 +127,8 @@ namespace VisionHub.Controllers
             return Ok(new
             {
                 token = token,
-                userId = user.Id
+                userId = user.Id,
+                username = user.UserName
             });
         }
 

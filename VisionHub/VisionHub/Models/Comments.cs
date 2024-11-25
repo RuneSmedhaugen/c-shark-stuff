@@ -6,6 +6,13 @@
         private int _userID;
         private string _commentText;
         private DateTime _commentDate = DateTime.Now;
+        private string _username;
+
+        public string Username
+        {
+            get { return _username; }
+            set { _username = value; }
+        }
 
         public int ArtworkID
         {
@@ -31,11 +38,12 @@
             private set { _commentDate = value; }
         }
 
-        public Comments(int id, int artworkID, int userID, string commentText) : base(id)
+        public Comments(int id, int artworkID, int userID, string commentText, string username) : base(id)
         {
             ArtworkID = artworkID;
             UserID = userID;
             CommentText = commentText;
+            Username = username;
         }
 
         public Comments()
